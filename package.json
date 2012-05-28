@@ -1,0 +1,16 @@
+{
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "3.0.0alpha4",
+    "consolidate": "*",
+    "dustjs-linkedin": "0.4.x",
+    "less-middleware": "*",
+    "page": "git://github.com/Skookum/page.js.git",
+    "backbone": "0.9.x"
+  }
+}
