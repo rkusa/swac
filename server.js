@@ -5,8 +5,8 @@
 
 var express = require('express')
   , cons = require('consolidate')
-  , handlebars = require('handlebars')
   , http = require('http')
+  , browserify = require('browserify')
 
 var app = GLOBAL.express = express()
 
@@ -36,7 +36,10 @@ app.get('/serverside', function(req, res) {
 
 require('./app')
 
+app.use(browserify(__dirname + '/app.js'))
+
 var server = module.exports = http.createServer(app)
+
 server.listen(app.get('port'), function() {
   console.log("Express server listening on port " + app.get('port'))
 })

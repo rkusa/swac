@@ -7,7 +7,8 @@ handlebars.registerHelper('block', function(context, block) {
     , ret = ''
   // console.log(block)
   ret += '<!---{' + ++this._blockCount + '-->'
-  ret += block(this)
+  block.tmpl.id = this._blockCount
+  ret += block.tmpl(this)
   ret += '<!---' + this._blockCount + '}-->'
 
   this._templates.push({
@@ -16,4 +17,8 @@ handlebars.registerHelper('block', function(context, block) {
   })
 
   return new handlebars.SafeString(ret)
+})
+
+handlebars.registerHelper('json', function(obj) {
+  return new handlebars.SafeString(JSON.stringify(obj))
 })

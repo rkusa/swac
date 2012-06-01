@@ -11,6 +11,7 @@
     "handlebars": "*",
     "less-middleware": "*",
     "page": "git://github.com/Skookum/page.js.git",
-    "backbone": "0.9.x"
+    "backbone": "0.9.x",
+    "browserify": "1.11.x"
   }
 }

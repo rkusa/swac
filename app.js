@@ -1,8 +1,13 @@
 var route, app = {}
+  , isBrowser = typeof window != 'undefined'
+  , isServer  = !isBrowser
+  , page = require('page')
+  , Model = require('./model')
 
 if (typeof window != 'undefined') {
 	var ranges = []
 	window.onload = function() {
+    page()
 		var treeWalker = document.createTreeWalker(document, NodeFilter.SHOW_COMMENT, {
 			acceptNode: function(node) {
 				return node.nodeValue[0] == '-' ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP
@@ -17,6 +22,10 @@ if (typeof window != 'undefined') {
 				else           /* opening */ ranges[id].setStartBefore(treeWalker.currentNode)
 			}
 		}
+    Bindings.forEach(function(binding) {
+      Model.models[binding.model].on(binding.event, refresh.bind(refresh, binding.block))
+    })
+    return
 		for (var i = 1; i < ranges.length; ++i) {
 			ranges[i].deleteContents()
 			var fragment = document.createDocumentFragment()
@@ -32,43 +41,24 @@ if (typeof window != 'undefined') {
 }
 
 function refresh (id) {
-	
+  ranges[id].deleteContents()
+  var fragment = document.createDocumentFragment()
+    , tmp = document.createElement('div')
+    , child
+  tmp.innerHTML = Templates[id](app)
+  while (child = tmp.firstChild) {
+    fragment.appendChild(child)
+  }
+  ranges[id].insertNode(fragment)
 }
 
-var Model = function(attrs) {
-  var self = this
-  this._fns = {}
-  Object.keys(attrs).forEach(function(key) {
-  	var value = attrs[key]
-  	Object.defineProperty(self, key, {
-  		get: function() {
-  			var caller = arguments.callee.caller
-  			self._fns[key] = function() {
-  				ranges[caller.id].deleteContents()
-					var fragment = document.createDocumentFragment()
-		        , tmp = document.createElement('div')
-		        , child
-		      tmp.innerHTML = caller(app)
-		      while (child = tmp.firstChild) {
-		        fragment.appendChild(child)
-		      }
-		      ranges[caller.id].insertNode(fragment)
-  			}
-  			return value
-  		},
-  		set: function(newValue) {
-  			if (value == newValue) return
-  			value = newValue
-  			self._fns[key]()
-  		},
-  		enumerable: true
-  	})
-  })
-}
+var bindings = []
 
-app.state = new Model({ page: 1 })
+app.state = new Model("State", function() {
+  this.property('page')
+})
 
-if ('undefined' == typeof module) {
+if (isBrowser) {
 	var render = function(locals) {
 	}
 	route = function(path, callback) {
@@ -80,6 +70,7 @@ if ('undefined' == typeof module) {
 	var render = function(req, res, locals) {
 		app._blockCount = 0
 		app._templates = []
+    app._bindings = Model.bindings
 		res.render('index', app)
 	}
 	route = function(path, callback) {
