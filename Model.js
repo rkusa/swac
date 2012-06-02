@@ -18,13 +18,7 @@ Model.prototype.property = function(key) {
     , value = null
   Object.defineProperty(that, key, {
     get: function() {
-      var caller = arguments.callee.caller
-      console.log(caller)
-      bindings.push({
-        block: caller.id,
-        event: 'changed:' + key,
-        model: this._modelName
-      })
+      arguments.callee.caller.fragment.observe(that._position, key)
       return value
     },
     set: function(newValue) {

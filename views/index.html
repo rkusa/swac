@@ -14,15 +14,16 @@
 			<li><a href="/2">2</a></li>
 		</ul>
     <script type="text/javascript">
-      var Templates = []
+      var fragments = {}
+        , Fragment = require('./fragment')
       !function() {
       	var helpers = Handlebars.helpers, foundHelper, tmp1, self = Handlebars, functionType="function", helperMissing = helpers.helperMissing, undef = void 0, escapeExpression = Handlebars.Utils.escapeExpression, blockHelperMissing = helpers.blockHelperMissing
-	      {{#each _templates}}
-	      Templates[{{this.id}}] = {{{this.fn}}}
-	      Templates[{{this.id}}].id = {{this.id}}
+	      {{#each _fragments}}
+          !function() {
+            fragments[{{this.id}}] = new Fragment({{{this.toJson}}})
+          }()
 	      {{/each}}
       }()
-      var Bindings = {{json _bindings}}
     </script>
 	</body>
 </html>

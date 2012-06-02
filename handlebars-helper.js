@@ -1,20 +1,21 @@
 var handlebars = require('handlebars')
+  , Fragment = require('./fragment')
 
 handlebars.registerHelper('block', function(context, block) {
   var args     = Array.prototype.slice.call(arguments)
     , block = args.pop()
     , context = args.shift()
     , ret = ''
+
   // console.log(block)
   ret += '<!---{' + ++this._blockCount + '-->'
-  block.tmpl.id = this._blockCount
-  ret += block.tmpl(this)
+
+  var fragment = new Fragment({ id: this._blockCount, template: block.tmpl })
+  ret += fragment.render(this)
+
   ret += '<!---' + this._blockCount + '}-->'
 
-  this._templates.push({
-    id: this._blockCount,
-    fn: block.tmpl.toString()
-  })
+  this._fragments.push(fragment)
 
   return new handlebars.SafeString(ret)
 })

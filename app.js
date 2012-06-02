@@ -1,11 +1,11 @@
-var route, app = {}
+var route, app = require('./shared')
   , isBrowser = typeof window != 'undefined'
   , isServer  = !isBrowser
   , page = require('page')
   , Model = require('./model')
+  , Fragment = require('./fragment')
 
 if (typeof window != 'undefined') {
-	var ranges = []
 	window.onload = function() {
     page()
 		var treeWalker = document.createTreeWalker(document, NodeFilter.SHOW_COMMENT, {
@@ -17,46 +17,16 @@ if (typeof window != 'undefined') {
 			var value = treeWalker.currentNode.nodeValue, res
 			if (res = value.match(/\-(\{(\d+))|((\d+)\})/)) {
 				var id = res[2] || res[4]
-				if (!ranges[id]) ranges[id] = document.createRange()
-				if (res.index) /* closing */ ranges[id].setEndAfter(treeWalker.currentNode)
-				else           /* opening */ ranges[id].setStartBefore(treeWalker.currentNode)
+				if (res.index) /* closing */ fragments[id].DOMRange.setEndAfter(treeWalker.currentNode)
+				else           /* opening */ fragments[id].DOMRange.setStartBefore(treeWalker.currentNode)
 			}
-		}
-    Bindings.forEach(function(binding) {
-      Model.models[binding.model].on(binding.event, refresh.bind(refresh, binding.block))
-    })
-    return
-		for (var i = 1; i < ranges.length; ++i) {
-			ranges[i].deleteContents()
-			var fragment = document.createDocumentFragment()
-        , tmp = document.createElement('div')
-        , child
-      tmp.innerHTML = Templates[i](app)
-      while (child = tmp.firstChild) {
-        fragment.appendChild(child)
-      }
-      ranges[i].insertNode(fragment)
 		}
 	}
 }
 
-function refresh (id) {
-  ranges[id].deleteContents()
-  var fragment = document.createDocumentFragment()
-    , tmp = document.createElement('div')
-    , child
-  tmp.innerHTML = Templates[id](app)
-  while (child = tmp.firstChild) {
-    fragment.appendChild(child)
-  }
-  ranges[id].insertNode(fragment)
-}
-
-var bindings = []
-
-app.state = new Model("State", function() {
+app.register('state', new Model("State", function() {
   this.property('page')
-})
+}))
 
 if (isBrowser) {
 	var render = function(locals) {
@@ -69,8 +39,7 @@ if (isBrowser) {
 } else {
 	var render = function(req, res, locals) {
 		app._blockCount = 0
-		app._templates = []
-    app._bindings = Model.bindings
+		app._fragments = []
 		res.render('index', app)
 	}
 	route = function(path, callback) {
