@@ -11,11 +11,11 @@ handlebars.registerHelper('block', function(context, block) {
   var template = new Template(this.templates.length, block.tmpl)
   this.templates[template.id] = template
 
-  var fragment = new Fragment(this.fragments.length, template)
+  var fragment = new Fragment(this.fragments.length, template, this)
   this.fragments[fragment.id] = fragment
 
   ret += '<!---{' + fragment.id + '-->'
-  ret += fragment.render(this)
+  ret += fragment.render()
   ret += '<!---' + fragment.id + '}-->'
 
   return new handlebars.SafeString(ret)
@@ -28,18 +28,25 @@ handlebars.registerHelper('collection', function(context, block) {
     , that = this
     , ret = ''
 
-  ret += '<!--{#' + this._blockCount + '-->'
+
+  var template = new Template(this.templates.length, block.tmpl)
+  this.templates[template.id] = template
+
+  var list = new Fragment(this.fragments.length, template, context)
+  this.fragments[list.id] = list
+
+  ret += '<!---{' + list.id + '-->'
 
   for (var i = 0; i < context._collection.length; ++i) {
-    var fragment = new Fragment({ id: ++this._blockCount, template: block.tmpl, boundTo: context })
-    this._fragments.push(fragment)
+    var fragment = new Fragment(this.fragments.length, template, context._collection[i])
+    this.fragments[fragment.id] = fragment
 
-    ret += '<!---{' + this._blockCount + '-->'
-    ret += fragment.render(context._collection[i])
-    ret += '<!---' + this._blockCount + '}-->'
+    ret += '<!---{' + fragment.id + '-->'
+    ret += fragment.render()
+    ret += '<!---' + fragment.id + '}-->'
   }
 
-  ret += '<!--#' + this._blockCount + '}-->'
+  ret += '<!---' + list.id + '}-->'
 
   return new handlebars.SafeString(ret)
 })

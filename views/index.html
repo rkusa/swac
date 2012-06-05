@@ -8,6 +8,9 @@
 		  <p>Seite {{state.page}}</p>
 		{{/block}}
     <ul>
+      {{#collection todos}}
+        <li>{{this.todo}}</li>
+      {{/collection}}
     </ul>
 		<ul>
 			<li><a href="/">1</a></li>

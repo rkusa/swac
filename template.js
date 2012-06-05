@@ -10,7 +10,7 @@ Template.prototype.serialize = function() {
   var fn = jsp.parse(this.fn.toString())
   fn = pro.ast_squeeze(fn)
   fn = pro.gen_code(fn)
-  fn = fn.replace('function program1(depth0,data){', '')
+  fn = fn.replace(/function program\d+\(depth0,data\)\{/, '')
          .replace(/\}$/, '')
 
   return { type: 'Template', obj: {

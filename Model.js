@@ -5,13 +5,26 @@ var events = require('events')
 Model.models = {}
 
 Model.define = function(name, definition) {
-  var model = Model.models[name] = function() {
+  var model = Model.models[name] = function(properties) {
+    var that = this
     definition.call(this)
+    if (properties)
+      Object.keys(properties).forEach(function(property) {
+        if (that.hasOwnProperty(property))
+          that[property] = properties[property]
+      })
+    Object.defineProperty(this, '_modelName', {
+      value: name
+    })
   }
   util.inherits(model, events.EventEmitter)
   Object.defineProperty(model, '_name', {
     value: name
   })
+
+  model.prototype.destroy = function() {
+    this.emit('destroy')
+  }
 
   model.prototype.property = function(key) {
     var that = this

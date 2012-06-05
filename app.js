@@ -51,5 +51,9 @@ route('/', function(app, render) {
 
 route('/2', function(app, render) {
 	app.state.page = 2
+  app.todos._collection[1].destroy()
+  app.todos._collection[0].todo = '=)'
+  app.todos.add(new Todo({ todo: 'LAKS' }))
+  
 	render()
 })
