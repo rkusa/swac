@@ -1,32 +1,53 @@
 var events = require('events')
   , util = require('util')
+  , Model = exports
 
-var Model = module.exports = function(name, definition) {
-  this._modelName = name
-  definition.call(this)
-  models[name] = this
-}
-Model.define = Model
+Model.models = {}
 
-util.inherits(Model, events.EventEmitter)
-
-var models = module.exports.models = {}
-var bindings = module.exports.bindings = []
-
-Model.prototype.property = function(key) {
-  var that = this
-    , value = null
-  Object.defineProperty(that, key, {
-    get: function() {
-      arguments.callee.caller.fragment.observe(that._position, key)
-      return value
-    },
-    set: function(newValue) {
-      if (value == newValue) return
-      value = newValue
-      this.emit('changed')
-      this.emit('changed:' + key)
-    },
-    enumerable: true
+Model.define = function(name, definition) {
+  var model = Model.models[name] = function() {
+    definition.call(this)
+  }
+  util.inherits(model, events.EventEmitter)
+  Object.defineProperty(model, '_name', {
+    value: name
   })
+
+  model.prototype.property = function(key) {
+    var that = this
+      , value = null
+    Object.defineProperty(that, key, {
+      get: function() {
+        // console.log(that._position)
+        if (typeof arguments.callee.caller.fragment != 'undefined')
+          arguments.callee.caller.fragment.observe(that._position, key)
+        return value
+      },
+      set: function(newValue) {
+        if (value == newValue) return
+        value = newValue
+        this.emit('changed')
+        this.emit('changed:' + key)
+      },
+      enumerable: true
+    })
+  }
+
+  model.prototype.serialize = function() {
+    var obj = {}
+      , that = this
+    Object.keys(this).forEach(function(key) {
+      obj[key] = that[key]
+    })
+    return { type: 'Model:' + name, obj: obj }
+  }
+
+  model.prototype.deserialize = function(obj) {
+    var that = this
+    Object.keys(obj).forEach(function(key) {
+      if (that.hasOwnProperty(key)) that[key] = obj[key]
+    })
+  }
+
+  return model
 }

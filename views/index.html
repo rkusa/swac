@@ -2,28 +2,25 @@
 <html>
 	<head>
 		<title>Arkansas</title>
-		<script type="text/javascript" src="/browserify.js"></script>
-		<script type="text/javascript" src="/js/handlebars.runtime.js"></script>
 	</head>
 	<body>
 		{{#block}}
-		<p>Seite {{state.page}}</p>
+		  <p>Seite {{state.page}}</p>
 		{{/block}}
+    <ul>
+    </ul>
 		<ul>
 			<li><a href="/">1</a></li>
 			<li><a href="/2">2</a></li>
 		</ul>
+
+    <script type="text/javascript" src="/js/zepto.min.js"></script>
+    <script type="text/javascript" src="/js/page.js"></script>
+    <script type="text/javascript" src="/browserify.js"></script>
+    <script type="text/javascript" src="/js/handlebars.runtime.js"></script>
     <script type="text/javascript">
-      var fragments = {}
-        , Fragment = require('./fragment')
-      !function() {
-      	var helpers = Handlebars.helpers, foundHelper, tmp1, self = Handlebars, functionType="function", helperMissing = helpers.helperMissing, undef = void 0, escapeExpression = Handlebars.Utils.escapeExpression, blockHelperMissing = helpers.blockHelperMissing
-	      {{#each _fragments}}
-          !function() {
-            fragments[{{this.id}}] = new Fragment({{{this.toJson}}})
-          }()
-	      {{/each}}
-      }()
+      var app = window.app = new (require('./shared'))
+      app.deserialize({{{serialize}}})
     </script>
 	</body>
 </html>
