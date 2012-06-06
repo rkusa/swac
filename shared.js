@@ -34,6 +34,7 @@ App.prototype.serialize = function() {
     if (serialized = serialize(that[key]))
       obj[key] = serialized
   })
+  obj['path'] = this.path
   return JSON.stringify(obj)
 }
 
@@ -70,6 +71,7 @@ App.prototype.deserialize = function(obj) {
     if (!that[key] && key != 'fragments' && key != 'templates')
       that[key] = deserialize(obj[key])
   })
+  that.path = obj.path
   that.templates = deserialize(obj.templates)
   $(function() {
     that.fragments = deserialize(obj.fragments)

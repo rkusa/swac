@@ -23,10 +23,8 @@ Collection.define = function(name, definition) {
 
   collection.prototype.filter = function(name, fn) {
     var that = this
-    console.log(that)
     Object.defineProperty(this, name, {
       get: function() {
-        console.log(that._position)
         if (typeof arguments.callee.caller.fragment != 'undefined')
           arguments.callee.caller.fragment.observe(that._position)
         return fn.call(that)
