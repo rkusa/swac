@@ -50,7 +50,7 @@ function deserialize (that) {
         , prop
       switch (type[0]) {
         case 'Model':      prop = new Model.models[type[1]];             break
-        case 'Collection': prop = new Collection(Model.models[type[1]]); break
+        case 'Collection': prop = new Collection.collections[type[1]](Model.models[type[2]]); break
         case 'Template':   prop = new Template();                        break
         case 'Fragment':   prop = new Fragment();                        break
       }
@@ -67,7 +67,7 @@ function deserialize (that) {
 App.prototype.deserialize = function(obj) {
   var that = this
   Object.keys(obj).forEach(function(key) {
-    if (key != 'fragments' && key != 'templates')
+    if (!that[key] && key != 'fragments' && key != 'templates')
       that[key] = deserialize(obj[key])
   })
   that.templates = deserialize(obj.templates)
@@ -82,8 +82,8 @@ App.prototype.deserialize = function(obj) {
       var value = treeWalker.currentNode.nodeValue, res
       if (res = value.match(/\-(\{(\d+))|((\d+)\})/)) {
         var fragment = that.fragments[res[2] || res[4]]
-        if (res.index) /* closing */ fragment.DOMRange.setEndAfter(treeWalker.currentNode)
-        else           /* opening */ fragment.DOMRange.setStartBefore(treeWalker.currentNode)
+        if (res.index) /* closing */ fragment.endNode = treeWalker.currentNode
+        else           /* opening */ fragment.startNode = treeWalker.currentNode
       }
     }
   })

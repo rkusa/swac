@@ -1,6 +1,6 @@
 var events = require('events')
   , util = require('util')
-  , Model = exports
+  , Model = module.exports
 
 Model.models = {}
 

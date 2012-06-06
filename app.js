@@ -34,16 +34,26 @@ var State = Model.define("State", function() {
 })
 var Todo = Model.define('Todo', function() {
 	this.property('todo')
+  this.property('isDone')
+})
+var Todos = Collection.define('Todos', function() {
+  this.filter('itemsLeft', function() {
+    var count = 0
+    this._collection.forEach(function(todo) {
+      if (!todo.isDone) ++count
+    })
+    return count
+  })
 })
 
 route('/', function(app, render) {
 	app.register('state', new State)
-	app.register('todos', new Collection(Todo))
+  app.register('todos', new Todos(Todo))
 
 	app.state.page = 1
 	app.todos.reset([
-		{ todo: 'Tu das' },
-		{ todo: 'Tu dies' }
+		{ todo: 'Eins', isDone: true },
+		{ todo: 'Zwei', isDone: false }
 	])
 
 	render()
@@ -51,9 +61,14 @@ route('/', function(app, render) {
 
 route('/2', function(app, render) {
 	app.state.page = 2
-  app.todos._collection[1].destroy()
-  app.todos._collection[0].todo = '=)'
-  app.todos.add(new Todo({ todo: 'LAKS' }))
+  app.todos._collection[0].isDone = false
+  // app.todos._collection[1].isDone = true
   
 	render()
+})
+
+route('/3', function(app, render) {
+  app.todos._collection[1].isDone = true
+  
+  render()
 })

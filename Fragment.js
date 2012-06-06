@@ -10,6 +10,28 @@ var Fragment = module.exports = function(id, template, context) {
     this.template.fn.fragment = this
   if (typeof window !== 'undefined')
     this.DOMRange = document.createRange()
+
+  var startNode = null
+    , endNode = null
+    , that = this
+  Object.defineProperty(this, 'startNode', {
+    get: function() {
+      return startNode
+    },
+    set: function(node) {
+      startNode = node
+      that.DOMRange.setStart(node)
+    }
+  })
+  Object.defineProperty(this, 'endNode', {
+    get: function() {
+      return endNode
+    },
+    set: function(node) {
+      endNode = node
+      that.DOMRange.setEnd(node)
+    }
+  })
 }
 
 Fragment.prototype.observe = function(modelName, propertyName) {
@@ -37,6 +59,8 @@ Fragment.prototype.refresh = function() {
 
 Fragment.prototype.delete = function() {
   this.DOMRange.deleteContents()
+  this.startNode.parentNode.removeChild(this.startNode)
+  this.endNode.parentNode.removeChild(this.endNode)
 }
 
 Fragment.prototype.serialize = function() {
@@ -65,15 +89,22 @@ Fragment.prototype.deserialize = function(obj) {
   this.template.fn.fragment = this
   obj.events.forEach(function(event) {
     var model = followPath(event.path)
-    model.on('changed:' + event.property, that.refresh.bind(that))
+    if (event.property)
+      model.on('changed:' + event.property, that.refresh.bind(that))
+    else
+      model.on('changed', that.refresh.bind(that))
   })
   this.context = followPath(obj.context)
-  if (this.context instanceof Collection) {
+  if (this.context._collectionName && Collection.collections[this.context._collectionName]) {
     // is collection
     this.context.on('add', function(model) {
       var fragment = new Fragment(-1, that.template, model)
-      fragment.DOMRange.setStart(that.DOMRange.endContainer, that.DOMRange.endOffset - 1)
-      fragment.DOMRange.setEnd(that.DOMRange.endContainer, that.DOMRange.endOffset - 1)
+        , startNode = document.createComment('{') 
+        , endNode = document.createComment('}')
+      that.endNode.parentNode.insertBefore(startNode, that.endNode)
+      that.endNode.parentNode.insertBefore(endNode, that.endNode)
+      fragment.startNode = startNode
+      fragment.endNode = endNode
       fragment.refresh()
       model.on('destroy', fragment.delete.bind(fragment)) // redundant!
     })
