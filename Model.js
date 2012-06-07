@@ -21,19 +21,18 @@ Model.define = function(name, definition) {
   Object.defineProperty(model, '_name', {
     value: name
   })
-
-  model.prototype.destroy = function() {
-    this.emit('destroy')
-  }
+  model.list = Model.list.bind(null, model)
+  model.get = Model.get.bind(null, model)
+  model.post = Model.post.bind(null, model)
+  model.put = Model.put.bind(null, model)
+  model.delete = Model.delete.bind(null, model)
 
   model.prototype.property = function(key) {
-    var that = this
-      , value = null
-    Object.defineProperty(that, key, {
+    var value = null
+    Object.defineProperty(this, key, {
       get: function() {
-        // console.log(that._position)
         if (typeof arguments.callee.caller.fragment != 'undefined')
-          arguments.callee.caller.fragment.observe(that._position, key)
+          arguments.callee.caller.fragment.observe(this._position, key)
         return value
       },
       set: function(newValue) {
@@ -44,6 +43,10 @@ Model.define = function(name, definition) {
       },
       enumerable: true
     })
+  }
+
+  model.prototype.destroy = function() {
+    this.emit('destroy')
   }
 
   model.prototype.serialize = function() {
@@ -64,3 +67,23 @@ Model.define = function(name, definition) {
 
   return model
 }
+
+Model.api = function(method, model, fn) {
+  Object.defineProperty(model.prototype, method, {
+    value: fn,
+    enumerable: true
+  })
+  if (typeof window === 'undefined') {
+    var path = '/api/' + model._name.toLowerCase()
+    if (method != 'post' && method != 'list') path += '/:id'
+    express[method == 'list' ? 'get' : method](path, function(req, res) {
+      var result = fn(req.params.id || req.body, req.body)
+      res.json(result)
+    })
+  }
+}
+Model.list = Model.api.bind(null, 'list')
+Model.get = Model.api.bind(null, 'get')
+Model.post = Model.api.bind(null, 'post')
+Model.put = Model.api.bind(null, 'put')
+Model.delete = Model.api.bind(null, 'delete')

@@ -9,6 +9,7 @@ var express = require('express')
   , browserify = require('browserify')
 
 var app = GLOBAL.express = express()
+GLOBAL.db = {}
 
 app.configure(function() {
   app.set('port', process.env.PORT || 3000)
