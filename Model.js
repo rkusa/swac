@@ -21,11 +21,12 @@ Model.define = function(name, definition) {
   Object.defineProperty(model, '_name', {
     value: name
   })
-  model.list = Model.list.bind(null, model)
-  model.get = Model.get.bind(null, model)
-  model.post = Model.post.bind(null, model)
-  model.put = Model.put.bind(null, model)
-  model.delete = Model.delete.bind(null, model)
+
+  Model.prepareApi(model, 'list')
+  Model.prepareApi(model, 'get')
+  Model.prepareApi(model, 'post')
+  Model.prepareApi(model, 'put')
+  Model.prepareApi(model, 'delete')
 
   model.prototype.property = function(key) {
     var that = this
@@ -69,22 +70,23 @@ Model.define = function(name, definition) {
   return model
 }
 
-Model.api = function(method, model, fn) {
-  Object.defineProperty(model.prototype, method, {
-    value: fn,
-    enumerable: true
+Model.prepareApi = function(model, method) {
+  var fn = function() {}
+  Object.defineProperty(model, method, {
+    enumerable: true,
+    get: function() {
+      return fn
+    },
+    set: function(val) {
+      fn = val
+      if (typeof window === 'undefined') {
+        var path = '/api/' + model._name.toLowerCase()
+        if (method != 'post' && method != 'list') path += '/:id'
+        express[method == 'list' ? 'get' : method](path, function(req, res) {
+          var result = fn(req.params.id || req.body, req.body)
+          res.json(result)
+        })
+      }
+    }
   })
-  if (typeof window === 'undefined') {
-    var path = '/api/' + model._name.toLowerCase()
-    if (method != 'post' && method != 'list') path += '/:id'
-    express[method == 'list' ? 'get' : method](path, function(req, res) {
-      var result = fn(req.params.id || req.body, req.body)
-      res.json(result)
-    })
-  }
 }
-Model.list = Model.api.bind(null, 'list')
-Model.get = Model.api.bind(null, 'get')
-Model.post = Model.api.bind(null, 'post')
-Model.put = Model.api.bind(null, 'put')
-Model.delete = Model.api.bind(null, 'delete')
