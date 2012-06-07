@@ -28,11 +28,12 @@ Model.define = function(name, definition) {
   model.delete = Model.delete.bind(null, model)
 
   model.prototype.property = function(key) {
-    var value = null
+    var that = this
+      , value = null
     Object.defineProperty(this, key, {
       get: function() {
         if (typeof arguments.callee.caller.fragment != 'undefined')
-          arguments.callee.caller.fragment.observe(this._position, key)
+          arguments.callee.caller.fragment.observe(that._position, key)
         return value
       },
       set: function(newValue) {
