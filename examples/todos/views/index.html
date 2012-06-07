@@ -70,11 +70,10 @@
 	<!-- Scripts here. Don't remove this ↓ -->
     <script type="text/javascript" src="/js/zepto.min.js"></script>
     <script type="text/javascript" src="/js/page.js"></script>
-    <script type="text/javascript" src="/browserify.js"></script>
     <script type="text/javascript" src="/js/handlebars.runtime.js"></script>
-    <script type="text/javascript" src="/js/handlebars-helper.js"></script>
+    <script type="text/javascript" src="/browserify.js"></script>
     <script type="text/javascript">
-      var app = window.app = new (require('./app'))
+      var app = window.app = new (require('arkansas').State)
       app.deserialize({{{serialize}}})
     </script>
 </body>
