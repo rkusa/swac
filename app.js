@@ -1,5 +1,4 @@
-var route
-  , isBrowser = typeof window != 'undefined'
+var isBrowser = typeof window != 'undefined'
   , isServer  = !isBrowser
   , Model = require('./model')
   , Collection = require('./collection')
@@ -20,36 +19,42 @@ if (isBrowser) {
 	}
 }
 
-
-
-_route = function(path, callback) {
+var initialized = false
+var route = function(method, path, action, rdy) {
   var that = this
+    , callback = function(app, cb) {
+      if (!isBrowser || initialized) action(app, cb)
+      if (isBrowser && rdy) rdy(window.app)
+    }
   var fn = function(app, cb) {
+    if (isBrowser && app.path == path) return callback(app, cb)
     that.parent(app, callback.bind(null, app, cb))
   }
-  var get = function(req, res) {
+  var bla = function(req, res) {
     var app = isBrowser ? window.app : new App
-    app.path = path
-    fn.call(this, app, render.bind(render, app, req, res))
+    fn.call(this, app, function() {
+      app.path = path
+      render(app, req, res)
+    })
+    initialized = true
   }
-  if (isBrowser) page(path, get)
-  else express.get(path, get)
+  if (isBrowser) page(path, bla)
+  else express.get(path, bla)
 
   return {
-    route: _route.bind({ parent: fn })
+    get: route.bind({ parent: fn }, 'GET'),
+    post: route.bind({ parent: fn }, 'POST')
   }
 }
-route = _route.bind({ parent: function(app, cb) {
-  cb()
-} })
+var context = { parent: function(app, cb) {
+    cb()
+  }}
+  , get = route.bind(context, 'GET')
+  , post = route.bind(context, 'POST')
 
 
 
 
-
-var State = Model.define("State", function() {
-  this.property('page')
-})
 var Todo = Model.define('Todo', function() {
 	this.property('todo')
   this.property('isDone')
@@ -64,9 +69,7 @@ var Todos = Collection.define('Todos', function() {
   })
 })
 
-root = route('/', function(app, render) {
-  console.log('/')
-	app.register('state', new State)
+root = get('/', function(app, render) {
   app.register('todos', new Todos(Todo))
 
 	app.todos.reset([
@@ -75,32 +78,10 @@ root = route('/', function(app, render) {
 	])
 
 	render()
-})
-
-root.route('/2', function(app, render) {
-  console.log('/2')
-	
-  app.todos.reset([
-    { todo: 'Drei', isDone: true },
-    { todo: 'Vier', isDone: false }
-  ])
-
-	render()
-}).route('/4', function(app, render) {
-  console.log('/4')
-  app.todos.reset([
-    { todo: 'FUNZT', isDone: true }
-  ])
-  render()
-})
-
-root.route('/3', function(app, render) {
-  console.log('/3')
   
-  app.todos.reset([
     { todo: 'Fünf', isDone: true },
-    { todo: 'Sechs', isDone: false }
-  ])
-  
-  render()
+}, function(app) {
+  // $('#new-todo').on('keypress', function(e) {
+  //   if (e.keyCode == 13) app.todos.add(new Todo({ todo: $(this).val(), isDone: false }))
+  // })
 })
