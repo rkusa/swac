@@ -44,15 +44,16 @@ Todo.put = function(id, props, callback) {
   if (callback) callback(todo)
 }
 Todo.post = function(props, callback) {
-  var id = 1
-  while (db[id]) id++
-  props['id'] = id
-  db[id] = new Todo(props)
-  db[id].isNew = false
-  if (callback) callback(db[id])
+  if (!props['id']) {
+    var id = 1
+    while (db[id]) id++
+    props['id'] = id
+  }
+  db[props['id']] = new Todo(props)
+  db[props['id']].isNew = false
+  if (callback) callback(db[props['id']])
 }
 Todo.delete = function(id, callback) {
-  console.log(arguments)
   delete db[id]
   if (callback) callback()
 }
@@ -68,6 +69,7 @@ todos.forEach(function(todo) {
 })
 
 var server = module.exports = http.createServer(app)
+module.exports.db = db
 
 server.listen(app.get('port'), function() {
   console.log("Express server listening on port " + app.get('port'))
