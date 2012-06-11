@@ -27,7 +27,7 @@
 					<div class="view">
 						<input class="toggle" type="checkbox" {{b this.isDone "checked"}}>
 						<label>{{this.todo}}</label>
-						<button class="destroy"></button>
+						<a class="destroy" data-silent="true" href="/todos/{{this.id}}/delete"></a>
 					</div>
 					<input class="edit" value="{{this.todo}}">
 				</li>
@@ -64,9 +64,6 @@
 		<p>Created by <a href="http://todomvc.com">you</a></p>
 		<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
 	</footer>
-		<a href="/2">2</a><br />
-		<a href="/3">3</a><br />
-		<a href="/4">4</a>
 	<!-- Scripts here. Don't remove this ↓ -->
     <script type="text/javascript" src="/js/zepto.min.js"></script>
     <script type="text/javascript" src="/js/page.js"></script>

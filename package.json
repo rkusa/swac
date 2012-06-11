@@ -5,12 +5,19 @@
     "start": "node app"
   },
   "dependencies": {
-    "express": "3.0.0alpha4",
+    "express": "3.0.x",
     "consolidate": "*",
     "handlebars": "*",
     "less-middleware": "*",
-    "page": "git://github.com/Skookum/page.js.git",
+    "page": "git://github.com/visionmedia/page.js.git",
     "browserify": "1.11.x",
     "uglify-js": "1.3.x"
+  },
+  "devDependencies": {
+    "mocha": "1.1.x",
+    "should": "0.6.x"
+  },
+  "scripts": {
+    "test": "mocha"
   }
 }
