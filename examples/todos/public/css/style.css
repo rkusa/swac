@@ -4,3 +4,14 @@
   width: 40px;
   cursor: pointer;
 }
+a.toggle {
+  text-decoration: none;
+}
+.toggle-all {
+  position: absolute;
+  top: -65px;
+  width: 41px;
+  height: 65px;
+  text-align: center;
+  border: none;
+}

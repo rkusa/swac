@@ -18,6 +18,7 @@
 		<!-- This section should be hidden by default and shown when there are todos -->
 		<section id="main">
 			<input id="toggle-all" type="checkbox">
+			<a class="toggle-all" data-silent="true" href="/todos/toggle-all"></a>
 			<label for="toggle-all">Mark all as complete</label>
 			<ul id="todo-list">
 				<!-- These are here just to show the structure of the list items -->
@@ -25,10 +26,8 @@
 				{{#collection todos}}
 				<li class="{{b this.isDone "completed"}}" id="todo-{{this._id}}">
 					<div class="view">
-						<form action="/todos/{{this._id}}/toggle" method="POST">
-							<input class="toggle" type="checkbox" {{b this.isDone "checked"}}>
-							<button type="submit"></button>
-						</form>
+						<input class="toggle" type="checkbox" {{b this.isDone "checked"}}>
+						<a class="toggle" data-silent="true" href="/todos/{{this._id}}/toggle"></a>
 						<label>{{this.todo}}</label>
 						<form action="/todos/{{this._id}}/delete" method="POST">
 							<button type="submit" class="destroy"></button>

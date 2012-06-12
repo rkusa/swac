@@ -53,7 +53,7 @@ root.post('/todos/:id/edit', function(app, done, params, body) {
   $('#todo-' + params.id).removeClass('editing')
 })
 
-root.post('/todos/:id/toggle', function(app, done, params) {
+root.get('/todos/:id/toggle', function(app, done, params) {
   console.log('/todos/' + params.id + '/toggle')
 
   var search = app.todos._collection.filter(function(model) {
@@ -67,6 +67,19 @@ root.post('/todos/:id/toggle', function(app, done, params) {
       done.redirect('/')
     })
   }
+})
+
+root.get('/todos/toggle-all', function(app, done) {
+  var left = app.todos._collection.filter(function(todo) {
+    return !todo.isDone
+  })
+  var count = left.length
+  left.forEach(function(todo) {
+    todo.isDone = true
+    todo.save(function() {
+      if (--count == 0) done.redirect('/')
+    })
+  })
 })
 
 root.post('/todos/:id/delete', function(app, done, params) {
