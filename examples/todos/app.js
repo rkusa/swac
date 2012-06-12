@@ -5,8 +5,8 @@ var Arkansas = require('arkansas')
   , post     = Arkansas.post
   , root
 
-root = get('/', function(app, done) {
-  console.log('/')
+root = get('/:filter?', function(app, done, params) {
+  console.log('/' + params.filter)
 
   app.register('todos', new Todos(Todo))
 	Todo.list(function(todos) {
@@ -14,7 +14,7 @@ root = get('/', function(app, done) {
     done()
   })
 }, function(app) {
-  $('#todo-list li').on('dblclick', function() {
+  $('#todo-list').on('dblclick', 'li', function() {
     $(this).addClass('editing')
   })
 })
@@ -26,11 +26,14 @@ root.post('/todos/new', function(app, done, params, body) {
     todo: body.todo,
     isDone: false
   })
-  todo.save()
-  app.todos.add(todo)
-
-  done.redirect('/')
-}, { silent: true })
+  todo.save(function(body) {
+    todo._id = body._id
+    app.todos.add(todo)
+    done.redirect('/')
+  })
+}, function() {
+  $('#new-todo').val('')
+})
 
 root.post('/todos/:id/edit', function(app, done, params, body) {
   console.log('/todos/' + params.id + '/edit')
@@ -42,15 +45,31 @@ root.post('/todos/:id/edit', function(app, done, params, body) {
   if (search.length > 0) {
     var model = search[0]
     model.todo = body.todo
-    model.save()
+    model.save(function() {
+      done.redirect('/')
+    })
   }
-
-  done.redirect('/')
 }, function(app, params) {
   $('#todo-' + params.id).removeClass('editing')
 })
 
-root.get('/todos/:id/delete', function(app, done, params) {
+root.post('/todos/:id/toggle', function(app, done, params) {
+  console.log('/todos/' + params.id + '/toggle')
+
+  var search = app.todos._collection.filter(function(model) {
+    return model._id == params.id
+  })
+
+  if (search.length > 0) {
+    var model = search[0]
+    model.isDone = !model.isDone
+    model.save(function() {
+      done.redirect('/')
+    })
+  }
+})
+
+root.post('/todos/:id/delete', function(app, done, params) {
   console.log('/todos/' + params.id + '/delete')
 
   var search = app.todos._collection.filter(function(model) {
@@ -59,8 +78,8 @@ root.get('/todos/:id/delete', function(app, done, params) {
 
   if (search.length > 0) {
     var model = search[0]
-    model.destroy()
+    model.destroy(function() {
+      done.redirect('/')
+    })
   }
-
-  done.redirect('/')
-}, { silent: true })
+})

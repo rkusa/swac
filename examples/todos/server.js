@@ -12,7 +12,6 @@ app.configure(function() {
   app.use(express.logger('dev'))
   app.use(express.bodyParser())
   app.use(express.methodOverride())
-  app.use(app.router)
   app.use(require('less-middleware')({ src: __dirname + '/public' }))
   app.use(express.static(__dirname + '/public'))
 })
@@ -53,7 +52,6 @@ Todo.put = function(id, props, callback) {
     Object.keys(props).forEach(function(key) {
       if (todo.hasOwnProperty(key)) todo[key] = props[key]
     })
-    console.log(body)
     todo._rev = body._rev
     db.insert(todo, todo._id, function(err) {
       if (err) throw err

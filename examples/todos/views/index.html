@@ -25,9 +25,14 @@
 				{{#collection todos}}
 				<li class="{{b this.isDone "completed"}}" id="todo-{{this._id}}">
 					<div class="view">
-						<input class="toggle" type="checkbox" {{b this.isDone "checked"}}>
+						<form action="/todos/{{this._id}}/toggle" method="POST">
+							<input class="toggle" type="checkbox" {{b this.isDone "checked"}}>
+							<button type="submit"></button>
+						</form>
 						<label>{{this.todo}}</label>
-						<a class="destroy" data-silent="true" href="/todos/{{this._id}}/delete"></a>
+						<form action="/todos/{{this._id}}/delete" method="POST">
+							<button type="submit" class="destroy"></button>
+						</form>
 					</div>
 					<form action="/todos/{{this._id}}/edit" method="POST">
 						<input class="edit" name="todo" value="{{this.todo}}">
@@ -41,22 +46,24 @@
 			<!-- This should be `0 items left` by default -->
 			<span id="todo-count">
 				{{#block}}
-				<strong>{{todos.itemsLeft}}</strong> item left
+					<strong>{{todos.left}}</strong> item left
 				{{/block}}
 			</span>
 			<!-- Remove this if you don't implement routing -->
 			<ul id="filters">
 				<li>
-					<a class="selected" href="#/">All</a>
+					<a class="selected" href="/">All</a>
 				</li>
 				<li>
-					<a href="#/active">Active</a>
+					<a href="/active">Active</a>
 				</li>
 				<li>
-					<a href="#/completed">Completed</a>
+					<a href="/completed">Completed</a>
 				</li>
 			</ul>
-			<button id="clear-completed">Clear completed (1)</button>
+			{{#if false}}
+				<button id="clear-completed">Clear completed ({{todos.completed}})</button>
+			{{/if}}
 		</footer>
 	</section>
 	<footer id="info">
