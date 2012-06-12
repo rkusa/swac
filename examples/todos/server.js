@@ -2,6 +2,8 @@ var arkansas = require('arkansas/server')
   , app = arkansas.app
   , express = arkansas.express
   , http = require('http')
+  , nano = require('nano')('http://localhost:5984')
+  , db = nano.db.use('arkansas')
 
 app.configure(function() {
   app.set('port', process.env.PORT || 3000)
@@ -23,53 +25,65 @@ arkansas.init(__dirname + '/app')
 
 // API
 var Todo = require('./models/todo')
-  , db = {}
 
 Todo.list = function(callback) {
-  var arr = []
-  Object.keys(db).forEach(function(key) {
-    arr.push(db[key])
+  db.view('todos', 'all', function(err, body) {
+    if (err) throw err
+    var todos = []
+    body.rows.forEach(function(row) {
+      var todo = new Todo(row.value)
+      todo.isNew = false
+      todos.push(todo)
+    })
+    if (callback) callback(todos)
   })
-  if (callback) callback(arr)
 }
 Todo.get = function(id, callback) {
-  if (callback) callback(db[id])
+  db.get(id, function(err, body) {
+    if (err) throw err
+    var todo = new Todo(body)
+    todo.isNew = false
+    if (callback) callback(todo)
+  })
 }
 Todo.put = function(id, props, callback) {
-  var todo
-  if (!(todo = db[id])) return false
-  Object.keys(props).forEach(function(key) {
-    if (todo.hasOwnProperty(key)) todo[key] = props[key]
+  db.get(id, function(err, body) {
+    var todo = new Todo(body)
+    todo.isNew = false
+    Object.keys(props).forEach(function(key) {
+      if (todo.hasOwnProperty(key)) todo[key] = props[key]
+    })
+    console.log(body)
+    todo._rev = body._rev
+    db.insert(todo, todo._id, function(err) {
+      if (err) throw err
+      if (callback) callback(todo)
+    })
   })
-  if (callback) callback(todo)
 }
 Todo.post = function(props, callback) {
-  if (!props['id']) {
-    var id = 1
-    while (db[id]) id++
-    props['id'] = id
-  }
-  db[props['id']] = new Todo(props)
-  db[props['id']].isNew = false
-  if (callback) callback(db[props['id']])
+  props.type = 'Todo'
+  if (!props._id) delete props._id
+  db.insert(props, props._id, function(err, body) {
+    if (err) throw err
+    var todo = new Todo(props)
+    todo._id = body.id
+    todo.isNew = false
+    if (callback) callback(todo)
+  })
 }
 Todo.delete = function(id, callback) {
-  delete db[id]
-  if (callback) callback()
+  db.get(id, function(err, body) {
+    if (err) throw err
+
+    db.destroy(id, body._rev, function(err) {
+      if (err) throw err
+      if (callback) callback()
+    })
+  })
 }
 
-// Bootstrap
-var todos = ["Tu dies", "Tu das"]
-todos.forEach(function(todo) {
-  var model = new Todo({
-    todo: todo,
-    isDone: false
-  })
-  model.create()
-})
-
 var server = module.exports = http.createServer(app)
-module.exports.db = db
 
 server.listen(app.get('port'), function() {
   console.log("Express server listening on port " + app.get('port'))

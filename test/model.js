@@ -1,7 +1,40 @@
 var server = require('../examples/todos/server')
-  , db = server.db
+  , db = {}
   , Todo = require('../examples/todos/models/todo')
   , http = require('request')
+
+Todo.list = function(callback) {
+  var arr = []
+  Object.keys(db).forEach(function(key) {
+    arr.push(db[key])
+  })
+  if (callback) callback(arr)
+}
+Todo.get = function(id, callback) {
+  if (callback) callback(db[id])
+}
+Todo.put = function(id, props, callback) {
+  var todo
+  if (!(todo = db[id])) return false
+  Object.keys(props).forEach(function(key) {
+    if (todo.hasOwnProperty(key)) todo[key] = props[key]
+  })
+  if (callback) callback(todo)
+}
+Todo.post = function(props, callback) {
+  if (!props['_id']) {
+    var id = 1
+    while (db[id]) id++
+    props['_id'] = id
+  }
+  db[props['_id']] = new Todo(props)
+  db[props['_id']].isNew = false
+  if (callback) callback(db[props['_id']])
+}
+Todo.delete = function(id, callback) {
+  delete db[id]
+  if (callback) callback()
+}
 
 describe('Model', function() {
   after(function() {
@@ -22,7 +55,7 @@ describe('Model', function() {
     })
 
     it('should have the defined properties', function() {
-      todo.should.have.ownProperty('id')
+      todo.should.have.ownProperty('_id')
       todo.should.have.ownProperty('todo', 'Tu dies')
       todo.should.have.ownProperty('isDone', null)
     })
@@ -47,7 +80,7 @@ describe('Model', function() {
     describe('.save()', function() {
       it('should create a new record if not exists', function(done) {
         var lengthBefore = Object.keys(db).length
-          , todo = new Todo({ id: 9, todo: 'Tu das' })
+          , todo = new Todo({ _id: 9, todo: 'Tu das' })
         db.should.not.have.property(9)
         todo.save(function() {
           Object.keys(db).should.have.lengthOf(lengthBefore + 1)
@@ -57,7 +90,7 @@ describe('Model', function() {
         })
       })
       it('should update the record if exists', function(done) {
-        var todo = new Todo({ id: 10 })
+        var todo = new Todo({ _id: 10 })
         todo.save(function() {
           db.should.have.property(10)
           todo.todo = 'Und das'
@@ -71,7 +104,7 @@ describe('Model', function() {
 
     describe('.destroy()', function() {
       it('should destroy the record if exists', function(done) {
-        var todo = new Todo({ id: 11 })
+        var todo = new Todo({ _id: 11 })
         todo.save(function() {
           db.should.have.property(11)
           todo.destroy(function() {
@@ -81,7 +114,7 @@ describe('Model', function() {
         })
       })
       it('should fire the appropriated events', function(done) {
-        var todo = new Todo({ id: 11 })
+        var todo = new Todo({ _id: 11 })
         todo.save(function() {
           db.should.have.property(11)
           todo.on('destroy', function callback() {
@@ -105,8 +138,8 @@ describe('Model', function() {
     })
     it('.post() should create a new model', function(done) {
       Todo.post({ todo: 'Danach das', isDone: false }, function(todo) {
-        todo.id.should.not.eql(null)
-        var record = db[todo.id]
+        todo._id.should.not.eql(null)
+        var record = db[todo._id]
         record.todo.should.eql(todo.todo)
         record.isDone.should.eql(todo.isDone)
         done()
@@ -124,9 +157,9 @@ describe('Model', function() {
       })
     })
     it('.put(:id) should update the model with id = :id', function(done) {
-      Todo.post({ id: 5, todo: 'Das!' }, function(todo) {
-        Todo.put(todo.id, { isDone: true }, function(todo) {
-          var record = db[todo.id]
+      Todo.post({ _id: 5, todo: 'Das!' }, function(todo) {
+        Todo.put(todo._id, { isDone: true }, function(todo) {
+          var record = db[todo._id]
           record.todo.should.eql(todo.todo)
           record.isDone.should.eql(todo.isDone)
           done()
@@ -134,10 +167,10 @@ describe('Model', function() {
       })
     })
     it('PUT /:id should update the model with id = :id', function(done) {
-      Todo.post({ id: 5, todo: 'Das!', isDone: false }, function(todo) {
+      Todo.post({ _id: 5, todo: 'Das!', isDone: false }, function(todo) {
         todo.isDone = true
         http.put({
-          uri: 'http://localhost:3000/api/todo/' + todo.id,
+          uri: 'http://localhost:3000/api/todo/' + todo._id,
           json: todo
         }, function(err, res, body) {
           body.should.have.property('todo', todo.todo)

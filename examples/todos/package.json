@@ -5,6 +5,7 @@
     "start": "node server"
   },
   "dependencies": {
-    "less-middleware": "*"
+    "less-middleware": "*",
+    "nano": "3.0.x"
   }
 }

@@ -36,7 +36,7 @@ root.post('/todos/:id/edit', function(app, done, params, body) {
   console.log('/todos/' + params.id + '/edit')
 
   var search = app.todos._collection.filter(function(model) {
-    return model.id == params.id
+    return model._id == params.id
   })
 
   if (search.length > 0) {
@@ -54,7 +54,7 @@ root.get('/todos/:id/delete', function(app, done, params) {
   console.log('/todos/' + params.id + '/delete')
 
   var search = app.todos._collection.filter(function(model) {
-    return model.id == params.id
+    return model._id == params.id
   })
 
   if (search.length > 0) {
