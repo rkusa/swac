@@ -14,6 +14,7 @@ root = get('/:filter?', function(app, done, params) {
     done()
   })
 }, function(app) {
+  console.log('script: /')
   $('#todo-list').on('dblclick', 'li', function() {
     $(this).addClass('editing')
   })
