@@ -17,8 +17,10 @@
 		</header>
 		<!-- This section should be hidden by default and shown when there are todos -->
 		<section id="main">
-			<input id="toggle-all" type="checkbox">
-			<a class="toggle-all" data-silent="true" href="/todos/toggle-all"></a>
+			{{#block}}
+				<input id="toggle-all" type="checkbox" {{b todos.done "checked"}}>
+			{{/block}}
+			<a class="toggle-all-trigger" data-silent="true" href="/todos/toggle-all"></a>
 			<label for="toggle-all">Mark all as complete</label>
 			<ul id="todo-list">
 				<!-- These are here just to show the structure of the list items -->
@@ -27,7 +29,7 @@
 				<li class="{{b this.isDone "completed"}}" id="todo-{{this._id}}">
 					<div class="view">
 						<input class="toggle" type="checkbox" {{b this.isDone "checked"}}>
-						<a class="toggle" data-silent="true" href="/todos/{{this._id}}/toggle"></a>
+						<a class="toggle-trigger" data-silent="true" href="/todos/{{this._id}}/toggle"></a>
 						<label>{{this.todo}}</label>
 						<form action="/todos/{{this._id}}/delete" method="POST">
 							<button type="submit" class="destroy"></button>
@@ -60,9 +62,11 @@
 					<a href="/completed">Completed</a>
 				</li>
 			</ul>
-			{{#if false}}
-				<button id="clear-completed">Clear completed ({{todos.completed}})</button>
-			{{/if}}
+			{{#block}}
+				{{#if todos.completed}}
+					<button id="clear-completed">Clear completed ({{todos.completed}})</button>
+				{{/if}}
+			{{/block}}
 		</footer>
 	</section>
 	<footer id="info">

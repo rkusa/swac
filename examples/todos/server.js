@@ -60,6 +60,13 @@ Todo.put = function(id, props, callback) {
   })
 }
 Todo.post = function(props, callback) {
+  if (props instanceof Todo) {
+    var todo = props
+    props = {}
+    Object.keys(todo).forEach(function(key) {
+      props[key] = todo[key]
+    })
+  }
   props.type = 'Todo'
   if (!props._id) delete props._id
   db.insert(props, props._id, function(err, body) {

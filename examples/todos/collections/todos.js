@@ -15,4 +15,11 @@ module.exports = Arkansas.Collection.define('Todos', function() {
     })
     return count
   })
+  this.filter('done', function() {
+    var done = true
+    this._collection.forEach(function(todo) {
+      if (!todo.isDone) done = false
+    })
+    return done
+  })
 })
