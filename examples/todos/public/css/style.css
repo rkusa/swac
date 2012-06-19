@@ -22,3 +22,6 @@ a.toggle-all-trigger {
   text-align: center;
   border: none;
 }
+a#clear-completed {
+  color: #777;
+}

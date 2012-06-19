@@ -82,6 +82,18 @@ root.get('/todos/toggle-all', function(app, done) {
   })
 })
 
+root.get('/todos/clear/completed', function(app, done) {
+  var completed = app.todos._collection.filter(function(todo) {
+    return todo.isDone
+  })
+  var count = completed.length
+  completed.forEach(function(todo) {
+    todo.destroy(function() {
+      if (--count === 0) done.redirect('/')
+    })
+  })
+})
+
 root.post('/todos/:id/delete', function(app, done, params) {
   console.log('/todos/' + params.id + '/delete')
 
