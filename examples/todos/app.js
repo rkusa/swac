@@ -5,16 +5,20 @@ var Arkansas = require('arkansas')
   , post     = Arkansas.post
   , root
 
-root = get('/:filter?', function(app, done, params) {
-  console.log('/' + params.filter)
+root = get('/:condition?', function(app, done, params) {
+  console.log('/' + params.condition)
 
   app.register('todos', new Todos(Todo))
-	Todo.list(function(todos) {
-    app.todos.reset(todos)
+  app.condition = params.condition
+  Todo.list(function(todos) {
+    app.todos.reset(todos.filter(function(todo) {
+      return !params.condition
+          || (todo.isDone && params.condition === 'completed')
+          || (!todo.isDone && params.condition === 'active')
+    }))
     done()
   })
 }, function(app) {
-  console.log('script: /')
   $('#todo-list').on('dblclick', 'li', function() {
     $(this).addClass('editing')
   })
