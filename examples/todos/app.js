@@ -1,6 +1,5 @@
 var Arkansas = require('arkansas')
   , Todo     = require('./models/todo')
-  , Todos    = require('./collections/todos')
   , get      = Arkansas.get
   , post     = Arkansas.post
   , root
@@ -8,9 +7,34 @@ var Arkansas = require('arkansas')
 root = get('/:condition?', function(app, done, params) {
   console.log('/' + params.condition)
 
-  app.register('todos', new Todos(Todo))
+  app.register('todos', Arkansas.observableArray(Todo))
+
+
+  app.todos.defineValue('left', function() {
+    var count = 0
+    this.forEach(function(todo) {
+      if (!todo.isDone) ++count
+    })
+    return count
+  })
+  app.todos.defineValue('completed', function() {
+    var count = 0
+    this.forEach(function(todo) {
+      if (todo.isDone) ++count
+    })
+    return count
+  })
+  app.todos.defineValue('done', function() {
+    var done = true
+    this.forEach(function(todo) {
+      if (!todo.isDone) done = false
+    })
+    return done
+  })
+
   app.condition = params.condition
   Todo.list(function(todos) {
+    console.log(todos.length)
     app.todos.reset(todos.filter(function(todo) {
       return !params.condition
           || (todo.isDone && params.condition === 'completed')
@@ -33,7 +57,7 @@ root.post('/todos/new', function(app, done, params, body) {
   })
   todo.save(function(body) {
     todo._id = body._id
-    app.todos.add(todo)
+    app.todos.push(todo)
     done.redirect('/')
   })
 }, function() {
@@ -43,17 +67,13 @@ root.post('/todos/new', function(app, done, params, body) {
 root.post('/todos/:id/edit', function(app, done, params, body) {
   console.log('/todos/' + params.id + '/edit')
 
-  var search = app.todos._collection.filter(function(model) {
-    return model._id == params.id
-  })
-
-  if (search.length > 0) {
-    var model = search[0]
+  var model = app.todos.find(params.id)
+  if (model) {
     model.todo = body.todo
     model.save(function() {
       done.redirect('/')
     })
-  }
+  } else done.redirect('/')
 }, function(app, params) {
   $('#todo-' + params.id).removeClass('editing')
 })
@@ -61,21 +81,17 @@ root.post('/todos/:id/edit', function(app, done, params, body) {
 root.get('/todos/:id/toggle', function(app, done, params) {
   console.log('/todos/' + params.id + '/toggle')
 
-  var search = app.todos._collection.filter(function(model) {
-    return model._id == params.id
-  })
-
-  if (search.length > 0) {
-    var model = search[0]
+  var model = app.todos.find(params.id)
+  if (model) {
     model.isDone = !model.isDone
     model.save(function() {
       done.redirect('/')
     })
-  }
+  } else done.redirect('/')
 })
 
 root.get('/todos/toggle-all', function(app, done) {
-  var left = app.todos._collection.filter(function(todo) {
+  var left = app.todos.filter(function(todo) {
     return !todo.isDone
   })
   var count = left.length
@@ -88,7 +104,7 @@ root.get('/todos/toggle-all', function(app, done) {
 })
 
 root.get('/todos/clear/completed', function(app, done) {
-  var completed = app.todos._collection.filter(function(todo) {
+  var completed = app.todos.filter(function(todo) {
     return todo.isDone
   })
   var count = completed.length
@@ -102,14 +118,10 @@ root.get('/todos/clear/completed', function(app, done) {
 root.post('/todos/:id/delete', function(app, done, params) {
   console.log('/todos/' + params.id + '/delete')
 
-  var search = app.todos._collection.filter(function(model) {
-    return model._id == params.id
-  })
-
-  if (search.length > 0) {
-    var model = search[0]
+  var model = app.todos.find(params.id)
+  if (model) {
     model.destroy(function() {
       done.redirect('/')
     })
-  }
+  } else done.redirect('/')
 })
