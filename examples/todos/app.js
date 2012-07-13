@@ -4,6 +4,10 @@ var Arkansas = require('arkansas')
   , post     = Arkansas.post
   , root
 
+get('/example', function(app, done) {
+  done.render('example')
+})
+
 root = get('/:condition?', function(app, done, params) {
   console.log('/' + params.condition)
 
@@ -34,13 +38,12 @@ root = get('/:condition?', function(app, done, params) {
 
   app.condition = params.condition
   Todo.list(function(todos) {
-    console.log(todos.length)
     app.todos.reset(todos.filter(function(todo) {
       return !params.condition
           || (todo.isDone && params.condition === 'completed')
           || (!todo.isDone && params.condition === 'active')
     }))
-    done()
+    done.render('index')
   })
 }, function(app) {
   $('#todo-list').on('dblclick', 'li', function() {

@@ -1,88 +1,69 @@
-<!doctype html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<title>Template • TodoMVC</title>
-	<link rel="stylesheet" href="/css/base.css">
-	<link rel="stylesheet" href="/css/style.css">
-</head>
-<body>
-	<section id="todoapp">
-		<header id="header">
-			<h1>todos</h1>
-			<form action="/todos/new" method="POST">
-				<input id="new-todo" name="todo" placeholder="What needs to be done?" autofocus>
-			</form>
-		</header>
-		<!-- This section should be hidden by default and shown when there are todos -->
-		<section id="main">
-			<%= @block -> %>
-				<input id="toggle-all" type="checkbox" <%= "checked" if @todos.done %>>
-			<% end %>
-			<a class="toggle-all-trigger" data-silent="true" href="/todos/toggle-all"></a>
-			<label for="toggle-all">Mark all as complete</label>
-			<ul id="todo-list">
-				<!-- These are here just to show the structure of the list items -->
-				<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
-				<%= @collection @todos, (todo) -> %>
-				<li class="<%= "completed" if todo.isDone %>" id="todo-<%= todo._id %>">
-					<div class="view">
-						<input class="toggle" type="checkbox" <%= "checked" if todo.isDone %>>
-						<a class="toggle-trigger" data-silent="true" href="/todos/<%= todo._id %>/toggle"></a>
-						<label><%= todo.todo %></label>
-						<form action="/todos/<%= todo._id %>/delete" method="POST">
-							<button type="submit" class="destroy"></button>
-						</form>
-					</div>
-					<form action="/todos/<%= todo._id %>/edit" method="POST">
-						<input class="edit" name="todo" value="<%= todo.todo %>">
-					</form>
-				</li>
-				<% end %>
-			</ul>
-		</section>
-		<!-- This footer should hidden by default and shown when there are todos -->
-		<footer id="footer">
-			<!-- This should be `0 items left` by default -->
-			<span id="todo-count">
-        <%= @block -> %>
-          <strong><%= @todos.left %></strong> item<%= "s" if @todos.left != 1 %> left
-        <% end %>
-			</span>
-			<!-- Remove this if you don't implement routing -->
-			<ul id="filters">
-				<li>
-					<a class="selected" href="/">All</a>
-				</li>
-				<li>
-					<a href="/active">Active</a>
-				</li>
-				<li>
-					<a href="/completed">Completed</a>
-				</li>
-			</ul>
-      <%= @block -> %>
-        <% if @todos.completed: %>
-          <a href="/todos/clear/completed" data-silent="true" id="clear-completed">Clear completed (<%= @todos.completed %>)</a>
-        <% end %>
+<% @area 'main', -> %>
+  <header id="header">
+    <h1>todos</h1>
+    <form action="/todos/new" method="POST">
+      <input id="new-todo" name="todo" placeholder="What needs to be done?" autofocus>
+    </form>
+  </header>
+  <!-- This section should be hidden by default and shown when there are todos -->
+  <section id="main">
+    <%= @block -> %>
+      <input id="toggle-all" type="checkbox" <%= "checked" if @todos.done %>>
+    <% end %>
+    <a class="toggle-all-trigger" data-silent="true" href="/todos/toggle-all"></a>
+    <label for="toggle-all">Mark all as complete</label>
+    <ul id="todo-list">
+      <!-- These are here just to show the structure of the list items -->
+      <!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
+      <%= @collection @todos, (todo) -> %>
+      <li class="<%= "completed" if todo.isDone %>" id="todo-<%= todo._id %>">
+        <div class="view">
+          <input class="toggle" type="checkbox" <%= "checked" if todo.isDone %>>
+          <a class="toggle-trigger" data-silent="true" href="/todos/<%= todo._id %>/toggle"></a>
+          <label><%= todo.todo %></label>
+          <form action="/todos/<%= todo._id %>/delete" method="POST">
+            <button type="submit" class="destroy"></button>
+          </form>
+        </div>
+        <form action="/todos/<%= todo._id %>/edit" method="POST">
+          <input class="edit" name="todo" value="<%= todo.todo %>">
+        </form>
+      </li>
       <% end %>
-		</footer>
-	</section>
-	<footer id="info">
-		<p>Double-click to edit a todo</p>
-		<p>Template by <a href="http://github.com/sindresorhus">Sindre Sorhus</a></p>
-		<!-- Change this out with your name and url ↓ -->
-		<p>Created by <a href="http://ma.rkusa.st">Markus Ast</a></p>
-		<p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
-	</footer>
-	<!-- Scripts here. Don't remove this ↓ -->
-    <script type="text/javascript" src="/js/zepto.js"></script>
-    <script type="text/javascript" src="/js/page.js"></script>
-    <script type="text/javascript" src="/browserify.js"></script>
-    <script type="text/javascript">
-      var app = window.app = new (require('arkansas').State)
-      app.deserialize(<%- @serialize() %>)
-    </script>
-</body>
-</html>
+    </ul>
+  </section>
+  <!-- This footer should hidden by default and shown when there are todos -->
+  <footer id="footer">
+    <!-- This should be `0 items left` by default -->
+    <span id="todo-count">
+      <%= @block -> %>
+        <strong><%= @todos.left %></strong> item<%= "s" if @todos.left != 1 %> left
+      <% end %>
+    </span>
+    <!-- Remove this if you don't implement routing -->
+    <ul id="filters">
+      <li>
+        <a class="selected" href="/">All</a>
+      </li>
+      <li>
+        <a href="/active">Active</a>
+      </li>
+      <li>
+        <a href="/completed">Completed</a>
+      </li>
+    </ul>
+    <%= @block -> %>
+      <% if @todos.completed: %>
+        <a href="/todos/clear/completed" data-silent="true" id="clear-completed">Clear completed (<%= @todos.completed %>)</a>
+      <% end %>
+    <% end %>
+  </footer>
+<% end %>
+
+<% @area 'footer', -> %>
+  <p>Double-click to edit a todo</p>
+  <p>Template by <a href="http://github.com/sindresorhus">Sindre Sorhus</a></p>
+  <!-- Change this out with your name and url ↓ -->
+  <p>Created by <a href="http://ma.rkusa.st">Markus Ast</a></p>
+  <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+<% end %>
