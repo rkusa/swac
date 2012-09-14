@@ -9,7 +9,8 @@
     "consolidate": "*",
     "eco": "git://github.com/brainafk/eco.git",
     "page": "1.2.x",
-    "browserify": "1.11.x"
+    "browserify": "1.11.x",
+    "eventemitter2": "0.4.x"
   },
   "devDependencies": {
     "mocha": "1.1.x",

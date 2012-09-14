@@ -13,7 +13,6 @@ root = get('/:condition?', function(app, done, params) {
 
   app.register('todos', Arkansas.observableArray(Todo))
 
-
   app.todos.defineValue('left', function() {
     var count = 0
     this.forEach(function(todo) {
@@ -88,9 +87,9 @@ root.get('/todos/:id/toggle', function(app, done, params) {
   if (model) {
     model.isDone = !model.isDone
     model.save(function() {
-      done.redirect('/')
+      done.redirect('/', { silent: true })
     })
-  } else done.redirect('/')
+  } else done.redirect('/', { silent: true })
 })
 
 root.get('/todos/toggle-all', function(app, done) {
