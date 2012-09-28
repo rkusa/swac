@@ -66,14 +66,11 @@ describe('Model', function() {
           , callback = function() {
             if (++count == 2) done()
           }
-        todo.on('changed', callback)
-        todo.on('changed:isDone', callback)
+        todo.once('changed.*', callback)
+        todo.once('changed.isDone', callback)
 
         todo.isDone = true
         todo.isDone.should.equal(true)
-
-        todo.removeListener('changed', callback)
-        todo.removeListener('changed:role', callback)
       })
     })
 
@@ -117,8 +114,7 @@ describe('Model', function() {
         var todo = new Todo({ _id: 11 })
         todo.save(function() {
           db.should.have.property(11)
-          todo.on('destroy', function callback() {
-            todo.removeListener('destroy', callback)
+          todo.once('destroy', function callback() {
             db.should.not.have.property(11)
             done()
           })
