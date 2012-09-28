@@ -1,14 +1,7 @@
 var db = {}
   , Todo = require('../examples/todos/models/todo')
-  , request = require('request')
-  , http = require('http')
-
-arkansas = require('../lib/server')
-arkansas.init(__dirname + '/../examples/todos/app')
-var server = module.exports = http.createServer(arkansas.app)
-server.listen(3000, function() {
-  console.log("Express server listening on port 3000")
-})
+  , app = require('../lib/server').app
+  , client = require('supertest')(app)
 
 Todo.list = function(callback) {
   var arr = []
@@ -44,10 +37,6 @@ Todo.delete = function(id, callback) {
 }
 
 describe('Model', function() {
-  after(function() {
-    server.close()
-  })
-
   describe('.define()', function() {
     it('should return a function', function() {
       Todo.should.be.a('function')
@@ -130,28 +119,34 @@ describe('Model', function() {
       })
     })
   })
-
+  
+  function testAPI (method, path, done) {
+    var called = false
+    Todo[method] = function() {
+      called = true
+      var args = Array.prototype.slice.call(arguments)
+        , fn = args.pop()
+      fn()
+    }
+    if (method === 'list') method = 'get'
+    else if (method === 'delete') method = 'del'
+    client[method](path).expect(200)
+    .end(function(err, res) {
+      if (err) return done(err)
+      called.should.be.ok
+      done()
+    })
+  }
   describe('API', function() {
-    it('POST / should create a new model', function(done) {
-      Todo.post = done.bind(null, null)
-      request.post({ uri: 'http://localhost:3000/api/todo' })
-    })
-    it('PUT /:id should update the model with id = :id', function(done) {
-      Todo.put = done.bind(null, null)
-      request.put({ uri: 'http://localhost:3000/api/todo/42' })
-    })
-
-    it('GET /:id should return the model with id = :id', function(done) {
-      Todo.get = done.bind(null, null)
-      request.get({ uri: 'http://localhost:3000/api/todo/42' })
-    })
-    it('GET / should return list', function(done) {
-      Todo.list = done.bind(null, null)
-      request.get({ uri: 'http://localhost:3000/api/todo' })
-    })
-    it('DELETE /:id should delete the model with id = :id', function(done) {
-      Todo.delete = done.bind(null, null)
-      request.del({ uri: 'http://localhost:3000/api/todo/42' })
-    })
+    it('POST / should create a new model',
+      testAPI.bind(this, 'post', '/api/todo'))
+    it('PUT /:id should update the model with id = :id',
+      testAPI.bind(this, 'put', '/api/todo/42'))
+    it('GET /:id should return the model with id = :id',
+      testAPI.bind(this, 'get', '/api/todo/42'))
+    it('GET / should return list',
+      testAPI.bind(this, 'list', '/api/todo'))
+    it('DELETE /:id should delete the model with id = :id',
+      testAPI.bind(this, 'delete', '/api/todo/42'))
   })
 })
