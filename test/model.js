@@ -1,7 +1,14 @@
-var server = require('../examples/todos/server')
-  , db = {}
+var db = {}
   , Todo = require('../examples/todos/models/todo')
-  , http = require('request')
+  , request = require('request')
+  , http = require('http')
+
+arkansas = require('../lib/server')
+arkansas.init(__dirname + '/../examples/todos/app')
+var server = module.exports = http.createServer(arkansas.app)
+server.listen(3000, function() {
+  console.log("Express server listening on port 3000")
+})
 
 Todo.list = function(callback) {
   var arr = []
@@ -125,113 +132,26 @@ describe('Model', function() {
   })
 
   describe('API', function() {
-    it('should be defined', function() {
-      Todo.list.should.be.a('function')
-      Todo.get.should.be.a('function')
-      Todo.post.should.be.a('function')
-      Todo.put.should.be.a('function')
-      Todo.delete.should.be.a('function')
-    })
-    it('.post() should create a new model', function(done) {
-      Todo.post({ todo: 'Danach das', isDone: false }, function(todo) {
-        todo._id.should.not.eql(null)
-        var record = db[todo._id]
-        record.todo.should.eql(todo.todo)
-        record.isDone.should.eql(todo.isDone)
-        done()
-      })
-    })
     it('POST / should create a new model', function(done) {
-      var todo = { todo: 'Danach das', isDone: false }
-      http.post({
-        uri: 'http://localhost:3000/api/todo',
-        json: todo
-      }, function(err, res, body) {
-        body.should.have.property('todo', todo.todo)
-        body.should.have.property('isDone', todo.isDone)
-        done()
-      })
-    })
-    it('.put(:id) should update the model with id = :id', function(done) {
-      Todo.post({ _id: 5, todo: 'Das!' }, function(todo) {
-        Todo.put(todo._id, { isDone: true }, function(todo) {
-          var record = db[todo._id]
-          record.todo.should.eql(todo.todo)
-          record.isDone.should.eql(todo.isDone)
-          done()
-        })
-      })
+      Todo.post = done.bind(null, null)
+      request.post({ uri: 'http://localhost:3000/api/todo' })
     })
     it('PUT /:id should update the model with id = :id', function(done) {
-      Todo.post({ _id: 5, todo: 'Das!', isDone: false }, function(todo) {
-        todo.isDone = true
-        http.put({
-          uri: 'http://localhost:3000/api/todo/' + todo._id,
-          json: todo
-        }, function(err, res, body) {
-          body.should.have.property('todo', todo.todo)
-          body.should.have.property('isDone', todo.isDone)
-          done()
-        })
-      })
+      Todo.put = done.bind(null, null)
+      request.put({ uri: 'http://localhost:3000/api/todo/42' })
     })
-    it('.get(:id) should return the model with id = :id', function(done) {
-      var id = Object.keys(db)[0]
-        , record = db[id]
-      Todo.get(id, function(todo) {
-        todo.should.be.a('object')
-        record.todo.should.eql(todo.todo)
-        done()
-      })
-    })
+
     it('GET /:id should return the model with id = :id', function(done) {
-      var id = Object.keys(db)[0]
-        , record = db[id]
-      http.get({
-        uri: 'http://localhost:3000/api/todo/' + id
-      }, function(err, res, body) {
-        res.should.be.json
-        body = JSON.parse(body)
-        body.should.have.property('todo', record.todo)
-        body.should.have.property('isDone', record.isDone)
-        done()
-      })
-    })
-    it('.list() should return list', function(done) {
-      Todo.list(function(todos) {
-        todos.should.have.lengthOf(Object.keys(db).length)
-        done()
-      })
+      Todo.get = done.bind(null, null)
+      request.get({ uri: 'http://localhost:3000/api/todo/42' })
     })
     it('GET / should return list', function(done) {
-      http.get({
-        uri: 'http://localhost:3000/api/todo'
-      }, function(err, res, body) {
-        res.should.be.json
-        body = JSON.parse(body)
-        body.should.have.lengthOf(Object.keys(db).length)
-        done()
-      })
-    })
-    it('.delete(:id) should delete the model with id = :id', function(done) {
-      var lengthBefore = Object.keys(db).length
-        , id = Object.keys(db)[0]
-      Todo.delete(id, function() {
-        Object.keys(db).should.have.lengthOf(lengthBefore - 1)
-        db.should.not.have.property(id)
-        done()
-      })
+      Todo.list = done.bind(null, null)
+      request.get({ uri: 'http://localhost:3000/api/todo' })
     })
     it('DELETE /:id should delete the model with id = :id', function(done) {
-      var lengthBefore = Object.keys(db).length
-        , id = Object.keys(db)[0]
-      http.del({
-        uri: 'http://localhost:3000/api/todo/' + id
-      }, function(err, res, body) {
-        Object.keys(db).should.have.lengthOf(lengthBefore - 1)
-        db.should.not.have.property(id)
-        done()
-      })
+      Todo.delete = done.bind(null, null)
+      request.del({ uri: 'http://localhost:3000/api/todo/42' })
     })
   })
 })
