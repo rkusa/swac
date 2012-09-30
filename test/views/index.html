@@ -1,0 +1,10 @@
+<% @area 'main', -> %>
+	<ul>
+    <%= @collection @todos, (todo) -> %>
+			<li>
+				<input type="checkbox" <%= "checked" if todo.isDone %>>
+				<label><%= todo.todo %></label>
+	    </li>
+    <% end %>
+  </ul>
+<% end %>

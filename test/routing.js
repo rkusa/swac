@@ -33,6 +33,7 @@ function switchToBrowser () {
 function defineRoute (id, parent) {
   if (!parent) parent = Arkansas
   return parent.get('/' + id, function(app, done) {
+    app.area['main'] = function() { return '' }
     window.app = app
     stack.push(id)
     done()
@@ -73,6 +74,9 @@ describe('Routing', function() {
   })
   beforeEach(function() {
     stack = []
+  })
+  after(function() {
+    switchToServer()
   })
   it('Server-Side', function(finish) {
     client.get('/E')
