@@ -1,11 +1,8 @@
-var Arkansas = require('../')
+var fixtures = require('./fixtures')
+  , Arkansas = require('../')
   , utils = require('../lib/utils')
   , should = require('should')
-  , app = require('../lib/server').app
-  , client = require('supertest')(app)
   , root, stack, context
-
-app.set('views', __dirname + '/views')
 
 GLOBAL.page = require('page')
 GLOBAL.window = {
@@ -36,7 +33,7 @@ function defineRoute (id, parent) {
     app.area['main'] = function() { return '' }
     window.app = app
     stack.push(id)
-    done()
+    done.render('empty')
   })
 }
 function defineRouteTree() {
@@ -56,7 +53,7 @@ function defineRouteTree() {
 }
 function initialRequest (path, cont) {
   switchToServer()
-  client.get(path)
+  fixtures.client.get(path)
   .expect(200).end(function(err) {
     if (err) finish(err)
     switchToBrowser()
@@ -79,9 +76,9 @@ describe('Routing', function() {
     switchToServer()
   })
   it('Server-Side', function(finish) {
-    client.get('/E')
+    fixtures.client.get('/E')
     .expect(200).end(function(err, res) {
-      if (err) finish(err)
+      if (err) return finish(err)
       stack.length.should.equal(3)
       stack[0].should.equal('A')
       stack[1].should.equal('B')

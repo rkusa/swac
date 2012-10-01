@@ -125,14 +125,14 @@ describe('Serialization', function() {
   })
   it('should request', function(done) {
     client.get('/').expect(200).end(function(err, res) {
-      console.log(res.text)
+      // console.log(res.text)
       done()
     })
   })
   it('should set state', function() {
     // console.log(state.todos)
     var prepared = Serialization.prepare(state)
-    console.log(prepared)
+    // console.log(prepared)
     // console.log(state.$contract)
   })
   // it('should work', function() {

@@ -1,7 +1,8 @@
-var db = {}
+var fixtures = require('./fixtures')
+  , serialization = require('../lib/serialization')
+  , should = require('should')
   , Todo = require('../examples/todos/models/todo')
-  , app = require('../lib/server').app
-  , client = require('supertest')(app)
+  , db = {}
 
 Todo.list = function(callback) {
   var arr = []
@@ -118,6 +119,43 @@ describe('Model', function() {
         })
       })
     })
+
+    var prepared
+    describe('Serialization', function() {
+      before(function() {
+        prepared = serialization.prepare(todo)
+      })
+      it('should include the proper #$type', function() {
+        prepared.should.have.property('$type', 'Model/Todo')
+      })
+      it('should include the #_id property', function() {
+        prepared.should.have.property('_id')
+      })
+      it('should only include its properties', function() {
+        Object.keys(prepared).should.have.lengthOf(4)
+        prepared.should.have.property('task')
+        prepared.should.have.property('isDone')
+      })
+    })
+    
+    describe('Deserialization', function() {
+      var recovered
+      before(function() {
+        recovered = serialization.recover(prepared)
+      })
+      it('should recover its instance', function() {
+        recovered.should.be.instanceof(Todo)
+      })
+      it('shouldn\'t have the #$type property', function() {
+        recovered.should.not.have.property('$type')
+      })
+      it('should keep its properties', function() {
+        Object.keys(recovered).should.have.lengthOf(3)
+        recovered.should.have.property('_id', prepared._id)
+        recovered.should.have.property('task', prepared.task)
+        recovered.should.have.property('isDone', prepared.isDone)
+      })
+    })
   })
   
   function testAPI (method, path, done) {
@@ -130,7 +168,7 @@ describe('Model', function() {
     }
     if (method === 'list') method = 'get'
     else if (method === 'delete') method = 'del'
-    client[method](path).expect(200)
+    fixtures.client[method](path).expect(200)
     .end(function(err, res) {
       if (err) return done(err)
       called.should.be.ok

@@ -4,7 +4,7 @@ var Observable = require('../lib/observable')
   , should = require('should')
 
 describe('Array', function() {
-  describe('#_position', function() {
+  describe.skip('#_position', function() {
     describe('should exist after', function() {
       var arr
       function testPositions(arr) {
@@ -75,7 +75,7 @@ describe('Grouped Array', function() {
   var Item = Model.define('Item', function() {
     this.property('type')
   })
-  describe('#_position', function() {
+  describe.skip('#_position', function() {
     describe('should exist after', function() {
       var arr
       function testPositions(arr) {

@@ -1,10 +1,13 @@
-<% @area 'main', -> %>
+@area('main', function() {
 	<ul>
-    <%= @collection @todos, (todo) -> %>
+		@@collection(todos, function(todo) {
 			<li>
-				<input type="checkbox" <%= "checked" if todo.isDone %>>
-				<label><%= todo.todo %></label>
+				<input type="checkbox" @@(todo.isDone ? '"checked"' : '')>
+				<label>@todo.task</label>
 	    </li>
-    <% end %>
-  </ul>
-<% end %>
+		})
+	</ul>
+})
+
+@area('footer', function() {
+})
