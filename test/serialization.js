@@ -1,9 +1,6 @@
 var Arkansas = require('../')
   , Todo = require('../examples/todos/models/todo')
-  , State = require('../lib/state')
   , Serialization = require('../lib/serialization')
-  , app = require('../lib/server').app
-  , client = require('supertest')(app)
   , should = require('should')
 
 var User = function(name, password, roles) {
@@ -115,39 +112,4 @@ describe('Serialization', function() {
       users.type.should.equal(User)
     })
   })
-})
-  
-app.set('views', __dirname + '/views')
-
-describe('Serialization', function() {
-  var state
-  Arkansas.get('/', function(app, done) {
-    app.register('todos', Arkansas.observableArray(Todo))
-    app.todos.reset([
-      new Todo({ task: 'First',  isDone: false }),
-      new Todo({ task: 'Second', isDone: true })
-    ])
-    done.render('index')
-    state = app
-  })
-  it('should request', function(done) {
-    client.get('/').expect(200).end(function(err, res) {
-      // console.log(res.text)
-      done()
-    })
-  })
-  it('should set state', function() {
-    // console.log(state.todos)
-    var prepared = Serialization.prepare(state)
-    // console.log(prepared)
-    // console.log(state.$contract)
-  })
-  // it('should work', function() {
-  //   var contracted = Serialization.prepare(state)
-  //   Object.keys(contracted).length.should.equal(2)
-  //   contracted.$type.should.equal('State')
-  //   Object.keys(contracted.todo).length.should.equal(3)
-  //   contracted.todo.task.should.equal('Foobar')
-  //   contracted.todo.isDone.should.equal(true)
-  // })
 })
