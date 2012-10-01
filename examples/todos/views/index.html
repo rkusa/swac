@@ -20,13 +20,13 @@
         <div class="view">
           <input class="toggle" type="checkbox" <%= "checked" if todo.isDone %>>
           <a class="toggle-trigger" data-silent="true" href="/todos/<%= todo._id %>/toggle"></a>
-          <label><%= todo.todo %></label>
+          <label><%= todo.task %></label>
           <form action="/todos/<%= todo._id %>/delete" method="POST">
             <button type="submit" class="destroy"></button>
           </form>
         </div>
         <form action="/todos/<%= todo._id %>/edit" method="POST">
-          <input class="edit" name="todo" value="<%= todo.todo %>">
+          <input class="edit" name="todo" value="<%= todo.task %>">
         </form>
       </li>
       <% end %>

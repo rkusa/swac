@@ -54,7 +54,7 @@ root.post('/todos/new', function(app, done, params, body) {
   console.log('/todos/new')
 
   var todo = new Todo({
-    todo: body.todo,
+    task: body.task,
     isDone: false
   })
   todo.save(function(body) {
@@ -71,7 +71,7 @@ root.post('/todos/:id/edit', function(app, done, params, body) {
 
   var model = app.todos.find(params.id)
   if (model) {
-    model.todo = body.todo
+    model.task = body.task
     model.save(function() {
       done.redirect('/')
     })

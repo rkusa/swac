@@ -117,8 +117,8 @@ describe('Serialization', function() {
   Arkansas.get('/', function(app, done) {
     app.register('todos', Arkansas.observableArray(Todo))
     app.todos.reset([
-      new Todo({ todo: 'First',  isDone: false }),
-      new Todo({ todo: 'Second', isDone: true })
+      new Todo({ task: 'First',  isDone: false }),
+      new Todo({ task: 'Second', isDone: true })
     ])
     done.render('index')
     state = app
@@ -140,7 +140,7 @@ describe('Serialization', function() {
   //   Object.keys(contracted).length.should.equal(2)
   //   contracted.$type.should.equal('State')
   //   Object.keys(contracted.todo).length.should.equal(3)
-  //   contracted.todo.todo.should.equal('Foobar')
+  //   contracted.todo.task.should.equal('Foobar')
   //   contracted.todo.isDone.should.equal(true)
   // })
 })

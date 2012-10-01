@@ -47,12 +47,12 @@ describe('Model', function() {
     var todo
 
     before(function() {
-      todo = new Todo({ todo: 'Tu dies' })
+      todo = new Todo({ task: 'Tu dies' })
     })
 
     it('should have the defined properties', function() {
       todo.should.have.ownProperty('_id')
-      todo.should.have.ownProperty('todo', 'Tu dies')
+      todo.should.have.ownProperty('task', 'Tu dies')
       todo.should.have.ownProperty('isDone', null)
     })
 
@@ -73,12 +73,12 @@ describe('Model', function() {
     describe('.save()', function() {
       it('should create a new record if not exists', function(done) {
         var lengthBefore = Object.keys(db).length
-          , todo = new Todo({ _id: 9, todo: 'Tu das' })
+          , todo = new Todo({ _id: 9, task: 'Tu das' })
         db.should.not.have.property(9)
         todo.save(function() {
           Object.keys(db).should.have.lengthOf(lengthBefore + 1)
           db.should.have.property(9)
-          db[9].should.have.property('todo', 'Tu das')
+          db[9].should.have.property('task', 'Tu das')
           done()
         })
       })
@@ -86,9 +86,9 @@ describe('Model', function() {
         var todo = new Todo({ _id: 10 })
         todo.save(function() {
           db.should.have.property(10)
-          todo.todo = 'Und das'
+          todo.task = 'Und das'
           todo.save(function() {
-            db[10].todo.should.eql(todo.todo)
+            db[10].task.should.eql(todo.task)
             done()
           })
         })

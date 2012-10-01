@@ -1,0 +1,12 @@
+@area('main', function () {
+	<div>
+		Update the following:
+		@@block(function () {
+			<input type="checkbox" @@(todo.isDone ? 'checked="true"' : '')>
+			<label>@todo.task</label>
+		})
+	</div>
+})
+
+@area('footer', function () {
+})
