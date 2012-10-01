@@ -42,10 +42,11 @@ var admin = new Role('Admin')
 obj.trap = admin
 obj.roles = [admin, member, new Role('Guest')]
 obj.users = [user]
+obj.users.type = User
 obj.loggedInAs = user
 
 var roles, users, loggedInAs
-describe('Combination of Decycling and Contract', function() {
+describe('Serialization', function() {
   describe('#prepare', function() {
     before(function() {
       prepared = Serialization.prepare(obj)
@@ -79,6 +80,9 @@ describe('Combination of Decycling and Contract', function() {
       users[0].roles[1].$ref.should.equal('roles.1')
       prepared.loggedInAs.$ref.should.equal('users.0')
     })
+    it('should resolve class references', function() {
+      users.type.should.have.property('$obj', 'Test/User')
+    })
   })
   describe('#recover', function() {
     before(function() {
@@ -102,10 +106,13 @@ describe('Combination of Decycling and Contract', function() {
       users[0].should.be.instanceof(User)
       loggedInAs.should.be.instanceof(User)
     })
-    it('should proper resolve references', function() {
+    it('should recover references', function() {
       roles[0].should.equal(users[0].roles[0])
       roles[1].should.equal(users[0].roles[1])
       loggedInAs.should.equal(users[0])
+    })
+    it('should recover class references', function() {
+      users.type.should.equal(User)
     })
   })
 })

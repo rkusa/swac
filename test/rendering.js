@@ -108,8 +108,8 @@ describe('Rendering', function() {
             res.text.should.include('<!---{' + i + '-->')
             res.text.should.include('<!---' + i + '}-->')
           }
-          res.text.should.include('<label><%= First %></label>')
-          res.text.should.include('<label><%= Second %></label>')
+          res.text.should.include('<label>First</label>')
+          res.text.should.include('<label>Second</label>')
           done()
         })
     })

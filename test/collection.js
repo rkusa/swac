@@ -1,57 +1,76 @@
 var Todo = require('../examples/todos/models/todo')
-  , Observable = require('../lib/observable.js')
+  , collection = require('../lib/collection')
+  , Collection = collection.Collection
+  , serialization = require('../lib/serialization')
   , should = require('should')
 
+var Todos, todos
+
 describe('Collection', function() {
-  var todos
-  before(function() {
-    todos = Observable.Array(Todo)
+  it('should be defineable', function() {
+    (function() {
+      Todos = Collection.define('Todos')
+    }).should.throw();
+    (function() {
+      Todos = Collection.define('Todos', function() {})
+    }).should.throw();
+    (function() {
+      Todos = Collection.define('Todos', Todo, function() {
+        this.property('completed', function() {
+          var count = 0
+          this.forEach(function(todo) {
+            if (todo.isDone) ++count
+          })
+          return count
+        })
+      })
+    }).should.not.throw()
   })
-  describe('.add()', function() {
-    var todo
+  it('should be instantiable', function() {
+    todos = new Todos([
+      new Todo({ task: 'First',  isDone: true }),
+      new Todo({ task: 'Second', isDone: false })
+    ])
+    todos.should.be.instanceOf(Array)
+    todos.should.have.lengthOf(2)
+  })
+  
+  describe('Properties', function() {
+    it('should work', function() {
+      todos.should.have.property('completed', 1)
+      todos[1].isDone = true
+      todos.should.have.property('completed', 2)
+    })
+  })
+  
+  var prepared
+  describe('Serialization', function() {
     before(function() {
-      todo = new Todo
+      prepared = serialization.prepare(todos)
+      // console.log(prepared)
     })
-    it('should add the provided models to the internal collection', function() {
-      var todo = new Todo
-      todos.add(todo)
-      todos[0].should.eql(todo)
+    it('should include the proper #$type', function() {
+      prepared.should.have.property('$type', 'Collection/Todos')
     })
-    it('should only accept the defined model type')
-    it('should trigger the changed event', function(done) {
-      todos.on('changed', function callback() {
-        todos.off('changed', callback)
-        done()
-      })
-      todos.add(new Todo)
-    })
-    it('should trigger the add event', function(done) {
-      todos.once('added', function callback() {
-        done()
-      })
-      todos.add(new Todo)
+    it('should not include its functional properties', function() {
+      prepared.should.not.have.property('completed')
     })
   })
-  describe('.remove()', function() {
-    it('should be triggered if a contained model got destroyed', function() {
-      var todo = new Todo
-      todos.add(todo)
-      var pos = todos.length - 1
-      todo.should.eql(todos[pos])
-      todo.destroy()
-      should.not.exist(todos[pos])
+    
+  describe('Deserialization', function() {
+    var recovered
+    before(function() {
+      recovered = serialization.recover(prepared)
+      // console.log(recovered)
     })
-    it('should trigger the changed event', function(done) {
-      todos.once('changed', function callback() {
-        done()
-      })
-      todos.remove(todos[0])
+    it('should recover its instance', function() {
+      recovered.should.be.instanceof(Array)
     })
-  })
-  describe('.get()', function() {
-    it('should return the appropriated model')
-  })
-  describe('.reset()', function() {
-    it('should add the provided models to the internal collection')
+    it('shouldn\'t have the #$type property', function() {
+      recovered.should.not.have.property('$type')
+    })
+    it('should regain its functional properties', function() {
+      recovered.should.have.property('completed', 2)
+    })
   })
 })
