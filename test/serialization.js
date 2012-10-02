@@ -47,9 +47,10 @@ describe('Serialization', function() {
   describe('#prepare', function() {
     before(function() {
       prepared = Serialization.prepare(obj)
-      roles = prepared.roles
-      users = prepared.users
-      loggedInAs = prepared.loggedInAs
+      roles = prepared.obj.roles
+      users = prepared.obj.users
+      loggedInAs = prepared.obj.loggedInAs
+      console.log(prepared)
     })
     it('should stick to the contract', function() {
       should.not.exist(prepared.trap)
@@ -59,13 +60,13 @@ describe('Serialization', function() {
     it('should prepare arrays', function() {
       roles.length.should.equal(3)
       users.length.should.equal(1)
-      loggedInAs.roles.length.should.equal(2)
+      loggedInAs.obj.roles.length.should.equal(2)
     })
     it('should replicate properties', function() {
-      roles[0].name.should.equal('Admin')
-      roles[1].name.should.equal('Member')
-      roles[2].name.should.equal('Guest')
-     loggedInAs.name.should.equal('Test')
+      roles[0].obj.name.should.equal('Admin')
+      roles[1].obj.name.should.equal('Member')
+      roles[2].obj.name.should.equal('Guest')
+     loggedInAs.obj.name.should.equal('Test')
     })
     it('should add proper #$type', function() {
       for (var i = 0; i < 2; ++i)
@@ -73,8 +74,8 @@ describe('Serialization', function() {
       loggedInAs.$type.should.equal('Test/User')
     })
     it('should resolve references', function() {
-      loggedInAs.roles[0].$ref.should.equal('#.roles.0')
-      loggedInAs.roles[1].$ref.should.equal('#.roles.1')
+      loggedInAs.obj.roles[0].$ref.should.equal('#.roles.0')
+      loggedInAs.obj.roles[1].$ref.should.equal('#.roles.1')
       users[0].$ref.should.equal('#.loggedInAs')
     })
     it('should resolve class references', function() {

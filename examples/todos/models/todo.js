@@ -1,11 +1,11 @@
 var Arkansas = require('arkansas')
 
-module.exports = Arkansas.Model.define('Todo', function() {
+var Todo = module.exports = Arkansas.Model.define('Todo', function() {
   this.property('task')
   this.property('isDone')
 })
 
-module.exports.Collection = Arkansas.Collection.define('Todos', module.exports, function() {
+module.exports.Collection = Arkansas.Collection.define('Todos', Todo, function() {
   this.property('left', function() {
     var count = 0
     this.forEach(function(todo) {

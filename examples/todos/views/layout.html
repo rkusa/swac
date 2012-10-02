@@ -19,7 +19,7 @@
     <script type="text/javascript" src="/js/page.js"></script>
     <script type="text/javascript" src="/browserify.js"></script>
     <script type="text/javascript">
-      window.app = window.Arkansas.State.deserialize(@@serialize())
+      window.app = window.__scope = window.Arkansas.State.deserialize(@@serialize())
     </script>
 </body>
 </html>

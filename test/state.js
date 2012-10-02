@@ -10,7 +10,7 @@ describe('State', function() {
     fixtures.client.get('/').expect(200, function() {
       (function() {
         prepared = serialization.prepare(state.app)
-        // console.log(prepared.fragments)
+        // console.log(prepared)
         done()
       }).should.not.throw()
     })
@@ -24,13 +24,16 @@ describe('State', function() {
       prepared.should.have.property('$type', 'Arkansas/State')
     })
     it('should only include its properties', function() {
-      Object.keys(prepared).should.have.lengthOf(4)
-      prepared.should.have.property('fragments')
-      prepared.should.have.property('path')
-      prepared.should.have.property('todos')
+      Object.keys(prepared.obj).should.have.lengthOf(3)
+      with (prepared) {
+        obj.should.have.property('fragments')
+        obj.should.have.property('path')
+        obj.should.have.property('todos')
+        obj.todos.should.have.property('$type', 'Collection/Todos')
+      }
     })
     it('should be referenced correctly', function() {
-      prepared.fragments[0].context.should.have.property('$ref', '#')
+      prepared.obj.fragments[0].obj.context.should.have.property('$ref', '#')
     })
   })
   

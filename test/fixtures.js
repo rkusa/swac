@@ -7,7 +7,7 @@ var Arkansas = require('../')
 app.set('views', __dirname + '/views')
 
 Arkansas.get('/', function(app, done) {
-  app.register('todos', Arkansas.observableArray(Todo))
+  app.register('todos', new Todo.Collection)
   app.todos.reset([
     new Todo({ task: 'First',  isDone: false }),
     new Todo({ task: 'Second', isDone: true })

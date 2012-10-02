@@ -23,15 +23,15 @@ describe('Fragment', function() {
       prepared.should.have.property('$type', 'Fragment')
     })
     it('should only include its properties', function() {
-      Object.keys(prepared).should.have.lengthOf(6)
-      prepared.should.have.property('id', 2)
+      Object.keys(prepared.obj).should.have.lengthOf(5)
+      prepared.obj.should.have.property('id', 2)
       // #template
-      prepared.should.have.property('template')
-      prepared.template.should.have.property('$type', 'Template')
+      prepared.obj.should.have.property('template')
+      prepared.obj.template.should.have.property('$type', 'Template')
       // #context
-      prepared.should.have.property('context')
-      prepared.context.should.not.be.instanceOf(Todo)
-      prepared.context.should.have.property('$type', 'Model/Todo')
+      prepared.obj.should.have.property('context')
+      prepared.obj.context.should.not.be.instanceOf(Todo)
+      prepared.obj.context.should.have.property('$type', 'Model/Todo')
     })
   })
   describe('Deserialization', function() {

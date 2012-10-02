@@ -130,13 +130,13 @@ describe('Model', function() {
         prepared.should.have.property('$type', 'Model/Todo')
       })
       it('should include the #_id property', function() {
-        prepared.should.have.property('_id')
+        prepared.obj.should.have.property('_id')
       })
       it('should only include its properties', function() {
-        Object.keys(prepared).should.have.lengthOf(5)
-        prepared.should.have.property('task')
-        prepared.should.have.property('isDone')
-        prepared.should.have.property('events')
+        Object.keys(prepared.obj).should.have.lengthOf(4)
+        prepared.obj.should.have.property('task')
+        prepared.obj.should.have.property('isDone')
+        prepared.obj.should.have.property('events')
       })
     })
     
