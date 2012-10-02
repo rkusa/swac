@@ -63,7 +63,8 @@ describe('Model', function() {
           , callback = function() {
             if (++count == 2) done()
           }
-        todo.once('changed.*', callback)
+        
+        todo.once('changed', callback)
         todo.once('changed.isDone', callback)
 
         todo.isDone = true
@@ -132,9 +133,10 @@ describe('Model', function() {
         prepared.should.have.property('_id')
       })
       it('should only include its properties', function() {
-        Object.keys(prepared).should.have.lengthOf(4)
+        Object.keys(prepared).should.have.lengthOf(5)
         prepared.should.have.property('task')
         prepared.should.have.property('isDone')
+        prepared.should.have.property('events')
       })
     })
     
@@ -150,10 +152,11 @@ describe('Model', function() {
         recovered.should.not.have.property('$type')
       })
       it('should keep its properties', function() {
-        Object.keys(recovered).should.have.lengthOf(3)
+        Object.keys(recovered).should.have.lengthOf(4)
         recovered.should.have.property('_id', prepared._id)
         recovered.should.have.property('task', prepared.task)
         recovered.should.have.property('isDone', prepared.isDone)
+        recovered.should.have.property('events')
       })
     })
   })

@@ -32,16 +32,6 @@ describe('Fragment', function() {
       prepared.should.have.property('context')
       prepared.context.should.not.be.instanceOf(Todo)
       prepared.context.should.have.property('$type', 'Model/Todo')
-      // #events
-      prepared.should.have.property('events')
-      prepared.events.should.have.lengthOf(1)
-      with (prepared.events[0]) {
-        _id.should.not.be.instanceOf(Todo)
-        _id.should.not.have.property('$type')
-        _id.should.have.property('$ref', '#.context')
-        properties.should.have.lengthOf(2)
-        properties.should.include('task', 'isDone')
-      }
     })
   })
   describe('Deserialization', function() {
@@ -61,7 +51,6 @@ describe('Fragment', function() {
       recovered.template.fn.should.be.a('function')
       recovered.should.have.property('template')
       recovered.should.have.property('context')
-      recovered.should.have.property('events')
     })
   })
   describe('Client-Side', function() {

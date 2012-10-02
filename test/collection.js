@@ -46,6 +46,7 @@ describe('Collection', function() {
   var prepared
   describe('Serialization', function() {
     before(function() {
+      console.log(todos)
       prepared = serialization.prepare(todos)
       // console.log(prepared)
     })

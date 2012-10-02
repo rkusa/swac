@@ -120,14 +120,9 @@ describe('Array', function() {
       todos.add(todo)
       todos.remove(todo)
       
-      !function traverse(obj, path) {
-        Object.keys(obj).forEach(function(i) {
-          var prop = traverse(obj[i], path.concat(i))
-          if (typeof prop !== 'object') return
-          prop.should.not.have.property('_listeners', undefined, 'event remaining: ' + path.concat(i).join('.'))
-        })
-        return obj
-      }(todo.EventEmitter.listenerTree, [])
+      Object.keys(todo.events).forEach(function(i) {
+        todo.events[i].should.have.lengthOf(0)
+      })
     })
   })
   describe('.get()', function() {

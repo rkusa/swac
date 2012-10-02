@@ -70,7 +70,7 @@ describe('Rendering', function() {
         template.fn.toString().should.include('__b.push(todo.task);')
       }
     })
-    it('should register appropriated events', function() {
+    it.skip('should register appropriated events', function() {
       // console.log(state.app.fragments)
       // main area
       state.app.fragments[0].events.length.should.equal(0)
@@ -125,7 +125,7 @@ describe('Rendering', function() {
         template.should.equal(state.app.fragments[3].template)
       }
     })
-    it('should register appropriated events', function() {
+    it.skip('should register appropriated events', function() {
       // console.log(state.app.fragments)
       // main area
       state.app.fragments[0].events.length.should.equal(0)
