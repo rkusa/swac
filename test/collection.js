@@ -9,13 +9,13 @@ var Todos, todos
 describe('Collection', function() {
   it('should be defineable', function() {
     (function() {
-      Todos = Collection.define('Todos')
+      Todos = Collection.define('TodoCollection')
     }).should.throw();
     (function() {
-      Todos = Collection.define('Todos', function() {})
+      Todos = Collection.define('TodoCollection', function() {})
     }).should.throw();
     (function() {
-      Todos = Collection.define('Todos', Todo, function() {
+      Todos = Collection.define('TodoCollection', Todo, function() {
         this.property('completed', function() {
           var count = 0
           this.forEach(function(todo) {
@@ -50,7 +50,7 @@ describe('Collection', function() {
       // console.log(prepared)
     })
     it('should include the proper #$type', function() {
-      prepared.should.have.property('$type', 'Collection/Todos')
+      prepared.should.have.property('$type', 'Collection/TodoCollection')
     })
     it('should not include its functional properties', function() {
       prepared.should.not.have.property('completed')

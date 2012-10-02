@@ -1,1 +1,1 @@
-../../../../node_modules/page/build/page.js
+../../../../node_modules/page/index.js

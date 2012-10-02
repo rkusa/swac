@@ -6,6 +6,6 @@
   },
   "dependencies": {
     "less-middleware": "*",
-    "nano": "3.0.x"
+    "nano": "3.3.x"
   }
 }

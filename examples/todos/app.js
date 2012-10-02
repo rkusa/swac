@@ -1,5 +1,6 @@
 var Arkansas = require('arkansas')
   , Todo     = require('./models/todo')
+  , Todos    = Todo.Collection
   , get      = Arkansas.get
   , post     = Arkansas.post
   , root
@@ -9,32 +10,9 @@ get('/example', function(app, done) {
 })
 
 root = get('/:condition?', function(app, done, params) {
-  console.log('/' + params.condition)
+  console.log('/' + (params.condition || ''))
 
-  app.register('todos', Arkansas.observableArray(Todo))
-
-  app.todos.defineValue('left', function() {
-    var count = 0
-    this.forEach(function(todo) {
-      if (!todo.isDone) ++count
-    })
-    return count
-  })
-  app.todos.defineValue('completed', function() {
-    var count = 0
-    this.forEach(function(todo) {
-      if (todo.isDone) ++count
-    })
-    return count
-  })
-  app.todos.defineValue('done', function() {
-    var done = true
-    this.forEach(function(todo) {
-      if (!todo.isDone) done = false
-    })
-    return done
-  })
-
+  app.register('todos', new Todos)
   app.condition = params.condition
   Todo.list(function(todos) {
     app.todos.reset(todos.filter(function(todo) {

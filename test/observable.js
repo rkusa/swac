@@ -115,8 +115,32 @@ describe('Array', function() {
       })
       todos.remove(todos[0])
     })
+    it('should remove all events from model', function() {
+      var todo = new Todo
+      todos.add(todo)
+      todos.remove(todo)
+      
+      !function traverse(obj, path) {
+        Object.keys(obj).forEach(function(i) {
+          var prop = traverse(obj[i], path.concat(i))
+          if (typeof prop !== 'object') return
+          prop.should.not.have.property('_listeners', undefined, 'event remaining: ' + path.concat(i).join('.'))
+        })
+        return obj
+      }(todo.EventEmitter.listenerTree, [])
+    })
   })
   describe('.get()', function() {
+    it('should track item\'s #_id property', function() {
+      var todo = new Todo
+      todo.should.have.property('_id', null)
+      todos.add(todo)
+      todo._id = 10
+      todos.find(10).should.equal(todo)
+      todo._id = 11
+      should.strictEqual(todos.find(10), undefined)
+      todos.find(11).should.equal(todo)
+    })
     it('should return the appropriated model')
   })
   describe('.reset()', function() {

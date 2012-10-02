@@ -9,18 +9,17 @@
 </head>
 <body>
 	<section id="todoapp">
-		<%= @area.main() %>
+		@@area.main()
 	</section>
 	<footer id="info">
-		<%= @area.footer() %>
+		@@area.footer()
 	</footer>
 	<!-- Scripts here. Don't remove this ↓ -->
     <script type="text/javascript" src="/js/zepto.js"></script>
     <script type="text/javascript" src="/js/page.js"></script>
     <script type="text/javascript" src="/browserify.js"></script>
     <script type="text/javascript">
-      var app = window.app = new (require('arkansas').State)
-      app.deserialize(<%- @serialize() %>)
+      window.app = window.Arkansas.State.deserialize(@@serialize())
     </script>
 </body>
 </html>

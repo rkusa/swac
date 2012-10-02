@@ -23,7 +23,7 @@ describe('Fragment', function() {
       prepared.should.have.property('$type', 'Fragment')
     })
     it('should only include its properties', function() {
-      Object.keys(prepared).should.have.lengthOf(5)
+      Object.keys(prepared).should.have.lengthOf(6)
       prepared.should.have.property('id', 2)
       // #template
       prepared.should.have.property('template')
@@ -36,9 +36,9 @@ describe('Fragment', function() {
       prepared.should.have.property('events')
       prepared.events.should.have.lengthOf(1)
       with (prepared.events[0]) {
-        model.should.not.be.instanceOf(Todo)
-        model.should.not.have.property('$type')
-        model.should.have.property('$ref', 'context')
+        _id.should.not.be.instanceOf(Todo)
+        _id.should.not.have.property('$type')
+        _id.should.have.property('$ref', '#.context')
         properties.should.have.lengthOf(2)
         properties.should.include('task', 'isDone')
       }
@@ -62,6 +62,25 @@ describe('Fragment', function() {
       recovered.should.have.property('template')
       recovered.should.have.property('context')
       recovered.should.have.property('events')
+    })
+  })
+  describe('Client-Side', function() {
+    describe('#delete()', function() {
+      it('should delete its content', function() {
+
+      })
+      it('should fire its `delete` event', function() {
+        
+      })
+      it('should remove itself from `app.fragments`', function() {
+        
+      })
+      it('should - if its parent got deleted - be deleted first', function() {
+        
+      })
+      it('should - if deleted directy - unlisten from its parent', function() {
+        
+      })
     })
   })
 })

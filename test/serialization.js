@@ -73,9 +73,9 @@ describe('Serialization', function() {
       users[0].$type.should.equal('Test/User')
     })
     it('should resolve references', function() {
-      users[0].roles[0].$ref.should.equal('roles.0')
-      users[0].roles[1].$ref.should.equal('roles.1')
-      prepared.loggedInAs.$ref.should.equal('users.0')
+      users[0].roles[0].$ref.should.equal('#.roles.0')
+      users[0].roles[1].$ref.should.equal('#.roles.1')
+      prepared.loggedInAs.$ref.should.equal('#.users.0')
     })
     it('should resolve class references', function() {
       users.type.should.have.property('$obj', 'Test/User')

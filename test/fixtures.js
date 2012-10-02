@@ -13,5 +13,5 @@ Arkansas.get('/', function(app, done) {
     new Todo({ task: 'Second', isDone: true })
   ])
   done.render('index')
-  state.app = app
+  state.app = app.original
 })

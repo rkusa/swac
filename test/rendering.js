@@ -19,12 +19,12 @@ describe('Rendering', function() {
         .expect(200)
         .end(function(err, res) {
           // console.log(res.text)
-          res.text.should.include('<!---{main-->')
+          res.text.should.include('<!---{0-->')
           res.text.should.include('it works')
-          res.text.should.include('<!---main}-->')
-          res.text.should.include('<!---{footer-->')
+          res.text.should.include('<!---0}-->')
+          res.text.should.include('<!---{1-->')
           res.text.should.include('Copyrights etc.')
-          res.text.should.include('<!---footer}-->')
+          res.text.should.include('<!---1}-->')
           done()
         })
     })
@@ -32,11 +32,11 @@ describe('Rendering', function() {
       // console.log(state.app)
       state.app.fragments.length.should.equal(2)
       with (state.app.fragments[0]) {
-        id.should.equal('main')
+        id.should.equal(0)
         template.fn.toString().should.include('__b.push(status);')
       }
       with (state.app.fragments[1]) {
-        id.should.equal('footer')
+        id.should.equal(1)
         template.fn.toString().should.include('Copyrights etc.')
       }
     })
@@ -80,7 +80,7 @@ describe('Rendering', function() {
       with (state.app.fragments[1]) {
         events.length.should.equal(1)
         with (events[0]) {
-          model.should.equal(state.app.todo)
+          _id.should.equal(state.app.todo)
           properties[0].should.equal('isDone')
           properties[1].should.equal('task')
         }
@@ -116,7 +116,7 @@ describe('Rendering', function() {
     it('should create appropriated fragments', function() {
       // console.log(state.app.fragments)
       state.app.fragments.length.should.equal(5)
-      state.app.fragments[0].id.should.equal('main')
+      state.app.fragments[0].id.should.equal(0)
       for (var i = 1; i <= 3; ++i) {
         state.app.fragments[i].id.should.equal(i)
       }
@@ -135,7 +135,7 @@ describe('Rendering', function() {
       with (state.app.fragments[2]) {
         events.length.should.equal(1)
         with (events[0]) {
-          model.should.equal(state.app.todos[0])
+          _id.should.equal(state.app.todos[0])
           properties[0].should.equal('isDone')
           properties[1].should.equal('task')
         }
@@ -144,7 +144,7 @@ describe('Rendering', function() {
       with (state.app.fragments[3]) {
         events.length.should.equal(1)
         with (events[0]) {
-          model.should.equal(state.app.todos[1])
+          _id.should.equal(state.app.todos[1])
           properties[0].should.equal('isDone')
           properties[1].should.equal('task')
         }
