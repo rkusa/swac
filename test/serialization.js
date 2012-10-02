@@ -59,23 +59,23 @@ describe('Serialization', function() {
     it('should prepare arrays', function() {
       roles.length.should.equal(3)
       users.length.should.equal(1)
-      users[0].roles.length.should.equal(2)
+      loggedInAs.roles.length.should.equal(2)
     })
     it('should replicate properties', function() {
       roles[0].name.should.equal('Admin')
       roles[1].name.should.equal('Member')
       roles[2].name.should.equal('Guest')
-      users[0].name.should.equal('Test')
+     loggedInAs.name.should.equal('Test')
     })
     it('should add proper #$type', function() {
       for (var i = 0; i < 2; ++i)
         roles[i].$type.should.equal('Test/Role')
-      users[0].$type.should.equal('Test/User')
+      loggedInAs.$type.should.equal('Test/User')
     })
     it('should resolve references', function() {
-      users[0].roles[0].$ref.should.equal('#.roles.0')
-      users[0].roles[1].$ref.should.equal('#.roles.1')
-      prepared.loggedInAs.$ref.should.equal('#.users.0')
+      loggedInAs.roles[0].$ref.should.equal('#.roles.0')
+      loggedInAs.roles[1].$ref.should.equal('#.roles.1')
+      users[0].$ref.should.equal('#.loggedInAs')
     })
     it('should resolve class references', function() {
       users.type.should.have.property('$obj', 'Test/User')

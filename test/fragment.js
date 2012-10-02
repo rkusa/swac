@@ -46,11 +46,12 @@ describe('Fragment', function() {
       recovered.should.not.have.property('$type')
     })
     it('should keep its properties', function() {
-      Object.keys(recovered).should.have.lengthOf(4)
+      Object.keys(recovered).should.have.lengthOf(5)
       recovered.should.have.property('id', fragment.id)
       recovered.template.fn.should.be.a('function')
       recovered.should.have.property('template')
       recovered.should.have.property('context')
+      recovered.should.have.property('events')
     })
   })
   describe('Client-Side', function() {
