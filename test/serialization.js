@@ -50,7 +50,7 @@ describe('Serialization', function() {
       roles = prepared.obj.roles
       users = prepared.obj.users
       loggedInAs = prepared.obj.loggedInAs
-      console.log(prepared)
+      // console.log(prepared)
     })
     it('should stick to the contract', function() {
       should.not.exist(prepared.trap)
