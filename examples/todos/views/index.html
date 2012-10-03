@@ -2,7 +2,7 @@
   <header id="header">
     <h1>todos</h1>
     <form action="/todos/new" method="POST">
-      <input id="new-todo" name="todo" placeholder="What needs to be done?" autofocus>
+      <input id="new-todo" name="task" placeholder="What needs to be done?" autofocus>
     </form>
   </header>
   <!-- This section should be hidden by default and shown when there are todos -->
@@ -24,7 +24,7 @@
 					<a class="destroy" data-silent="true" href="/todos/@(todo._id)/delete"></a>
         </div>
         <form action="/todos/@(todo._id)/edit" method="POST">
-          <input class="edit" name="todo" value="@(todo.task)">
+          <input class="edit" name="task" value="@(todo.task)">
         </form>
       </li>
       })
@@ -39,17 +39,19 @@
 	    </span>
     })
     <!-- Remove this if you don`t implement routing -->
-    <ul id="filters">
-      <li>
-        <a class="selected" href="/">All</a>
-      </li>
-      <li>
-        <a href="/active">Active</a>
-      </li>
-      <li>
-        <a href="/completed">Completed</a>
-      </li>
-    </ul>
+		@@block(function() {
+	    <ul id="filters">
+	      <li>
+	        <a class="@(!state.condition ? 'selected' : '')" href="/">All</a>
+	      </li>
+	      <li>
+	        <a class="@(state.condition === 'active' ? 'selected' : '')" href="/active">Active</a>
+	      </li>
+	      <li>
+	        <a class="@(state.condition === 'completed' ? 'selected' : '')" href="/completed">Completed</a>
+	      </li>
+	    </ul>
+		})
     @@block(function() {
       @if (todos.completed)
         <a href="/todos/clear/completed" data-silent="true" id="clear-completed">Clear completed (@todos.completed)</a>

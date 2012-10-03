@@ -133,7 +133,7 @@ describe('Model', function() {
         prepared.obj.should.have.property('_id')
       })
       it('should only include its properties', function() {
-        Object.keys(prepared.obj).should.have.lengthOf(4)
+        Object.keys(prepared.obj).should.have.lengthOf(5)
         prepared.obj.should.have.property('task')
         prepared.obj.should.have.property('isDone')
         prepared.obj.should.have.property('events')
@@ -152,7 +152,7 @@ describe('Model', function() {
         recovered.should.not.have.property('$type')
       })
       it('should keep its properties', function() {
-        Object.keys(recovered).should.have.lengthOf(4)
+        Object.keys(recovered).should.have.lengthOf(5)
         recovered.should.have.property('_id', prepared._id)
         recovered.should.have.property('task', prepared.task)
         recovered.should.have.property('isDone', prepared.isDone)

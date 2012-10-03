@@ -46,6 +46,7 @@ describe('Collection', function() {
   var prepared
   describe('Serialization', function() {
     before(function() {
+      todos.on('stackoverflow', todos, 'destroy')
       prepared = serialization.prepare(todos)
       // console.log(prepared)
     })
@@ -53,7 +54,11 @@ describe('Collection', function() {
       prepared.should.have.property('$type', 'Collection/TodoCollection')
     })
     it('should not include its functional properties', function() {
-      prepared.should.not.have.property('completed')
+      prepared.obj.should.not.have.property('completed')
+    })
+    it('should include events', function() {
+      prepared.obj.should.have.property('events')
+      prepared.obj.events.should.have.property('stackoverflow')
     })
   })
     
@@ -71,6 +76,10 @@ describe('Collection', function() {
     })
     it('should regain its functional properties', function() {
       recovered.should.have.property('completed', 2)
+    })
+    it('should regain its events', function() {
+      recovered.should.have.property('events')
+      recovered.events.should.have.property('stackoverflow')
     })
   })
 })
