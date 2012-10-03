@@ -95,13 +95,12 @@ root.get('/todos/clear/completed', function(app, done) {
   })
 })
 
-root.post('/todos/:id/delete', function(app, done, params) {
+root.get('/todos/:id/delete', function(app, done, params) {
   console.log('/todos/' + params.id + '/delete')
 
   var model = app.todos.find(params.id)
-  if (model) {
-    model.destroy(function() {
-      done.redirect('/')
-    })
-  } else done.redirect('/')
+  if (!model) return done.redirect('/', { silent: true })
+  model.destroy(function() {
+    done.redirect('/', { silent: true })
+  })
 })

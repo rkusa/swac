@@ -22,6 +22,10 @@ a.toggle-all-trigger {
   text-align: center;
   border: none;
 }
+a.destroy {
+  line-height: 40px;
+  text-decoration: none;
+}
 a#clear-completed {
   color: #777;
 }
