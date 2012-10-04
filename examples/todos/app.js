@@ -67,7 +67,7 @@ root.get('/todos/:id/toggle', function(app, done, params) {
   var model = app.todos.find(params.id)
   if (!model) return done.redirect('/', { silent: true })
   model.isDone = !model.isDone
-  if (app.state.condition !== undefined)
+  if (app.state.condition)
     app.todos.remove(model)
   model.save(function() {
     done.redirect('/', { silent: true })
