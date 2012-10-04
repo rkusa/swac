@@ -20,7 +20,8 @@
   "devDependencies": {
     "mocha": "1.5.x",
     "should": "1.2.x",
-    "supertest": "0.3.x"
+    "supertest": "0.3.x",
+    "zombie": "2.0.x"
   },
   "bugs": "https://github.com/rkusa/Arkansas/issues",
   "repository" : {
