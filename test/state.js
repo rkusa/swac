@@ -24,9 +24,10 @@ describe('State', function() {
       prepared.should.have.property('$type', 'Arkansas/State')
     })
     it('should only include its properties', function() {
-      Object.keys(prepared.obj).should.have.lengthOf(3)
+      Object.keys(prepared.obj).should.have.lengthOf(4)
       with (prepared) {
         obj.should.have.property('fragments')
+        obj.should.have.property('areas')
         obj.should.have.property('path')
         obj.should.have.property('todos')
         obj.todos.should.have.property('$type', 'Collection/Todos')
@@ -49,8 +50,9 @@ describe('State', function() {
       recovered.should.not.have.property('$type')
     })
     it('should keep its properties', function() {
-      Object.keys(recovered).should.have.lengthOf(4)
+      Object.keys(recovered).should.have.lengthOf(5)
       recovered.should.have.property('fragments')
+      recovered.should.have.property('areas')
       recovered.should.have.property('path')
       recovered.should.have.property('todos')
     })

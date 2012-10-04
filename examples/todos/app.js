@@ -1,6 +1,7 @@
 var Arkansas = require('arkansas')
   , Todo     = require('./models/todo')
   , Todos    = Todo.Collection
+  , List     = require('./models/list')
   , State    = require('./models/state')
   , get      = Arkansas.get
   , post     = Arkansas.post
@@ -8,6 +9,16 @@ var Arkansas = require('arkansas')
 
 get('/example', function(app, done) {
   done.render('example')
+})
+
+get('/lists', function(app, done) {
+  console.log('/lists')
+  
+  app.register('lists', Arkansas.observableArray(List))
+  List.list(function(lists) {
+    app.lists.reset(lists)
+    done.render('lists')
+  })
 })
 
 root = get('/:condition?', function(app, done, params) {
@@ -40,7 +51,7 @@ root.post('/todos/new', function(app, done, params, body) {
   })
   todo.save(function(body) {
     todo._id = body._id
-    if (app.state.condition === 'active')
+    if (app.state.condition !== 'completed')
       app.todos.push(todo)
     done.redirect('/', { silent: true })
   })
