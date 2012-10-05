@@ -1,5 +1,5 @@
 var fixtures = require('./fixtures')
-  , serialization = require('../lib/serialization')
+  , implode = require('../lib/implode')
   , should = require('should')
   , Todo = require('../examples/todos/models/todo')
   , db = {}
@@ -124,7 +124,7 @@ describe('Model', function() {
     var prepared
     describe('Serialization', function() {
       before(function() {
-        prepared = serialization.prepare(todo)
+        prepared = implode(todo)
       })
       it('should include the proper #$type', function() {
         prepared.should.have.property('$type', 'Model/Todo')
@@ -143,7 +143,7 @@ describe('Model', function() {
     describe('Deserialization', function() {
       var recovered
       before(function() {
-        recovered = serialization.recover(prepared)
+        recovered = implode.recover(prepared)
       })
       it('should recover its instance', function() {
         recovered.should.be.instanceof(Todo)

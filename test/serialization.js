@@ -1,6 +1,6 @@
 var Arkansas = require('../')
   , Todo = require('../examples/todos/models/todo')
-  , Serialization = require('../lib/serialization')
+  , implode = require('../lib/implode')
   , should = require('should')
 
 var User = function(name, password, roles) {
@@ -17,7 +17,7 @@ var User = function(name, password, roles) {
   this.password = password
   this.roles = roles
 }
-new Serialization.Contract('Test/User', User, ['name', 'roles'])
+implode.register('Test/User', User, ['name', 'roles'])
 
 var Role = function(name) {
   Object.defineProperty(this, 'name', {
@@ -26,10 +26,10 @@ var Role = function(name) {
     enumerable: true
   })
 }
-new Serialization.Contract('Test/Role', Role, ['name'])
+implode.register('Test/Role', Role, ['name'])
 
 var State = function() {}
-new Serialization.Contract('Test/State', State, ['roles', 'users', 'loggedInAs'])
+implode.register('Test/State', State, ['roles', 'users', 'loggedInAs'])
 
 var admin = new Role('Admin')
   , member = new Role('Member')
@@ -44,9 +44,9 @@ obj.loggedInAs = user
 
 var roles, users, loggedInAs
 describe('Serialization', function() {
-  describe('#prepare', function() {
+  describe('implode', function() {
     before(function() {
-      prepared = Serialization.prepare(obj)
+      prepared = implode(obj)
       roles = prepared.obj.roles
       users = prepared.obj.users
       loggedInAs = prepared.obj.loggedInAs
@@ -82,9 +82,9 @@ describe('Serialization', function() {
       users.type.should.have.property('$obj', 'Test/User')
     })
   })
-  describe('#recover', function() {
+  describe('recover', function() {
     before(function() {
-      recovered = Serialization.recover(prepared)
+      recovered = implode.recover(prepared)
       roles = recovered.roles
       users = recovered.users
       loggedInAs = recovered.loggedInAs

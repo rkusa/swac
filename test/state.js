@@ -1,6 +1,6 @@
 var fixtures = require('./fixtures')
   , State = require('../lib/state')
-  , serialization = require('../lib/serialization')
+  , implode = require('../lib/implode')
   , should = require('should')
   , state = fixtures.state
   
@@ -9,7 +9,7 @@ describe('State', function() {
   it('should request and prepare', function(done) {
     fixtures.client.get('/').expect(200, function() {
       (function() {
-        prepared = serialization.prepare(state.app)
+        prepared = implode(state.app)
         // console.log(prepared)
         done()
       }).should.not.throw()
@@ -43,7 +43,7 @@ describe('State', function() {
     before(function() {
     })
     it('should recover its instance', function() {
-      recovered = serialization.recover(prepared)
+      recovered = implode.recover(prepared)
       recovered.should.be.instanceof(State)
     })
     it('shouldn\'t have the #$type property', function() {

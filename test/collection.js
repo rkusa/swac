@@ -1,7 +1,7 @@
 var Todo = require('../examples/todos/models/todo')
   , collection = require('../lib/collection')
   , Collection = collection.Collection
-  , serialization = require('../lib/serialization')
+  , implode = require('../lib/implode')
   , should = require('should')
 
 var Todos, todos
@@ -47,7 +47,7 @@ describe('Collection', function() {
   describe('Serialization', function() {
     before(function() {
       todos.on('stackoverflow', todos, 'destroy')
-      prepared = serialization.prepare(todos)
+      prepared = implode(todos)
       // console.log(prepared)
     })
     it('should include the proper #$type', function() {
@@ -65,7 +65,7 @@ describe('Collection', function() {
   describe('Deserialization', function() {
     var recovered
     before(function() {
-      recovered = serialization.recover(prepared)
+      recovered = implode.recover(prepared)
       // console.log(recovered)
     })
     it('should recover its instance', function() {

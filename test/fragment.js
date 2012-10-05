@@ -1,5 +1,5 @@
 var fixtures = require('./fixtures')
-  , serialization = require('../lib/serialization')
+  , implode = require('../lib/implode')
   , Todo = require('../examples/todos/models/todo')
   , Fragment = require('../lib/fragment')
   , state = fixtures.state
@@ -17,7 +17,7 @@ describe('Fragment', function() {
   describe('Serialization', function() {
     before(function() {
       fragment = state.app.fragments[2]
-      prepared = serialization.prepare(fragment)
+      prepared = implode(fragment)
     })
     it('should include the proper #$type', function() {
       prepared.should.have.property('$type', 'Fragment')
@@ -37,7 +37,7 @@ describe('Fragment', function() {
   describe('Deserialization', function() {
     var recovered
     before(function() {
-      recovered = serialization.recover(prepared)
+      recovered = implode.recover(prepared)
     })
     it('should recover its instance', function() {
       recovered.should.be.instanceof(Fragment)
