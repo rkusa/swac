@@ -39,7 +39,7 @@
 		    <!-- This should be `0 items left` by default -->
 		    @@block(function() {
 			    <span id="todo-count">
-			        <strong>@todos.left</strong> item@(todos.left === 1 ? '' : 's') left
+			        <strong>@todos.left.toString()</strong> item@(todos.left === 1 ? '' : 's') left
 			    </span>
 		    })
 		    <!-- Remove this if you don`t implement routing -->
