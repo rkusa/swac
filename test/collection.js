@@ -1,4 +1,4 @@
-var Todo = require('../examples/todos/models/todo')
+var Todo = require('./fixtures').Todo
   , collection = require('../lib/collection')
   , Collection = collection.Collection
   , implode = require('../lib/implode')

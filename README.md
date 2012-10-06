@@ -1,10 +1,17 @@
 # Arkansas [![Build Status](https://secure.travis-ci.org/rkusa/Arkansas.png)](http://travis-ci.org/rkusa/Arkansas)
 
+## Status
+
+Don't use yet.
+
 ## How to Install
 
 ```bash
 npm install arkansas
 ```
+
+## Example
+[Arkansas TodoMVC](https://github.com/rkusa/todomvc.arkansas)
     
 ## How to Use
 

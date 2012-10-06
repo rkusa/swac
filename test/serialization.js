@@ -1,5 +1,5 @@
 var Arkansas = require('../')
-  , Todo = require('../examples/todos/models/todo')
+  , Todo = require('./fixtures').Todo
   , implode = require('../lib/implode')
   , should = require('should')
 

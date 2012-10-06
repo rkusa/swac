@@ -1,7 +1,7 @@
 var Observable = require('../lib/observable')
   , utils = require('../lib/utils')
   , Model = require('../lib/model')
-  , Todo = require('../examples/todos/models/todo')
+  , Todo = require('./fixtures').Todo
   , should = require('should')
 
 describe('Array', function() {

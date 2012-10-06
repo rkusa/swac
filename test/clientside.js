@@ -2,7 +2,7 @@ var arkansas = require('../lib/server')
   , app = arkansas.app
   , express = arkansas.express
   , appPath = __dirname + '/../examples/todos'
-  , Todo = require('../examples/todos/models/todo')
+  , Todo = require('./fixtures').Todo
   , browser = new (require("zombie"))({ silent: true, debug: true })
   , should = require('should')
   , server, db

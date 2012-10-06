@@ -1,6 +1,6 @@
 var fixtures = require('./fixtures')
   , implode = require('../lib/implode')
-  , Todo = require('../examples/todos/models/todo')
+  , Todo = fixtures.Todo
   , Fragment = require('../lib/fragment')
   , state = fixtures.state
 

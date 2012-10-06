@@ -1,5 +1,4 @@
 var Arkansas = require('../')
-  , Todo = require('../examples/todos/models/todo')
   , app = require('../lib/server').app
   , client = exports.client = require('supertest')(app)
   , state = exports.state = { app: null }
@@ -14,4 +13,33 @@ Arkansas.get('/', function(app, done) {
   ])
   done.render('index')
   state.app = app.original
+})
+
+var Todo = exports.Todo = Arkansas.Model.define('Todo', function() {
+  this.property('task')
+  this.property('isDone')
+})
+
+exports.Todo.Collection = Arkansas.Collection.define('Todos', Todo, function() {
+  this.property('left', function() {
+    var count = 0
+    this.forEach(function(todo) {
+      if (!todo.isDone) ++count
+    })
+    return count
+  })
+  this.property('completed', function() {
+    var count = 0
+    this.forEach(function(todo) {
+      if (todo.isDone) ++count
+    })
+    return count
+  })
+  this.property('done', function() {
+    var done = true
+    this.forEach(function(todo) {
+      if (!todo.isDone) done = false
+    })
+    return done
+  })
 })

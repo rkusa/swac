@@ -1,6 +1,6 @@
 var fixtures = require('./fixtures')
   , Arkansas = require('../')
-  , Todo = require('../examples/todos/models/todo')
+  , Todo = fixtures.Todo
   , utils = require('../lib/utils')
   , should = require('should')
   , state = fixtures.state

@@ -1,7 +1,7 @@
 var fixtures = require('./fixtures')
   , implode = require('../lib/implode')
   , should = require('should')
-  , Todo = require('../examples/todos/models/todo')
+  , Todo = fixtures.Todo
   , db = {}
 
 Todo.list = function(callback) {
