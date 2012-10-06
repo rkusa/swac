@@ -83,6 +83,10 @@ get('/', function(app, done) {
 **Arguments**
 **Example**
 
+### .attr(name, fn)
+**Arguments**
+**Example**
+
 ### .collection(context, [opts,] fn)
 **Arguments**
 **Example**
