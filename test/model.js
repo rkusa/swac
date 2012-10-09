@@ -4,7 +4,7 @@ var fixtures = require('./fixtures')
   , Todo = fixtures.Todo
   , db = {}
 
-Todo.list = function(callback) {
+Todo.list = function(view, key, callback) {
   var arr = []
   Object.keys(db).forEach(function(key) {
     arr.push(db[key])
