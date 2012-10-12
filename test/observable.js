@@ -81,4 +81,34 @@ describe('Grouped Array', function() {
   var Item = Model.define('Item', function() {
     this.property('type')
   })
+  var items
+  before(function() {
+    items = Observable.Array(Item).groupBy('type')
+  })
+  it('.add()', function() {
+    items.add(new Item({ _id: 1, type: 'a' }))
+    items.add(new Item({ _id: 2, type: 'a' }))
+    items.add(new Item({ _id: 3, type: 'b' }))
+    items.should.have.lengthOf(2)
+    items[0].should.have.property('collection')
+    items[0].should.have.property('_id', 'a')
+    items[0].collection.should.have.lengthOf(2)
+    items[1].collection.should.have.lengthOf(1)
+  })
+  var a, b
+  it('.find()', function() {
+    a = items.find(1)
+    b = items.find(3)
+    a.should.be.instanceOf(Item)
+    b.should.be.instanceOf(Item)
+  })
+  it('.remove', function() {
+    items.remove(b)
+    items.should.have.lengthOf(1)
+  })
+  it('change pivot', function() {
+    a.type = 'c'
+    items.should.have.lengthOf(2)
+    items[0].collection.should.have.lengthOf(1)
+  })
 })
