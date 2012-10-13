@@ -152,7 +152,7 @@ describe('Model', function() {
         recovered.should.not.have.property('$type')
       })
       it('should keep its properties', function() {
-        Object.keys(recovered).should.have.lengthOf(5)
+        Object.keys(recovered).should.have.lengthOf(4)
         recovered.should.have.property('_id', prepared._id)
         recovered.should.have.property('task', prepared.task)
         recovered.should.have.property('isDone', prepared.isDone)
