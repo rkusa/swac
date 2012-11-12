@@ -255,6 +255,12 @@ Remove a model from the collection
 ### .reset([items])
 Empty the collection and optional add the provided items afterwards.
 
+### .sort([compareFunction)
+This not only sorts the array, it will also lead new elements to be inserted according to the compareFunction.
+
+### .unsort()
+This stops the array from inserting new elements according to a previously defined compareFunction.
+
 ### .size
 Same as `Array.prototype.length` but with the difference, that fragments could listen to changes of this property.
 

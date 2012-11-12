@@ -75,6 +75,85 @@ describe('Array', function() {
   describe('.reset()', function() {
     it('should add the provided models to the internal collection')
   })
+  describe('Sort', function() {
+    var cmp = function(lhs, rhs) {
+      return lhs - rhs
+    }
+    it('should sort on first call', function() {
+      var arr1 = [5, 7, 9, 2, 12, 42, 1]
+        , arr2 = Observable.Array(arr1.slice())
+      arr1.sort(cmp)
+      arr2.sort(cmp)
+      arr2.should.have.lengthOf(7)
+      for (var i = 0; i < 7; ++i)
+        arr1[i].should.equal(arr2[i])
+    })
+    describe('should insert new elements appropriately', function() {
+      var arr = Observable.Array([5, 7, 9, 2, 12, 42, 1])
+      arr.sort(cmp)
+      it('on #push()', function() {
+        arr.push(10)
+        arr.should.have.lengthOf(8)
+        arr.indexOf(10).should.equal(5)
+      })
+      it('on #unshift()', function() {
+        arr.unshift(6)
+        arr.should.have.lengthOf(9)
+        arr.indexOf(6).should.equal(3)
+      })
+      it('on #splice()', function() {
+        arr.splice(1, 1, 41)
+        arr.should.have.lengthOf(9)
+        arr.indexOf(41).should.equal(7)
+      })
+    })
+    describe('should break insertion-sort appropriately', function() {
+      it('on #reverse()', function() {
+        var arr = Observable.Array([5, 7, 9, 2, 12, 42, 1])
+        arr.sort(cmp)
+        arr.reverse()
+        should.not.exist(arr.compareFunction)
+      })
+      it('on #reset()', function() {
+        var arr = Observable.Array([5, 7, 9, 2, 12, 42, 1])
+        arr.sort(cmp)
+        arr.reset()
+        should.not.exist(arr.compareFunction)
+      })
+      it('on #unsort()', function() {
+        var arr = Observable.Array([5, 7, 9, 2, 12, 42, 1])
+        arr.sort(cmp)
+        arr.unsort()
+        should.not.exist(arr.compareFunction)
+      })
+    })
+    it('should should re-arrange elements on property changes appropriately', function() {
+      var arr = new Observable.Array(Todo)
+        , a = new Todo({ task: 'A' })
+      arr.push(new Todo({ task: 'D' }))
+      arr.push(a)
+      arr.push(new Todo({ task: 'F' }))
+      arr.sort(function(lhs, rhs) {
+        if (lhs.task < rhs.task) return -1
+        if (lhs.task === rhs.task) return 0
+        else return 1
+      })
+      a.task = 'G'
+      arr.should.have.lengthOf(3)
+      arr[2].task.should.equal(a.task)
+    })
+    describe('Fragments', function() {
+      it('should be re-arranged on first call', function() {
+        
+      })
+      it('should be inserted appropriately', function() {
+        
+      })
+      it('should be moved appropriately', function() {
+        
+      })
+    })
+  })
 })
 
 describe('Grouped Array', function() {
