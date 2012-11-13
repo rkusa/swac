@@ -23,7 +23,7 @@ describe('Fragment', function() {
       prepared.should.have.property('$type', 'Fragment')
     })
     it('should only include its properties', function() {
-      Object.keys(prepared.obj).should.have.lengthOf(5)
+      Object.keys(prepared.obj).should.have.lengthOf(6)
       prepared.obj.should.have.property('id', 2)
       // #template
       prepared.obj.should.have.property('template')
@@ -46,7 +46,7 @@ describe('Fragment', function() {
       recovered.should.not.have.property('$type')
     })
     it('should keep its properties', function() {
-      Object.keys(recovered).should.have.lengthOf(5)
+      Object.keys(recovered).should.have.lengthOf(6)
       recovered.should.have.property('id', fragment.id)
       recovered.template.fn.should.be.a('function')
       recovered.should.have.property('template')
