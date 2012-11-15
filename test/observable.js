@@ -114,12 +114,6 @@ describe('Array', function() {
         arr.reverse()
         should.not.exist(arr.compareFunction)
       })
-      it('on #reset()', function() {
-        var arr = Observable.Array([5, 7, 9, 2, 12, 42, 1])
-        arr.sort(cmp)
-        arr.reset()
-        should.not.exist(arr.compareFunction)
-      })
       it('on #unsort()', function() {
         var arr = Observable.Array([5, 7, 9, 2, 12, 42, 1])
         arr.sort(cmp)
