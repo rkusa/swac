@@ -13,47 +13,6 @@ describe('Fragment', function() {
       done()
     })
   })
-  var fragment, prepared
-  describe('Serialization', function() {
-    before(function() {
-      fragment = state.app.fragments[2]
-      prepared = implode(fragment)
-    })
-    it('should include the proper #$type', function() {
-      prepared.should.have.property('$type', 'Fragment')
-    })
-    it('should only include its properties', function() {
-      Object.keys(prepared.obj).should.have.lengthOf(6)
-      prepared.obj.should.have.property('id', 2)
-      // #template
-      prepared.obj.should.have.property('template')
-      prepared.obj.template.should.have.property('$type', 'Template')
-      // #context
-      prepared.obj.should.have.property('context')
-      prepared.obj.context.should.not.be.instanceOf(Todo)
-      prepared.obj.context.should.have.property('$type', 'Model/Todo')
-    })
-  })
-  describe('Deserialization', function() {
-    var recovered
-    before(function() {
-      recovered = implode.recover(prepared)
-    })
-    it('should recover its instance', function() {
-      recovered.should.be.instanceof(Fragment)
-    })
-    it('shouldn\'t have the #$type property', function() {
-      recovered.should.not.have.property('$type')
-    })
-    it('should keep its properties', function() {
-      Object.keys(recovered).should.have.lengthOf(6)
-      recovered.should.have.property('id', fragment.id)
-      recovered.template.fn.should.be.a('function')
-      recovered.should.have.property('template')
-      recovered.should.have.property('context')
-      recovered.should.have.property('events')
-    })
-  })
   describe('Client-Side', function() {
     describe('#delete()', function() {
       it('should delete its content', function() {
