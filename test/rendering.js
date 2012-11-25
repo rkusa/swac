@@ -151,4 +151,26 @@ describe('Rendering', function() {
       }
     })
   })
+  describe('Helper', function() {
+    describe('Form', function() {
+      before(function() {
+        Arkansas.get('/helper/form', function(app, done) {
+          app.register('todo', new Todo)
+          done.render('forms')
+          state.app = app
+        })
+      })
+      it('should render', function(done) {
+        fixtures.client.get('/helper/form')
+          .expect(200)
+          .end(function(err, res) {
+            res.text.should.include('<form method="POST">')
+            res.text.should.include('<label for="todo_task">Task</label>')
+            res.text.should.include('<input id="todo_task" name="todo[task]" value="" type="text"/>')
+            res.text.should.include('</form>')
+            done()
+          })
+      })
+    })
+  })
 })
