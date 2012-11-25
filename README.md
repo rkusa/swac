@@ -188,6 +188,24 @@ Model.define('Todo', function() {
 })
 ```
 
+### .property(name, opts)
+Define a property.
+
+**Arguments**
+* **name** - the property's name
+
+**Options**
+* **silent** (boolean, default: true) whether the property should support events
+* Validation: **required**, **type**, **pattern**, ... provided by [revalidator](https://github.com/flatiron/revalidator#usage)
+
+**Example**
+```js
+Model.define('Todo', function() {
+  this.property('task', { type: 'string', minLength: 1 })
+  this.property('isDone', { type: 'boolean' })
+})
+```
+
 ## Model.prototype
 
 ### .save(callback)

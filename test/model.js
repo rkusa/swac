@@ -151,4 +151,33 @@ describe('Model', function() {
     it('DELETE /:id should delete the model with id = :id',
       testAPI.bind(this, 'delete', '/api/todo/42'))
   })
+  
+  describe('Validation', function() {
+    it('should return false appropriately', function() {
+      var todo = new Todo({ task: '' })
+        , validation = todo.validate()
+      validation.should.equal(false)
+      with (todo) {
+        Object.keys($errors).should.have.lengthOf(2)
+        with ($errors.task) {
+          attribute.should.equal('minLength')
+          expected.should.equal(1)
+          actual.should.equal(0)
+          message.should.equal('is too short (minimum is 1 characters)')
+        }
+        with ($errors.isDone) {
+          attribute.should.equal('type')
+          expected.should.equal('boolean')
+          actual.should.equal('object')
+          message.should.equal('must be of boolean type')
+        }
+      }
+    })
+    it('should return true appropriately', function() {
+      var todo = new Todo({ task: 'Test', isDone: false })
+        , validation = todo.validate()
+      validation.should.equal(true)
+      Object.keys(todo.$errors).should.have.lengthOf(0)
+    })
+  })
 })

@@ -16,8 +16,8 @@ Arkansas.get('/', function(app, done) {
 })
 
 var Todo = exports.Todo = Arkansas.Model.define('Todo', function() {
-  this.property('task')
-  this.property('isDone')
+  this.property('task', { type: 'string', minLength: 1 })
+  this.property('isDone', { type: 'boolean' })
 })
 
 exports.Todo.Collection = Arkansas.Collection.define('Todos', Todo, function() {
