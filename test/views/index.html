@@ -1,6 +1,6 @@
 @area('main', function() {
 	<ul>
-		@@collection(todos, function(todo) {
+		@collection(todos, function(todo) {
 			<li>
 				<input type="checkbox" @@(todo.isDone ? '"checked"' : '')>
 				<label>@todo.task</label>
