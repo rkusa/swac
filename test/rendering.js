@@ -33,7 +33,7 @@ describe('Rendering', function() {
       state.app.fragments.length.should.equal(2)
       with (state.app.fragments[0]) {
         id.should.equal(0)
-        template.fn.toString().should.include('__b.push(status);')
+        template.fn.toString().should.include('_b.push(status);')
       }
       with (state.app.fragments[1]) {
         id.should.equal(1)
@@ -67,7 +67,7 @@ describe('Rendering', function() {
       state.app.fragments.length.should.equal(3)
       with (state.app.fragments[1]) {
         id.should.equal(1)
-        template.fn.toString().should.include('__b.push(todo.task);')
+        template.fn.toString().should.include('_b.push(todo.task);')
       }
     })
     it.skip('should register appropriated events', function() {
