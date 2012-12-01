@@ -1,8 +1,9 @@
-var Arkansas = require('../')
-  , app = require('../lib/server').app
+var Arkansas = require('../../')
+  , server = exports.server = require('../../lib/server')
+  , app = server.app
   , client = exports.client = require('supertest')(app)
   , state = exports.state = { app: null }
-  , routing = require('../lib/routing')
+  , routing = require('../../lib/routing')
   
 app.set('views', __dirname + '/views')
 
@@ -49,3 +50,40 @@ exports.Todo.Collection = Arkansas.Collection.define('Todos', Todo, function() {
     return done
   })
 })
+
+var db = exports.db = {}
+
+Todo.list = function(/*view, key, callback*/) {
+  var args = Array.prototype.slice.call(arguments)
+    , callback = args.pop()
+  var arr = []
+  Object.keys(db).forEach(function(key) {
+    arr.push(db[key])
+  })
+  if (callback) callback(null, arr)
+}
+Todo.get = function(id, callback) {
+  if (callback) callback(null, db[id])
+}
+Todo.put = function(id, props, callback) {
+  var todo
+  if (!(todo = db[id])) return false
+  Object.keys(props).forEach(function(key) {
+    if (todo.hasOwnProperty(key)) todo[key] = props[key]
+  })
+  if (callback) callback(null, todo)
+}
+Todo.post = function(props, callback) {
+  if (!props['_id']) {
+    var id = 1
+    while (db[id]) id++
+    props['_id'] = id
+  }
+  db[props['_id']] = new Todo(props)
+  db[props['_id']].isNew = false
+  if (callback) callback(null, db[props['_id']])
+}
+Todo.delete = function(id, callback) {
+  delete db[id]
+  if (callback) callback()
+}
