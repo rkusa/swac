@@ -2,8 +2,14 @@ var Arkansas = require('../')
   , app = require('../lib/server').app
   , client = exports.client = require('supertest')(app)
   , state = exports.state = { app: null }
+  , routing = require('../lib/routing')
   
 app.set('views', __dirname + '/views')
+
+Arkansas.get  = routing.get
+Arkansas.post = routing.post
+Arkansas.put = routing.put
+Arkansas.delete = routing.delete
 
 Arkansas.get('/', function(app, done) {
   app.register('todos', new Todo.Collection)
