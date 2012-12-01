@@ -141,15 +141,15 @@ describe('Model', function() {
   }
   describe('API', function() {
     it('POST / should create a new model',
-      testAPI.bind(this, 'post', '/api/todo'))
+      testAPI.bind(this, 'post', '/_api/todo'))
     it('PUT /:id should update the model with id = :id',
-      testAPI.bind(this, 'put', '/api/todo/42'))
+      testAPI.bind(this, 'put', '/_api/todo/42'))
     it('GET /:id should return the model with id = :id',
-      testAPI.bind(this, 'get', '/api/todo/42'))
+      testAPI.bind(this, 'get', '/_api/todo/42'))
     it('GET / should return list',
-      testAPI.bind(this, 'list', '/api/todo'))
+      testAPI.bind(this, 'list', '/_api/todo'))
     it('DELETE /:id should delete the model with id = :id',
-      testAPI.bind(this, 'delete', '/api/todo/42'))
+      testAPI.bind(this, 'delete', '/_api/todo/42'))
   })
   
   describe('Validation', function() {
