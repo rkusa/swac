@@ -3,6 +3,7 @@ var fixtures = require('./fixtures')
   , should = require('should')
   , Todo = fixtures.Todo
   , utils = require('../lib/utils')
+  , Model = require('../lib/model')
 
 describe('Model', function() {
   describe('.define()', function() {
@@ -91,9 +92,9 @@ describe('Model', function() {
 
   function testAPI (method, path, done) {
     var called = false
-      , backup = Todo[method]
-    Todo[method] = function() {
-      Todo[method] = backup
+      , backup = Model.api.Todo[method]
+    Model.api.Todo[method] = function() {
+      Model.api.Todo[method] = backup
       called = true
       var args = Array.prototype.slice.call(arguments)
         , fn = args.pop()

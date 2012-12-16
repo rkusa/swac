@@ -4,8 +4,11 @@ var Arkansas = require('../../')
   , client = exports.client = require('supertest')(app)
   , state = exports.state = { app: null }
   , routing = require('../../lib/routing')
-  
+  , Model = require('../../lib/model')
+  , adapter = require('./mock-adapter')
+
 app.set('views', __dirname + '/views')
+app.use(server.express.bodyParser())
 
 Arkansas.get  = routing.get
 Arkansas.post = routing.post
@@ -23,6 +26,7 @@ Arkansas.get('/', function(app, done) {
 })
 
 var Todo = exports.Todo = Arkansas.Model.define('Todo', function() {
+  this.use(adapter)
   this.property('task', { type: 'string', minLength: 1 })
   this.property('isDone', { type: 'boolean' })
 })
@@ -51,39 +55,4 @@ exports.Todo.Collection = Arkansas.Collection.define('Todos', Todo, function() {
   })
 })
 
-var db = exports.db = {}
-
-Todo.list = function(/*view, key, callback*/) {
-  var args = Array.prototype.slice.call(arguments)
-    , callback = args.pop()
-  var arr = []
-  Object.keys(db).forEach(function(key) {
-    arr.push(db[key])
-  })
-  if (callback) callback(null, arr)
-}
-Todo.get = function(id, callback) {
-  if (callback) callback(null, db[id])
-}
-Todo.put = function(id, props, callback) {
-  var todo
-  if (!(todo = db[id])) return false
-  Object.keys(props).forEach(function(key) {
-    if (todo.hasOwnProperty(key)) todo[key] = props[key]
-  })
-  if (callback) callback(null, todo)
-}
-Todo.post = function(props, callback) {
-  if (!props['_id']) {
-    var id = 1
-    while (db[id]) id++
-    props['_id'] = id
-  }
-  db[props['_id']] = new Todo(props)
-  db[props['_id']].isNew = false
-  if (callback) callback(null, db[props['_id']])
-}
-Todo.delete = function(id, callback) {
-  delete db[id]
-  if (callback) callback()
-}
+exports.db = adapter.db
