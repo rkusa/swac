@@ -2,6 +2,7 @@ var fixtures = require('./fixtures')
   , implode = require('../lib/implode')
   , should = require('should')
   , Todo = fixtures.Todo
+  , utils = require('../lib/utils')
 
 describe('Model', function() {
   describe('.define()', function() {
@@ -144,6 +145,29 @@ describe('Model', function() {
         , validation = todo.validate()
       validation.should.equal(true)
       Object.keys(todo.$errors).should.have.lengthOf(0)
+    })
+  })
+
+  describe('Server-Only Part', function() {
+    it('Client-Side', function() {
+      utils.isServer = false
+      utils.isBrowser = true
+      var Model = require('./fixtures/example.model')
+        , model = new Model
+      model.should.have.property('Client')
+      model.should.not.have.property('Server')
+    })
+    it('Server-Side', function(done) {
+      delete require.cache[require.resolve('./fixtures/example.model')]
+      utils.isServer = true
+      utils.isBrowser = false
+      var Model = require('./fixtures/example.model')
+      process.nextTick(function() {
+        var model = new Model
+        model.should.have.property('Client')
+        model.should.have.property('Server')
+        done()
+      })
     })
   })
 })
