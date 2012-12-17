@@ -2,7 +2,7 @@ var async = require('async')
   , fixtures = require('./fixtures')
   , Todo = fixtures.Todo
   , should = require('should')
-  , app = new (require('arkansas').State)
+  , app = new (require('../').State)
 
 app.req = {}
 
