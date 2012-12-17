@@ -80,7 +80,7 @@ describe('Rendering', function() {
       with (state.app.fragments[1]) {
         events.length.should.equal(1)
         with (events[0]) {
-          _id.should.equal(state.app.todo)
+          id.should.equal(state.app.todo)
           properties[0].should.equal('isDone')
           properties[1].should.equal('task')
         }
@@ -135,7 +135,7 @@ describe('Rendering', function() {
       with (state.app.fragments[2]) {
         events.length.should.equal(1)
         with (events[0]) {
-          _id.should.equal(state.app.todos[0])
+          id.should.equal(state.app.todos[0])
           properties[0].should.equal('isDone')
           properties[1].should.equal('task')
         }
@@ -144,7 +144,7 @@ describe('Rendering', function() {
       with (state.app.fragments[3]) {
         events.length.should.equal(1)
         with (events[0]) {
-          _id.should.equal(state.app.todos[1])
+          id.should.equal(state.app.todos[1])
           properties[0].should.equal('isDone')
           properties[1].should.equal('task')
         }

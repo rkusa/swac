@@ -24,14 +24,14 @@ exports.initialize = function(Todo, opts, callback) {
       if (callback) callback(null, todo)
     },
     post: function(props, callback) {
-      if (!props['_id']) {
+      if (!props['id']) {
         var id = 1
         while (db[id]) id++
-        props['_id'] = id
+        props['id'] = id
       }
-      db[props['_id']] = new Todo(props)
-      db[props['_id']].isNew = false
-      if (callback) callback(null, db[props['_id']])
+      db[props['id']] = new Todo(props)
+      db[props['id']].isNew = false
+      if (callback) callback(null, db[props['id']])
     },
     delete: function(id, callback) {
       delete db[id]

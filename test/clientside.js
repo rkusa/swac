@@ -15,8 +15,8 @@ describe.skip('Client-Side functionality', function() {
     })
     arkansas.init(appPath + '/app')
     db = {
-      1: new Todo({ _id: 1, task: 'first', isDone: false }),
-      2: new Todo({ _id: 2, task: 'second', isDone: true })
+      1: new Todo({ id: 1, task: 'first', isDone: false }),
+      2: new Todo({ id: 2, task: 'second', isDone: true })
     }
     Todo.list = function(callback) {
       var arr = []
@@ -37,14 +37,14 @@ describe.skip('Client-Side functionality', function() {
       if (callback) callback(todo)
     }
     Todo.post = function(props, callback) {
-      if (!props['_id']) {
+      if (!props['id']) {
         var id = 1
         while (db[id]) id++
-        props['_id'] = id
+        props['id'] = id
       }
-      db[props['_id']] = new Todo(props)
-      db[props['_id']].isNew = false
-      if (callback) callback(db[props['_id']])
+      db[props['id']] = new Todo(props)
+      db[props['id']].isNew = false
+      if (callback) callback(db[props['id']])
     }
     Todo.delete = function(id, callback) {
       delete db[id]

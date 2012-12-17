@@ -65,6 +65,7 @@ describe('Collection', function() {
   describe('Deserialization', function() {
     var recovered
     before(function() {
+      // console.log(prepared.arr)
       recovered = implode.recover(prepared)
       // console.log(recovered)
     })

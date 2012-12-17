@@ -60,13 +60,13 @@ describe('Array', function() {
     })
   })
   describe('.get()', function() {
-    it('should track item\'s #_id property', function() {
+    it('should track item\'s #id property', function() {
       var todo = new Todo
-      todo.should.have.property('_id', null)
+      todo.should.have.property('id', null)
       todos.add(todo)
-      todo._id = 10
+      todo.id = 10
       todos.find(10).should.equal(todo)
-      todo._id = 11
+      todo.id = 11
       should.strictEqual(todos.find(10), undefined)
       todos.find(11).should.equal(todo)
     })
@@ -159,12 +159,12 @@ describe('Grouped Array', function() {
     items = Observable.Array(Item).groupBy('type')
   })
   it('.add()', function() {
-    items.add(new Item({ _id: 1, type: 'a' }))
-    items.add(new Item({ _id: 2, type: 'a' }))
-    items.add(new Item({ _id: 3, type: 'b' }))
+    items.add(new Item({ id: 1, type: 'a' }))
+    items.add(new Item({ id: 2, type: 'a' }))
+    items.add(new Item({ id: 3, type: 'b' }))
     items.should.have.lengthOf(2)
     items[0].should.have.property('collection')
-    items[0].should.have.property('_id', 'a')
+    items[0].should.have.property('id', 'a')
     items[0].collection.should.have.lengthOf(2)
     items[1].collection.should.have.lengthOf(1)
   })

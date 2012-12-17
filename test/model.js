@@ -20,7 +20,7 @@ describe('Model', function() {
     })
 
     it('should have the defined properties', function() {
-      todo.should.have.ownProperty('_id')
+      todo.should.have.ownProperty('id')
       todo.should.have.ownProperty('task', 'Tu dies')
       todo.should.have.ownProperty('isDone', null)
     })
@@ -43,7 +43,7 @@ describe('Model', function() {
     describe('.save()', function() {
       it('should create a new record if not exists', function(done) {
         var lengthBefore = Object.keys(fixtures.db).length
-          , todo = new Todo({ _id: 9, task: 'Tu das' })
+          , todo = new Todo({ id: 9, task: 'Tu das' })
         fixtures.db.should.not.have.property(9)
         todo.save(function() {
           Object.keys(fixtures.db).should.have.lengthOf(lengthBefore + 1)
@@ -53,7 +53,7 @@ describe('Model', function() {
         })
       })
       it('should update the record if exists', function(done) {
-        var todo = new Todo({ _id: 10 })
+        var todo = new Todo({ id: 10 })
         todo.save(function() {
           fixtures.db.should.have.property(10)
           todo.task = 'Und das'
@@ -67,7 +67,7 @@ describe('Model', function() {
 
     describe('.destroy()', function() {
       it('should destroy the record if exists', function(done) {
-        var todo = new Todo({ _id: 11 })
+        var todo = new Todo({ id: 11 })
         todo.save(function() {
           fixtures.db.should.have.property(11)
           todo.destroy(function() {
@@ -77,7 +77,7 @@ describe('Model', function() {
         })
       })
       it('should fire the appropriated events', function(done) {
-        var todo = new Todo({ _id: 11 })
+        var todo = new Todo({ id: 11 })
         todo.save(function() {
           fixtures.db.should.have.property(11)
           todo.once('destroy', function callback() {
