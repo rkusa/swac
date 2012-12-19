@@ -19,12 +19,24 @@ var arkansas = require('arkansas/server')
   , express = arkansas.express
 ```
 
-Next, configure your express server and point to your app definition:
+Next, configure your express server, add the arkansas middleware and point to your app definition:
 
 ```js
 app.configure(function() {
   app.set('views', __dirname + '/views')
   app.use(express.static(__dirname + '/public'))
+
+  // bodyparser middleware have to be - if used - placed 
+  // above the arkansas middleware
+  // app.use(express.bodyParser())
+  // app.use(express.methodOverride())
+
+  app.use(arkansas.middleware)
+
+  // sesssion middleware have to be - if used - placed
+  // below the arkansas middleware
+  // app.use(express.cookieParser())
+  // app.use(express.session({ secret: 'asd8723euzukasiudi', store: store }))
 })
 
 arkansas.area(__dirname + '/app')
@@ -244,94 +256,7 @@ This method is used to iterate through a collection and render the specified blo
 </ul>
 ```
 
-### .get(model, id, callback)
-This method is used to **retrieve** a specific document from the database.
-
-**Arguments:**
-
-* **model** - the type the document is a instance of
-* **id** - the documents id
-* **callback** - the callback, which will be executed once the document got retrieved
-
-**Example:**
-
-```js
-app.get(Todo, 'task1', function(err, todo) {
-  ...
-})
-```
-
-### .list(model, [viewName[, viewKey],] callback)
-This method is used to **retrieve a set** of document from the database.
-
-**Arguments:**
-
-* **model** - the type the document is a instance of
-* **viewName** - an optional name of the view, which should be listed
-* **viewKey** - an optional key, which should be provided to the view
-* **callback** - the callback, which will be executed once the documents got retrieved
-
-**Example:**
-
-```js
-app.list(Todo, function(err, todos) {
-  ...
-})
-```
-
-### .post(model, data, callback)
-This method is used to **create** a document in the database.
-
-**Arguments:**
-
-* **model** - the type the document is a instance of
-* **data** - the documents data
-* **callback** - the callback, which will be executed once the document got created
-
-**Example:**
-
-```js
-app.post(Todo, { task: 'Foobar' }, function(err, todo) {
-  ...
-})
-```
-
-### .put(model, id, data, callback)
-This method is used to **update** a specific document in the database.
-
-**Arguments:**
-
-* **model** - the type the document is a instance of
-* **id** - the documents id
-* **data** - the documents new data
-* **callback** - the callback, which will be executed once the document got updated
-
-**Example:**
-
-```js
-app.put(Todo, 42, { task: 'Foobar', isDone: true }, function(err, todo) {
-  ...
-})
-```
-
-### .delete(model, id, callback)
-This method is used to **delete** a specific document from the database.
-
-**Arguments:**
-
-* **model** - the type the document is a instance of
-* **id** - the documents id
-* **callback** - the callback, which will be executed once the document got deleted
-
-**Example:**
-
-```js
-app.delete(Todo, 'task1', function(err) {
-  ...
-})
-```
-
-## Model
+## Model Factory
 `require('arkansas').Model`
 
 ### .define(name[, opts], definition[, callback])
@@ -372,6 +297,7 @@ Define a property.
 
 * **silent** - (boolean, default: true) whether the property should support events
 * **serverOnly** - (boolean, default: false) makes the property only accessible from the server-side (property will not be accessible through the web API)
+* **default** - the properties default value
 * Validation: **required**, **type**, **pattern**, ... provided by [revalidator](https://github.com/flatiron/revalidator#usage)
 
 **Example:**
@@ -431,6 +357,90 @@ delete > write > all
 ```
 get    > read > all
 list   > read > all
+```
+
+## Model
+
+### .get(id, callback)
+This method is used to **retrieve** a specific document from the database.
+
+**Arguments:**
+
+* **id** - the documents id
+* **callback** - the callback, which will be executed once the document got retrieved
+
+**Example:**
+
+```js
+Todo.get('task1', function(err, todo) {
+  ...
+})
+```
+
+### .list([viewName[, viewKey],] callback)
+This method is used to **retrieve a set** of document from the database.
+
+**Arguments:**
+
+* **viewName** - an optional name of the view, which should be listed
+* **viewKey** - an optional key, which should be provided to the view
+* **callback** - the callback, which will be executed once the documents got retrieved
+
+**Example:**
+
+```js
+Todo.list(function(err, todos) {
+  ...
+})
+```
+
+### .post(data, callback)
+This method is used to **create** a document in the database.
+
+**Arguments:**
+
+* **data** - the documents data
+* **callback** - the callback, which will be executed once the document got created
+
+**Example:**
+
+```js
+Todo.post({ task: 'Foobar' }, function(err, todo) {
+  ...
+})
+```
+
+### .put(id, data, callback)
+This method is used to **update** a specific document in the database.
+
+**Arguments:**
+
+* **id** - the documents id
+* **data** - the documents new data
+* **callback** - the callback, which will be executed once the document got updated
+
+**Example:**
+
+```js
+Todo.put(42, { task: 'Foobar', isDone: true }, function(err, todo) {
+  ...
+})
+```
+
+### .delete(id, callback)
+This method is used to **delete** a specific document from the database.
+
+**Arguments:**
+
+* **id** - the documents id
+* **callback** - the callback, which will be executed once the document got deleted
+
+**Example:**
+
+```js
+Todo.delete('task1', function(err) {
+  ...
+})
 ```
 
 ## Model.prototype

@@ -29,5 +29,8 @@
   "repository" : {
     "type" : "git",
     "url" : "git://github.com/rkusa/Arkansas.git"
+  },
+  "engines": {
+    "node": ">=0.8"
   }
 }

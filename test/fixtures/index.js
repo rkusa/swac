@@ -1,4 +1,5 @@
 var Arkansas = require('../../')
+  , domain = require('domain')
   , server = exports.server = require('../../lib/server')
   , app = server.app
   , client = exports.client = require('supertest')(app)
@@ -7,8 +8,18 @@ var Arkansas = require('../../')
   , Model = require('../../lib/model')
   , adapter = require('./mock-adapter')
 
+var d = domain.create()
+d.req = {}
+
+exports.domainify = function(fn) {
+  return function(done) {
+    d.run(fn.bind(null, done))
+  }
+}
+
 app.set('views', __dirname + '/views')
 app.use(server.express.bodyParser())
+app.use(server.middleware)
 
 Arkansas.get  = routing.get
 Arkansas.post = routing.post

@@ -4,6 +4,7 @@ var fixtures = require('./fixtures')
   , Todo = fixtures.Todo
   , utils = require('../lib/utils')
   , Model = require('../lib/model')
+  , domainify = fixtures.domainify
 
 describe('Model', function() {
   describe('.define()', function() {
@@ -41,7 +42,7 @@ describe('Model', function() {
     })
 
     describe('.save()', function() {
-      it('should create a new record if not exists', function(done) {
+      it('should create a new record if not exists', domainify(function(done) {
         var lengthBefore = Object.keys(fixtures.db).length
           , todo = new Todo({ id: 9, task: 'Tu das' })
         fixtures.db.should.not.have.property(9)
@@ -51,8 +52,8 @@ describe('Model', function() {
           fixtures.db[9].should.have.property('task', 'Tu das')
           done()
         })
-      })
-      it('should update the record if exists', function(done) {
+      }))
+      it('should update the record if exists', domainify(function(done) {
         var todo = new Todo({ id: 10 })
         todo.save(function() {
           fixtures.db.should.have.property(10)
@@ -62,11 +63,11 @@ describe('Model', function() {
             done()
           })
         })
-      })
+      }))
     })
 
     describe('.destroy()', function() {
-      it('should destroy the record if exists', function(done) {
+      it('should destroy the record if exists', domainify(function(done) {
         var todo = new Todo({ id: 11 })
         todo.save(function() {
           fixtures.db.should.have.property(11)
@@ -75,8 +76,8 @@ describe('Model', function() {
             done()
           })
         })
-      })
-      it('should fire the appropriated events', function(done) {
+      }))
+      it('should fire the appropriated events', domainify(function(done) {
         var todo = new Todo({ id: 11 })
         todo.save(function() {
           fixtures.db.should.have.property(11)
@@ -86,7 +87,7 @@ describe('Model', function() {
           })
           todo.destroy()
         })
-      })
+      }))
     })
   })
 

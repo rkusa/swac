@@ -3,6 +3,7 @@ var async = require('async')
   , Todo = fixtures.Todo
   , should = require('should')
   , app = new (require('../').State)
+  , domainify = fixtures.domainify
 
 app.req = {}
 
@@ -72,7 +73,7 @@ describe('Security', function() {
   })
   describe('Model', function() {
     var a, b, allow = true
-    before(function(done) {
+    before(domainify(function(done) {
       async.parallel([
         function(cb) {
           a = new Todo({ task: 'A', isDone: false })
@@ -89,7 +90,7 @@ describe('Security', function() {
           })
         }
       ], done)
-    })
+    }))
     after(function() {
       Todo.allow = {}
       Todo.deny = {}
@@ -122,13 +123,13 @@ describe('Security', function() {
             })
           },
           function(cb) {
-            app.get(Todo, a.id, function(err, todo) {
+            Todo.get(a.id, function(err, todo) {
               todo.should.have.property('id', a.id)
               cb()
             })
           },
           function(cb) {
-            app.get(Todo, b.id, function(err, todo) {
+            Todo.get(b.id, function(err, todo) {
               should.strictEqual(todo, null)
               cb()
             })
@@ -148,7 +149,7 @@ describe('Security', function() {
             })
           },
           function(cb) {
-            app.list(Todo, function(err, todos) {
+            Todo.list(function(err, todos) {
               todos.should.have.lengthOf(1)
               todos[0].should.have.property('id', a.id)
               cb()
@@ -174,14 +175,14 @@ describe('Security', function() {
           },
           function(cb) {
             allow = false
-            app.post(Todo, { task: 'D' }, function(err, todo) {
+            Todo.post({ task: 'D' }, function(err, todo) {
               err.should.have.property('message', 'Unauthorized')
               cb()
             })
           },
           function(cb) {
             allow = true
-            app.post(Todo, { task: 'D' }, function(err, todo) {
+            Todo.post({ task: 'D' }, function(err, todo) {
               should.strictEqual(err, null)
               todo.should.have.property('task', 'D')
               cb()
