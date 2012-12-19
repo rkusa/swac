@@ -78,6 +78,7 @@ This method creates an area with the file in the path as starting point. The the
 **Options:**
 
 * **layout** - the view which will function as the area's layout 
+* **mount** - the path the area's JavaScript package should be mounted to
 * **allow** - a function which could be used to authenticate and/or authorize the access to the area (true = allow access; false = deny access)
 * **deny** - a function which could be used to authenticate and/or authorize the access to the area (true = deny access; false = allow access)
 
