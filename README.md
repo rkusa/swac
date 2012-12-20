@@ -315,13 +315,8 @@ This method could be used to define the database adapter which should be used to
 **Arguments:**
 
 * **adapter** - the adapter's name or the module itself
-* **opts** - additional options
+* **opts** - additional adapter specific options
 * **definition** - an optional definition to allow adapter specific functionality
-
-**Options:**
-
-* **scope** - the scope which should be used to authenticate API access
-* **serverOnly** - (boolean, default: false) make the model only accessible from the server-side (no API)
 
 ### .allow(definition)
 This method could be used to define functions which will be used to authorize the access to the model's data.
