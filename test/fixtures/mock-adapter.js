@@ -15,26 +15,23 @@ exports.initialize = function(Todo, opts, callback) {
     get: function(id, callback) {
       if (callback) callback(null, db[id])
     },
-    put: function(id, props, callback) {
-      var todo
-      if (!(todo = db[id])) return false
-      Object.keys(props).forEach(function(key) {
-        if (todo.hasOwnProperty(key)) todo[key] = props[key]
-      })
+    put: function(todo, callback) {
+      if (!todo) return false
+      db[todo.id] = todo
       if (callback) callback(null, todo)
     },
-    post: function(props, callback) {
-      if (!props['id']) {
+    post: function(instance, callback) {
+      if (!instance.id) {
         var id = 1
         while (db[id]) id++
-        props['id'] = id
+        instance.id = id
       }
-      db[props['id']] = new Todo(props)
-      db[props['id']].isNew = false
-      if (callback) callback(null, db[props['id']])
+      instance.isNew = false
+      db[instance.id] = instance
+      if (callback) callback(null, instance)
     },
-    delete: function(id, callback) {
-      delete db[id]
+    delete: function(instance, callback) {
+      delete db[instance.id]
       if (callback) callback()
     }
   }
