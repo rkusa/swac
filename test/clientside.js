@@ -73,7 +73,6 @@ describe.skip('Client-Side functionality', function() {
     it.skip('should dispose its children', function(done) {
       var count = 3
         , callback = function() {
-          console.log('ASD')
           if (--count > 0) return
           done()
         }
