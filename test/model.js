@@ -153,7 +153,7 @@ describe('Model', function() {
   describe('Server-Only Part', function() {
     it('Client-Side', function() {
       utils.isServer = false
-      utils.isBrowser = true
+      utils.isClient = true
       var Model = require('./fixtures/example.model')
         , model = new Model
       model.should.have.property('Client')
@@ -162,7 +162,7 @@ describe('Model', function() {
     it('Server-Side', function(done) {
       delete require.cache[require.resolve('./fixtures/example.model')]
       utils.isServer = true
-      utils.isBrowser = false
+      utils.isClient = false
       var Model = require('./fixtures/example.model')
       process.nextTick(function() {
         var model = new Model

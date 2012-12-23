@@ -21,11 +21,11 @@ GLOBAL.removeEventListener = function() {}
 
 function switchToServer () {
   utils.isServer = true
-  utils.isBrowser = false  
+  utils.isClient = false  
 }
 function switchToBrowser () {
   utils.isServer = false
-  utils.isBrowser = true  
+  utils.isClient = true  
 }
 function defineRoute (id, parent) {
   if (!parent) parent = Arkansas
