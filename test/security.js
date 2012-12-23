@@ -92,15 +92,15 @@ describe('Security', function() {
       ], done)
     }))
     after(function() {
-      Todo.allow = {}
-      Todo.deny = {}
+      Todo.allow = { instance: {} }
+      Todo.deny = { instance: {} }
     })
     describe('all', function() {
       before(function() {
-        Todo.allow.all = function(req, todo) {
+        Todo.allow.instance.all = function(req, todo) {
           return allow && (!todo || todo.task === 'A')
         }
-        Todo.deny.all  = function() { return false  }
+        Todo.deny.instance.all  = function() { return false  }
       })
       it('should work using GET', function(done) {
         async.series([

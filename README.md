@@ -318,19 +318,35 @@ This method could be used to define the database adapter which should be used to
 * **opts** - additional adapter specific options
 * **definition** - an optional definition to allow adapter specific functionality
 
-### .allow(definition)
+### .allow|deny(definition)
 This method could be used to define functions which will be used to authorize the access to the model's data.
 
 **Arguments:**
 
 * **definition** - an object which supports the properties as shown [below](#allowdeny-definition)
 
-### .deny(definition)
-This method could be used to define functions which will be used to authorize the access to the model's data.
+### .allow|deny(properties, definition)
+This method could be used to define functions which will be used to authorize the access to the specified properties.
 
 **Arguments:**
 
+* **properties** - string representing the targeted property name or an array of property names
 * **definition** - an object which supports the properties as shown [below](#allowdeny-definition)
+
+**Example:**
+
+```js
+arkansas.Model.define('User', function() {
+  this.property('name')
+  this.property('role')
+
+  this.allow('role', {
+    write: function(req, role) {
+      return !this.isClient
+    }
+  })
+})
+```
 
 ### allow/deny definition
 
@@ -353,6 +369,13 @@ delete > write > all
 get    > read > all
 list   > read > all
 ```
+
+### allow/deny context
+
+**Properties:**
+
+**this.isBrowser** - true if the request originates from a API call
+**this.isServer** - otherwise
 
 ## Model
 
