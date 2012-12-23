@@ -1,4 +1,4 @@
-# Arkansas ![](https://dl.dropbox.com/u/6699613/arkansas-logo.png)  
+# Arkansas ![](https://dl.dropbox.com/u/6699613/arkansas-logo.png)
 
 ## Status [![Build Status](https://secure.travis-ci.org/rkusa/Arkansas.png)](http://travis-ci.org/rkusa/Arkansas)
 
@@ -148,7 +148,7 @@ var root = get('/', function(app, done) {
 })
 ```
 
-### action(app, done, params, body, query)
+### .VERB - action(app, done, params, body, query)
 These are the arguments provided to the callback of a route.
 
 * **app** - the applications root model
@@ -158,6 +158,28 @@ These are the arguments provided to the callback of a route.
 * **params** - the route params such as `params.id` for the pattern `/:id`
 * **body** - the POST values
 * **query** - the URL query paramters
+
+### .init(action[, rdy])
+The `init` method provides the routing functionality, but without specifying an actually route. Its exists to be able to bootstrap a route tree.
+
+**Arguments:**
+
+* **action** - the callback
+* **rdy** - a optional client-only callback
+
+**Example:**
+```js
+var root = arkansas.init(function(req, app, done) {
+  app.register('user', req.user)
+  done()
+})
+```
+
+### .init - action(app, done, params, body, query)
+These are the arguments provided to the callback of a route.
+
+* **req** - the connect request object
+* **done** - the function, which must be called to finish the action's functionality
 
 ## app
 This is the root model of an application.
@@ -374,10 +396,23 @@ list   > read > all
 
 **Properties:**
 
-**this.isBrowser** - true if the request originates from a API call
-**this.isServer** - otherwise
+* **this.isBrowser** - true if the request originates from a API call
+* **this.isServer** - otherwise
 
 ## Model
+
+### Constructor
+The model's constructor.
+
+**Arguments:**
+
+* **properties** - the property values the model should be instantiated with
+
+**Example:**
+
+```js
+var todo = new Todo({ task: 'Foobar' })
+```
 
 ### .get(id, callback)
 This method is used to **retrieve** a specific document from the database.
