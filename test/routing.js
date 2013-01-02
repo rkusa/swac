@@ -76,7 +76,7 @@ describe('Routing', function() {
     switchToServer()
   })
   it('Server-Side', function(finish) {
-    fixtures.client.get('/E')
+    fixtures.client.get('/A/B/E')
     .expect(200).end(function(err, res) {
       if (err) return finish(err)
       stack.length.should.equal(3)
@@ -89,7 +89,7 @@ describe('Routing', function() {
   describe('Client-Side', function() {
     it('move forward', function(finish) {
       initialRequest('/A', function() {
-        page.show('/B')
+        page.show('/A/B')
         stack.length.should.equal(1)
         stack[0].should.equal('B')
         finish()
@@ -97,7 +97,7 @@ describe('Routing', function() {
     })
     it('move further', function(finish) {
       initialRequest('/A', function() {
-        page.show('/D')
+        page.show('/A/B/D')
         stack.length.should.equal(2)
         stack[0].should.equal('B')
         stack[1].should.equal('D')
@@ -105,16 +105,16 @@ describe('Routing', function() {
       })
     })
     it('move back', function(finish) {
-      initialRequest('/E', function() {
-        page.show('/C')
+      initialRequest('/A/B/E', function() {
+        page.show('/A/C')
         stack.length.should.equal(1)
         stack[0].should.equal('C')
         finish()
       })
     })
     it('change tree', function(finish) {
-      initialRequest('/E', function() {
-        page.show('/G')
+      initialRequest('/A/B/E', function() {
+        page.show('/F/G')
         stack.length.should.equal(2)
         stack[0].should.equal('F')
         stack[1].should.equal('G')
