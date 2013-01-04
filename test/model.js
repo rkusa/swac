@@ -101,7 +101,8 @@ describe('Model', function() {
         , fn = args.pop()
       fn()
     }
-    fixtures.client[method === 'list' ? 'get' : (method === 'delete' ? 'del' : method)](path).expect(200)
+    fixtures.client[method === 'list' ? 'get' : (method === 'delete' ? 'del' : method)](path)
+    .expect(200)
     .end(function(err, res) {
       if (err) return done(err)
       called.should.be.ok

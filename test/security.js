@@ -77,15 +77,13 @@ describe('Security', function() {
       async.parallel([
         function(cb) {
           a = new Todo({ task: 'A', isDone: false })
-          a.save(function(body) {
-            a.id = body.id
+          a.save(function() {
             cb()
           })
         },
         function(cb) {
           b = new Todo({ task: 'B', isDone: false })
-          b.save(function(body) {
-            b.id = body.id
+          b.save(function() {
             cb()
           })
         }
@@ -163,14 +161,14 @@ describe('Security', function() {
             allow = false
             fixtures.client.post('/_api/todo')
             .send({ task: 'C' })
-            .expect(401)
+            .expect(403)
             .end(cb)
           },
           function(cb) {
             allow = true
             fixtures.client.post('/_api/todo')
             .send({ task: 'C' })
-            .expect(401)
+            .expect(403)
             .end(cb)
           },
           function(cb) {
@@ -183,14 +181,14 @@ describe('Security', function() {
           function(cb) {
             allow = false
             Todo.post({ task: 'D' }, function(err, todo) {
-              err.should.have.property('message', 'Unauthorized')
+              err.should.have.property('message', 'Forbidden')
               cb()
             })
           },
           function(cb) {
             allow = true
             Todo.post({ task: 'D' }, function(err, todo) {
-              err.should.have.property('message', 'Unauthorized')
+              err.should.have.property('message', 'Forbidden')
               cb()
             })
           },
