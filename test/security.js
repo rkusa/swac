@@ -170,6 +170,13 @@ describe('Security', function() {
             allow = true
             fixtures.client.post('/_api/todo')
             .send({ task: 'C' })
+            .expect(401)
+            .end(cb)
+          },
+          function(cb) {
+            allow = true
+            fixtures.client.post('/_api/todo')
+            .send({ task: 'A' })
             .expect(200)
             .end(cb)
           },
@@ -183,8 +190,15 @@ describe('Security', function() {
           function(cb) {
             allow = true
             Todo.post({ task: 'D' }, function(err, todo) {
+              err.should.have.property('message', 'Unauthorized')
+              cb()
+            })
+          },
+          function(cb) {
+            allow = true
+            Todo.post({ task: 'A' }, function(err, todo) {
               should.strictEqual(err, null)
-              todo.should.have.property('task', 'D')
+              todo.should.have.property('task', 'A')
               cb()
             })
           }
