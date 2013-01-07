@@ -68,21 +68,19 @@ describe('Model', function() {
 
     describe('.destroy()', function() {
       it('should destroy the record if exists', domainify(function(done) {
-        var todo = new Todo({ id: 11 })
-        todo.save(function() {
-          fixtures.db.should.have.property(11)
+        Todo.get(9, function(err, todo) {
+          fixtures.db.should.have.property(9)
           todo.destroy(function() {
-            fixtures.db.should.not.have.property(11)
+            fixtures.db.should.not.have.property(9)
             done()
           })
         })
       }))
       it('should fire the appropriated events', domainify(function(done) {
-        var todo = new Todo({ id: 11 })
-        todo.save(function() {
-          fixtures.db.should.have.property(11)
+        Todo.get(10, function(err, todo) {
+          fixtures.db.should.have.property(10)
           todo.once('destroy', function callback() {
-            fixtures.db.should.not.have.property(11)
+            fixtures.db.should.not.have.property(10)
             done()
           })
           todo.destroy()
@@ -98,10 +96,12 @@ describe('Model', function() {
       Model.api.Todo[method] = backup
       called = true
       var args = Array.prototype.slice.call(arguments)
-        , fn = args.pop()
-      fn()
+      backup.apply(Model.api.Todo, args)
     }
-    fixtures.client[method === 'list' ? 'get' : (method === 'delete' ? 'del' : method)](path)
+    var req = fixtures.client[method === 'list' ? 'get' : (method === 'delete' ? 'del' : method)](path)
+    if (method === 'put' || method === 'post')
+      req.send({ id: 42, task: 'Foobar' })
+    req
     .expect(200)
     .end(function(err, res) {
       if (err) return done(err)
@@ -170,6 +170,323 @@ describe('Model', function() {
         model.should.have.property('Client')
         model.should.have.property('Server')
         done()
+      })
+    })
+  })
+
+  describe('Authorization', function() {
+    describe('Per-Instance', function() {
+      before(function(done) {
+        utils.series([
+          { id: 42, task: 'Authorization A', isDone: false },
+          { id: 43, task: 'Authorization B', isDone: true }
+        ], function(data, next) {
+          Todo.post(data, next)
+        }, done)
+      })
+      var allow, force
+      var restriction = {
+        all: undefined, read: undefined, get: undefined,
+        write: undefined, post: undefined, put: undefined,
+        list: undefined, delete: undefined
+      }
+      after(function() {
+        Todo.extend(function() {
+          this.allow(restriction)
+          this.deny(restriction)
+        })
+      })
+      function methods(scope) {
+        before(function() {
+          allow = false
+          force = false 
+        })
+        it('get', function(done) {
+          Todo.get(43, function(err, todo) {
+            if (['all', 'read', 'get'].indexOf(scope) !== -1) {
+              should.strictEqual(err, null)
+              should.strictEqual(todo, null)
+            } else {
+              should.strictEqual(err, null)
+              todo.should.have.property('id', 43)
+            }
+            done()
+          })
+        })
+        it('list', function(done) {
+          Todo.list(function(err, todos) {
+            if (['all', 'read', 'list'].indexOf(scope) !== -1) {
+              should.strictEqual(err, null)
+              todos.should.be.an.instanceOf(Array)
+              todos.should.have.lengthOf(1)
+              allow = true
+              Todo.list(function(err, todos) {
+                should.strictEqual(err, null)
+                todos.should.be.an.instanceOf(Array)
+                todos.should.have.lengthOf(2)
+                done()
+              })
+            } else {
+              should.strictEqual(err, null)
+              todos.should.be.an.instanceOf(Array)
+              todos.should.have.lengthOf(2)
+              done()
+            }
+          })
+        })
+        it('post', function(done) {
+          allow = false
+          Todo.post({ id: 44, isDone: true }, function(err, todo) {
+            if (['all', 'write', 'post'].indexOf(scope) !== -1) {
+              err.should.have.property('status', 403)
+              Todo.post({ id: 44, isDone: false }, function(err, todo) {
+                should.strictEqual(err, null)
+                todo.should.have.property('id', 44)
+                done()
+              })
+            } else {
+              should.strictEqual(err, null)
+              todo.should.have.property('id', 44)
+              todo.should.have.property('isDone', true)
+              done()
+            }
+          })
+        })
+        it('put', function(done) {
+          force = true
+          Todo.put(44, { task: 'C' }, function(err, todo) {
+            if (['all', 'write', 'put'].indexOf(scope) !== -1) {
+              err.should.have.property('status', 403)
+              force = false
+              allow = true
+              Todo.put(44, { task: 'C' }, function(err, todo) {
+                should.strictEqual(err, null)
+                todo.should.have.property('task', 'C')
+                allow = false
+                done()
+              })
+            } else {
+              should.strictEqual(err, null)
+              todo.should.have.property('task', 'C')
+              done()
+            }
+          })
+        })
+        it('delete', function(done) {
+          force = true
+          Todo.delete(44, function(err) {
+            if (['all', 'write', 'delete'].indexOf(scope) !== -1) {
+              err.should.have.property('status', 403)
+              force = false
+              allow = true
+              Todo.delete(44, function(err) {
+                should.strictEqual(err, null)
+                allow = false
+                done()
+              })
+            } else {
+              should.strictEqual(err, null)
+              done()
+            }
+          })
+        })
+      }
+      function restrict(scope) {
+        describe('allow', function() {
+          before(function() {
+            Todo.extend(function() {
+              this.allow(restriction)
+              this.deny(restriction)
+              var rest = {}
+              rest[scope] = function(req, todo) {
+                return !force && (allow || !todo.isDone) }
+              this.allow(rest)
+            })
+          })
+          methods(scope)
+        })
+        describe('deny', function() {
+          before(function() {
+            Todo.extend(function() {
+              this.allow(restriction)
+              this.deny(restriction)
+              var rest = {}
+              rest[scope] = function(req, todo) {
+                return !(!force && (allow || !todo.isDone)) }
+              this.deny(rest)
+            })
+          })
+          methods(scope)
+        })
+      }
+      var that = this
+      ;['all', 'read', 'write', 'get', 'list', 'put', 'post', 'delete'].forEach(function(method) {
+        describe(method, restrict.bind(that, method))
+      })
+
+      describe('Asynchronous', function() {
+        var allow, asyncAllow
+        before(function() {
+          Todo.extend(function() {
+            this.allow(restriction)
+            this.deny(restriction)
+            this.allow({
+              all: function(req, todo, callback) {
+                if (allow === true) return true
+                setTimeout(function() {
+                  callback(asyncAllow)
+                })
+              }
+            })
+          })
+        })
+        it('should possibly be synchronous', function(done) {
+          allow = true
+          Todo.get(42, function(err, todo) {
+            should.strictEqual(err, null)
+            todo.should.have.property('id', 42)
+            done()
+          })
+        })
+        it('should work', function(done) {
+          allow = false
+          asyncAllow = false
+          Todo.get(42, function(err, todo) {
+            should.strictEqual(todo, null)
+            asyncAllow = true
+            Todo.get(42, function(err, todo) {
+              should.strictEqual(err, null)
+              todo.should.have.property('id', 42)
+              done()
+            })
+          })
+        })
+      })
+    })
+
+    describe('Per-Property', function() {
+      var allow
+      describe('PUT', function() {
+        it('allow/deny method should have the corret attributes', function(done) {
+          var changes = { isDone: true, task: 'abc' }
+          Todo.extend(function() {
+            this.allow(['isDone', 'task'], {
+              write: function(req, todo, val, prop, callback) {
+                req.should.be.a('object')
+                todo.should.be.a('object')
+                todo.should.equal(fixtures.db[42])
+                val.should.equal(changes[prop])
+                callback.should.be.a('function')
+                return true
+              }
+            })
+          })
+          Todo.put(42, changes, function(err, todo) {
+            should.strictEqual(err, null)
+            should.strictEqual(todo, fixtures.db[42])
+            done()
+          })
+        })
+        it('should work synchronously', function(done) {
+          Todo.extend(function() {
+            this.allow('task', {
+              write: function(req, todo, val, prop, callback) {
+                return allow
+              }
+            })
+          })
+          allow = false
+          Todo.put(42, { task: 'A' }, function(err, todo) {
+            todo.should.have.property('task', 'abc')
+            allow = true
+            Todo.put(42, { task: 'A' }, function(err, todo) {
+              todo.should.have.property('task', 'A')
+              done()
+            })
+          })
+        })
+        it('should work asynchronously', function(done) {
+          Todo.extend(function() {
+            this.allow('task', {
+              write: function(req, todo, val, prop, callback) {
+                process.nextTick(function() {
+                  callback(allow)
+                })
+              }
+            })
+          })
+          allow = false
+          Todo.put(42, { task: 'B' }, function(err, todo) {
+            todo.should.have.property('task', 'A')
+            allow = true
+            Todo.put(42, { task: 'B' }, function(err, todo) {
+              todo.should.have.property('task', 'B')
+              done()
+            })
+          })
+        })
+      })
+      describe('POST', function() {
+        it('allow/deny method should have the corret attributes', function(done) {
+          var todo = { isDone: true, task: 'abc' }
+          Todo.extend(function() {
+            this.allow(['isDone', 'task'], {
+              write: function(req, todo, val, prop, callback) {
+                req.should.be.a('object')
+                todo.should.be.a('object')
+                todo.should.equal(todo)
+                val.should.equal(todo[prop])
+                callback.should.be.a('function')
+                return true
+              }
+            })
+          })
+          Todo.post(todo, function(err, todo) {
+            should.strictEqual(err, null)
+            todo.should.be.a('object')
+            done()
+          })
+        })
+        it('should work synchronously', function(done) {
+          Todo.extend(function() {
+            this.allow('task', {
+              write: function(req, todo, val, prop, callback) {
+                return allow
+              }
+            })
+          })
+          allow = false
+          Todo.post({ task: 'A' }, function(err, todo) {
+            todo.should.have.property('task', null)
+            allow = true
+            Todo.post({ task: 'A' }, function(err, todo) {
+              todo.should.have.property('task', 'A')
+              todo.destroy()
+              done()
+            })
+          })
+        })
+        it('should work asynchronously', function(done) {
+          Todo.extend(function() {
+            this.allow('task', {
+              write: function(req, todo, val, prop, callback) {
+                process.nextTick(function() {
+                  callback(allow)
+                })
+              }
+            })
+          })
+          allow = false
+          Todo.post({ task: 'B' }, function(err, todo) {
+            todo.should.have.property('task', null)
+            allow = true
+            Todo.post({ task: 'B' }, function(err, todo) {
+              todo.should.have.property('task', 'B')
+              todo.destroy()
+              done()
+            })
+          })
+        })
       })
     })
   })

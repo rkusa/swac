@@ -26,12 +26,12 @@ exports.initialize = function(Todo, opts, callback) {
         while (db[id]) id++
         instance.id = id
       }
-      instance.isNew = false
-      db[instance.id] = instance
-      if (callback) callback(null, instance)
+      db[instance.id] = instance instanceof Todo ? instance : new Todo(instance)
+      db[instance.id].isNew = false
+      if (callback) callback(null, db[instance.id])
     },
     delete: function(instance, callback) {
-      delete db[instance.id]
+      delete db[typeof instance === 'object' ? instance.id : instance]
       if (callback) callback()
     }
   }
