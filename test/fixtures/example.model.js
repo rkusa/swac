@@ -1,5 +1,5 @@
-var arkansas = require('../../')
+var swac = require('../../')
 
-module.exports = arkansas.Model.define('Example', function() {
+module.exports = swac.Model.define('Example', function() {
   this.property('Client')
 })

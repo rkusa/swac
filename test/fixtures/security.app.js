@@ -1,5 +1,5 @@
-var arkansas = require('../../lib')
+var swac = require('../../lib')
 
-arkansas.get('/security', function(app, done) {
+swac.get('/security', function(app, done) {
   done.render('empty')
 })

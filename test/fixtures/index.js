@@ -1,4 +1,4 @@
-var Arkansas = require('../../')
+var swac = require('../../')
   , domain = require('domain')
   , server = exports.server = require('../../lib/server')
   , app = server.app
@@ -21,12 +21,12 @@ app.set('views', __dirname + '/views')
 app.use(server.express.bodyParser())
 app.use(server.middleware)
 
-Arkansas.get  = routing.get
-Arkansas.post = routing.post
-Arkansas.put = routing.put
-Arkansas.delete = routing.delete
+swac.get  = routing.get
+swac.post = routing.post
+swac.put = routing.put
+swac.delete = routing.delete
 
-Arkansas.get('/', function(app, done) {
+swac.get('/', function(app, done) {
   app.register('todos', new Todo.Collection)
   app.todos.reset([
     new Todo({ task: 'First',  isDone: false }),
@@ -36,13 +36,13 @@ Arkansas.get('/', function(app, done) {
   state.app = app.original
 })
 
-var Todo = exports.Todo = Arkansas.Model.define('Todo', function() {
+var Todo = exports.Todo = swac.Model.define('Todo', function() {
   this.use(adapter)
   this.property('task', { type: 'string', minLength: 1 })
   this.property('isDone', { type: 'boolean' })
 })
 
-exports.Todo.Collection = Arkansas.Collection.define('Todos', Todo, function() {
+exports.Todo.Collection = swac.Collection.define('Todos', Todo, function() {
   this.property('left', function() {
     var count = 0
     this.forEach(function(todo) {

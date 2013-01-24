@@ -1,11 +1,11 @@
 {
-  "name": "arkansas",
+  "name": "swac",
   "author": {
     "name": "Markus Ast",
     "email": "npm.m@rkusa.st"
   },
   "version": "0.3.0",
-  "homepage": "https://github.com/rkusa/Arkansas",
+  "homepage": "https://github.com/rkusa/swac",
   "scripts": {
     "start": "node app",
     "test": "mocha"
@@ -25,10 +25,10 @@
     "zombie": "2.0.x",
     "async": "0.1.x"
   },
-  "bugs": "https://github.com/rkusa/Arkansas/issues",
+  "bugs": "https://github.com/rkusa/swac/issues",
   "repository" : {
     "type" : "git",
-    "url" : "git://github.com/rkusa/Arkansas.git"
+    "url" : "git://github.com/rkusa/swac.git"
   },
   "engines": {
     "node": ">=0.8"

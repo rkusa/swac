@@ -1,5 +1,5 @@
 var fixtures = require('./fixtures')
-  , Arkansas = require('../')
+  , swac = require('../')
   , utils = require('../lib/utils')
   , should = require('should')
   , root, stack, context
@@ -28,7 +28,7 @@ function switchToBrowser () {
   utils.isClient = true  
 }
 function defineRoute (id, parent) {
-  if (!parent) parent = Arkansas
+  if (!parent) parent = swac
   return parent.get('/' + id, function(app, done) {
     app.area['main'] = function() { return '' }
     window.app = app

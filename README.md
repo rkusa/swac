@@ -1,25 +1,25 @@
-# Arkansas ![](https://dl.dropbox.com/u/6699613/arkansas-logo.png)
+# SWAC ![](https://dl.dropbox.com/u/6699613/swac-logo.png)
 
-## Status [![Build Status](https://secure.travis-ci.org/rkusa/Arkansas.png)](http://travis-ci.org/rkusa/Arkansas)
+## Status [![Build Status](https://secure.travis-ci.org/rkusa/swac.png)](http://travis-ci.org/rkusa/swac)
 
 Don't use yet.
 
 ## Example
-[Arkansas TodoMVC](https://github.com/rkusa/todomvc.arkansas)
+[SWAC TodoMVC](https://github.com/rkusa/todomvc.swac)
     
 ## Getting Started
 
 ### Your Server
 
-First, require the `arkansas/server` module:
+First, require the `swac/server` module:
 
 ```js
-var arkansas = require('arkansas/server')
-  , app = arkansas.app
-  , express = arkansas.express
+var swac = require('swac/server')
+  , app = swac.app
+  , express = swac.express
 ```
 
-Next, configure your express server, add the arkansas middleware and point to your app definition:
+Next, configure your express server, add the swac middleware and point to your app definition:
 
 ```js
 app.configure(function() {
@@ -27,19 +27,19 @@ app.configure(function() {
   app.use(express.static(__dirname + '/public'))
 
   // bodyparser middleware have to be - if used - placed 
-  // above the arkansas middleware
+  // above the swac middleware
   // app.use(express.bodyParser())
   // app.use(express.methodOverride())
 
-  app.use(arkansas.middleware)
+  app.use(swac.middleware)
 
   // sesssion middleware have to be - if used - placed
-  // below the arkansas middleware
+  // below the swac middleware
   // app.use(express.cookieParser())
   // app.use(express.session({ secret: 'asd8723euzukasiudi', store: store }))
 })
 
-arkansas.area(__dirname + '/app')
+swac.area(__dirname + '/app')
 ```
 
 Finally, attach it to a HTTP/HTTPS server:
@@ -51,14 +51,14 @@ server.listen(80)
 
 ### Your App
 
-First, require the `arkansas` module:
+First, require the `swac` module:
 
 ```js
-var arkansas = require('arkansas')
-  , get      = arkansas.get
-  , post     = arkansas.post
-  , put      = arkansas.put
-  , delete   = arkansas.delete
+var swac = require('swac')
+  , get      = swac.get
+  , post     = swac.post
+  , put      = swac.put
+  , delete   = swac.delete
 ```
 
 Finally, define your routes
@@ -76,8 +76,8 @@ get('/', function(app, done) {
 
 ## API
 
-## Arkansas/Server
-`require('arkansas/server')`
+## SWAC/Server
+`require('swac/server')`
 
 ### .area(path[, opts])
 This method creates an area with the file in the path as starting point. The therefor created JavaScript bundle will contain all the area's dependencie.
@@ -97,7 +97,7 @@ This method creates an area with the file in the path as starting point. The the
 **Example:**
 
 ```js
-var server = require('arkansas/server')
+var server = require('swac/server')
 server.area(__dirname + '/admin.js', {
   layout: 'admin',
   allow: function(req) {
@@ -120,8 +120,8 @@ This methods is used to define scopes, which will be used to authenticate API ac
 server.scope('app', passport.authenticate('bearer', { session: false }))
 ```
 
-## Arkansas
-`require('arkansas')`
+## SWAC
+`require('swac')`
 
 ### .VERB(pattern, action[, rdy[, options]])
 The `.VERB()` methods provide the routing functionality, where **VERB** is one of the HTTP verbs, such as app.post().
@@ -136,7 +136,7 @@ The `.VERB()` methods provide the routing functionality, where **VERB** is one o
 **Example:**
 ```js
 var root = get('/', function(app, done) {
-  app.register('todos', arkansas.observableArray(Todo))
+  app.register('todos', swac.observableArray(Todo))
   app.list(Todo, function(todos) {
     app.todos.reset(todos)
     done.render('index')
@@ -169,7 +169,7 @@ The `init` method provides the routing functionality, but without specifying an 
 
 **Example:**
 ```js
-var root = arkansas.init(function(req, app, done) {
+var root = swac.init(function(req, app, done) {
   app.register('user', req.user)
   done()
 })
@@ -194,7 +194,7 @@ Register an object to a property of the *app* model to flag it to be serialized 
 
 **Example**
 ```js
-app.register('todos', arkansas.observableArray(Todo))
+app.register('todos', swac.observableArray(Todo))
 ```
 
 ### .area(name, fn)
@@ -279,7 +279,7 @@ This method is used to iterate through a collection and render the specified blo
 ```
 
 ## Model Factory
-`require('arkansas').Model`
+`require('swac').Model`
 
 ### .define(name[, opts], definition[, callback])
 Defines a model with the given properties.
@@ -358,7 +358,7 @@ This method could be used to define functions which will be used to authorize th
 **Example:**
 
 ```js
-arkansas.Model.define('User', function() {
+swac.Model.define('User', function() {
   this.property('name')
   this.property('role')
 
@@ -529,9 +529,9 @@ model.destroy(function() {
 ```
 
 ## Collection
-`require('arkansas').Collection`
+`require('swac').Collection`
 
-This is the same as `require('arkansas').observableArray` except the difference of having the ability to define dynamic properties.
+This is the same as `require('swac').observableArray` except the difference of having the ability to define dynamic properties.
 
 ### .define(name, definition)
 Defines a collection with the given dynamic properties.
@@ -583,7 +583,7 @@ Same as `Array.prototype.length` but with the difference, that fragments could l
 
 Since the goal of this framework is to re-use an application's codebase between server and client, it should be kept in mind, that **every part of the application's logic will be shared between server and client unless it is explicitly declared as server-only logic**. Nevertheless, **the actual communication between the business logic and the database will always be executed on the server-side**. Therefor the data API calls executed on the client-side will lead, as shown in the image below, to requests to the server. This makes it possible to secure the communication between the application and the database no matter how the to the client-side shared code get manipulated.
 
-![](https://dl.dropbox.com/u/6699613/arkansas-service-layer.png)
+![](https://dl.dropbox.com/u/6699613/swac-service-layer.png)
 
 ### Route Security
 
@@ -599,7 +599,7 @@ Since route authentication/authorization makes no sense if being executed on the
 **Example:**
 
 ```js
-var server = require('arkansas/server')
+var server = require('swac/server')
 server.area(__dirname + '/app.js', {
   allow: function(req) {
     return req.user && req.user.role && req.user.role === 'foobar'
@@ -612,8 +612,8 @@ server.area(__dirname + '/app.js', {
 Additionally, it is still possible to make use of [express](https://github.com/visionmedia/express) to define routes, as shown below.
 
 ```js
-var arkansas = require('arkansas/server')
-  , express = arkansas.express
+var swac = require('swac/server')
+  , express = swac.express
 
 app.post('/register', function(req, res) {
   ...
@@ -631,15 +631,15 @@ The data authentication and authorization logic are safe to code manipulation, a
 Data API calls can be authenticated using scopes. A scope simply consists of a name and a [connect](https://github.com/senchalabs/connect) middleware, as shown below.
 
 ```js
-var server = require('arkansas/server')
+var server = require('swac/server')
 server.scope('app', passport.authenticate('bearer', { session: false }))
 ```
 
 They can then be attached to models by simply passing the *scope* option containing the appropriated scope name. Once attached, the scope's middleware will be executed on every request to the model's API.
 
 ```js
-var arkansas = require('arkansas')
-module.exports = arkansas.Model.define('Note', { scope: 'app' }, function() {
+var swac = require('swac')
+module.exports = swac.Model.define('Note', { scope: 'app' }, function() {
   this.property('content')
 })
 ```
@@ -651,7 +651,7 @@ The authorization can be established by providing appropriated *allow* and/or *d
 **Example:**
 
 ```js
-arkansas.Model.define('Todo', function() {
+swac.Model.define('Todo', function() {
   this.property('task')
   this.property('user')
 
@@ -672,7 +672,7 @@ Additionally, it is possible to declare a model as a *server-only* model. There 
 **Example:**
 
 ```js
-arkansas.Model.define('Todo', { serverOnly: true }, function() {
+swac.Model.define('Todo', { serverOnly: true }, function() {
   this.property('task')
 })
 ```
@@ -684,7 +684,7 @@ As a smaller granularity, it is possible to define properties of a model as *ser
 **Example:**
 
 ```js
-arkansas.Model.define('Todo', function() {
+swac.Model.define('Todo', function() {
   this.property('task', { serverOnly: true })
 })
 ```
@@ -704,7 +704,7 @@ models/
 *todo.js*
 
 ```js
-module.exports = arkansas.Model.define('Todo', function() {
+module.exports = swac.Model.define('Todo', function() {
   this.property('task', { serverOnly: true })
 })
 ```

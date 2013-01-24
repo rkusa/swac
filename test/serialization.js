@@ -1,4 +1,4 @@
-var Arkansas = require('../')
+var swac = require('../')
   , Todo = require('./fixtures').Todo
   , implode = require('../lib/implode')
   , should = require('should')

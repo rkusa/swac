@@ -1,6 +1,6 @@
-var arkansas = require('../lib/server')
-  , app = arkansas.app
-  , express = arkansas.express
+var swac = require('../lib/server')
+  , app = swac.app
+  , express = swac.express
   , appPath = __dirname + '/../examples/todos'
   , Todo = require('./fixtures').Todo
   , browser = new (require("zombie"))({ silent: true, debug: true })
@@ -13,7 +13,7 @@ describe.skip('Client-Side functionality', function() {
       app.set('views', appPath + '/views')
       app.use(express.static(appPath + '/public'))
     })
-    arkansas.init(appPath + '/app')
+    swac.init(appPath + '/app')
     db = {
       1: new Todo({ id: 1, task: 'first', isDone: false }),
       2: new Todo({ id: 2, task: 'second', isDone: true })

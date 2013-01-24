@@ -1,5 +1,5 @@
 var fixtures = require('./fixtures')
-  , Arkansas = require('../')
+  , swac = require('../')
   , Todo = fixtures.Todo
   , utils = require('../lib/utils')
   , should = require('should')
@@ -8,7 +8,7 @@ var fixtures = require('./fixtures')
 describe('Rendering', function() {
   describe('Areas', function() {
     before(function() {
-      Arkansas.get('/areas', function(app, done) {
+      swac.get('/areas', function(app, done) {
         app.status = 'works'
         done.render('areas')
         state.app = app
@@ -43,7 +43,7 @@ describe('Rendering', function() {
   })
   describe('Self-Updating Fragments', function() {
     before(function() {
-      Arkansas.get('/blocks', function(app, done) {
+      swac.get('/blocks', function(app, done) {
         app.register('todo', new Todo({ task: 'Second', isDone: true }))
         done.render('blocks')
         state.app = app
@@ -89,8 +89,8 @@ describe('Rendering', function() {
   })
   describe('Collections', function() {
     before(function() {
-      Arkansas.get('/collections', function(app, done) {
-        app.register('todos', Arkansas.observableArray(Todo))
+      swac.get('/collections', function(app, done) {
+        app.register('todos', swac.observableArray(Todo))
         app.todos.reset([
           new Todo({ task: 'First',  isDone: false }),
           new Todo({ task: 'Second', isDone: true })
@@ -154,7 +154,7 @@ describe('Rendering', function() {
   describe('Helper', function() {
     describe('Form', function() {
       before(function() {
-        Arkansas.get('/helper/form', function(app, done) {
+        swac.get('/helper/form', function(app, done) {
           app.register('todo', new Todo)
           done.render('forms')
           state.app = app
