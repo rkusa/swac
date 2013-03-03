@@ -19,7 +19,7 @@ exports.domainify = function(fn) {
 
 app.set('views', __dirname + '/views')
 app.use(server.express.bodyParser())
-app.use(server.middleware)
+app.use(server.middleware('/'))
 
 swac.get  = routing.get
 swac.post = routing.post
@@ -40,6 +40,7 @@ var Todo = exports.Todo = swac.Model.define('Todo', function() {
   this.use(adapter)
   this.property('task', { type: 'string', minLength: 1 })
   this.property('isDone', { type: 'boolean' })
+  this.property('category')
 })
 
 exports.Todo.Collection = swac.Collection.define('Todos', Todo, function() {

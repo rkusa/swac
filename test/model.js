@@ -54,7 +54,7 @@ describe('Model', function() {
         })
       }))
       it('should update the record if exists', domainify(function(done) {
-        var todo = new Todo({ id: 10 })
+        var todo = new Todo({ id: 10, task: 'foobar' })
         todo.save(function() {
           fixtures.db.should.have.property(10)
           todo.task = 'Und das'
@@ -124,7 +124,7 @@ describe('Model', function() {
   
   describe('Validation', function() {
     it('should return false appropriately', function() {
-      var todo = new Todo({ task: '' })
+      var todo = new Todo({ task: '', isDone: 'invalid' })
         , validation = todo.validate()
       validation.should.equal(false)
       with (todo) {
@@ -138,7 +138,7 @@ describe('Model', function() {
         with ($errors.isDone) {
           attribute.should.equal('type')
           expected.should.equal('boolean')
-          actual.should.equal('object')
+          actual.should.equal('string')
           message.should.equal('must be of boolean type')
         }
       }
@@ -236,10 +236,10 @@ describe('Model', function() {
         })
         it('post', function(done) {
           allow = false
-          Todo.post({ id: 44, isDone: true }, function(err, todo) {
+          Todo.post({ id: 44, task: 'foobar', isDone: true }, function(err, todo) {
             if (['all', 'write', 'post'].indexOf(scope) !== -1) {
               err.should.have.property('status', 403)
-              Todo.post({ id: 44, isDone: false }, function(err, todo) {
+              Todo.post({ id: 44, task: 'foobar', isDone: false }, function(err, todo) {
                 should.strictEqual(err, null)
                 todo.should.have.property('id', 44)
                 done()
@@ -449,18 +449,21 @@ describe('Model', function() {
         })
         it('should work synchronously', function(done) {
           Todo.extend(function() {
-            this.allow('task', {
+            this.allow('category', {
               write: function(req, todo, val, prop, callback) {
                 return allow
               }
             })
           })
           allow = false
-          Todo.post({ task: 'A' }, function(err, todo) {
-            todo.should.have.property('task', null)
+          Todo.post({ task: 'A', category: 'A' }, function(err, todo) {
+            should.strictEqual(err, null)
+            todo.should.have.property('category', null)
+            todo.destroy()
             allow = true
-            Todo.post({ task: 'A' }, function(err, todo) {
-              todo.should.have.property('task', 'A')
+            Todo.post({ task: 'A', category: 'A' }, function(err, todo) {
+              should.strictEqual(err, null)
+              todo.should.have.property('category', 'A')
               todo.destroy()
               done()
             })
@@ -468,7 +471,7 @@ describe('Model', function() {
         })
         it('should work asynchronously', function(done) {
           Todo.extend(function() {
-            this.allow('task', {
+            this.allow('category', {
               write: function(req, todo, val, prop, callback) {
                 process.nextTick(function() {
                   callback(allow)
@@ -477,11 +480,11 @@ describe('Model', function() {
             })
           })
           allow = false
-          Todo.post({ task: 'B' }, function(err, todo) {
-            todo.should.have.property('task', null)
+          Todo.post({ task: 'B', category: 'B' }, function(err, todo) {
+            todo.should.have.property('category', null)
             allow = true
-            Todo.post({ task: 'B' }, function(err, todo) {
-              todo.should.have.property('task', 'B')
+            Todo.post({ task: 'B', category: 'B' }, function(err, todo) {
+              todo.should.have.property('category', 'B')
               todo.destroy()
               done()
             })

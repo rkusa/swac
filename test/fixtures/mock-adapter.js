@@ -1,6 +1,6 @@
 var db = exports.db = {}
 
-exports.initialize = function(Todo, opts, callback) {
+exports.initialize = function(Todo, opts, definition, callback) {
   if (callback) callback()
   return {
     list: function(/*view, key, callback*/) {

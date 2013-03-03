@@ -13,7 +13,7 @@ describe('Fragment', function() {
       done()
     })
   })
-  describe('Client-Side', function() {
+  describe.skip('Client-Side', function() {
     describe('#delete()', function() {
       it('should delete its content', function() {
 
