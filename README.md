@@ -31,7 +31,7 @@ app.configure(function() {
   // app.use(express.bodyParser())
   // app.use(express.methodOverride())
 
-  app.use(swac.middleware)
+  app.use(swac.middleware())
 
   // sesssion middleware have to be - if used - placed
   // below the swac middleware
@@ -54,11 +54,11 @@ server.listen(80)
 First, require the `swac` module:
 
 ```js
-var swac = require('swac')
-  , get      = swac.get
-  , post     = swac.post
-  , put      = swac.put
-  , delete   = swac.delete
+var swac   = require('swac')
+  , get    = swac.get
+  , post   = swac.post
+  , put    = swac.put
+  , delete = swac.delete
 ```
 
 Finally, define your routes
@@ -133,6 +133,17 @@ The `.VERB()` methods provide the routing functionality, where **VERB** is one o
 * **rdy** - a optional client-only callback
 * **options** - the possibility to provide options, such as `{ restrain: true }`, which allows to attach the route with `route.attach()` after its definition
 
+**action(app, done, params, body, query)**  
+These are the arguments provided to the callback of a route.
+
+* **app** - the applications root model
+* **done** - the function, which must be called to finish the action's functionality
+    * done.**render(viewName)** - render a view
+    * done.**redirect(path, options)** - redirect to a provided path
+* **params** - the route params such as `params.id` for the pattern `/:id`
+* **body** - the POST values
+* **query** - the URL query paramters
+
 **Example:**
 ```js
 var root = get('/', function(app, done) {
@@ -147,17 +158,6 @@ var root = get('/', function(app, done) {
   })
 })
 ```
-
-### .VERB - action(app, done, params, body, query)
-These are the arguments provided to the callback of a route.
-
-* **app** - the applications root model
-* **done** - the function, which must be called to finish the action's functionality
-    * done.**render(viewName)** - render a view
-    * done.**redirect(path, options)** - redirect to a provided path
-* **params** - the route params such as `params.id` for the pattern `/:id`
-* **body** - the POST values
-* **query** - the URL query paramters
 
 ### .init(action[, rdy])
 The `init` method provides the routing functionality, but without specifying an actually route. Its exists to be able to bootstrap a route tree.
@@ -175,10 +175,11 @@ var root = swac.init(function(req, app, done) {
 })
 ```
 
-### .init - action(app, done, params, body, query)
+**action(app, done, params, body, query)**  
 These are the arguments provided to the callback of a route.
 
 * **req** - the connect request object
+* **app** - the applications root model
 * **done** - the function, which must be called to finish the action's functionality
 
 ## app
@@ -581,20 +582,12 @@ Same as `Array.prototype.length` but with the difference, that fragments could l
 
 ## Security
 
-Since the goal of this framework is to re-use an application's codebase between server and client, it should be kept in mind, that **every part of the application's logic will be shared between server and client unless it is explicitly declared as server-only logic**. Nevertheless, **the actual communication between the business logic and the database will always be executed on the server-side**. Therefor the data API calls executed on the client-side will lead, as shown in the image below, to requests to the server. This makes it possible to secure the communication between the application and the database no matter how the to the client-side shared code get manipulated.
-
-![](https://dl.dropbox.com/u/6699613/swac-service-layer.png)
-
-### Route Security
-
-There are two options to establish - at least in some way - security for the application's routes.
+**Important Note:** Since the goal of this framework is to re-use an application's codebase between server and client it should be kept in mind that every part of the application's logic will be shared between server and client unless it is explicitly declared as server-only logic. Nevertheless, the actual communication between the business logic and the database will always be executed on the server-side.
 
 ### Areas
 
 **tl;dr**
 Areas can be used to establish both authenticate and authorize access to the application's routes.
-
-Since route authentication/authorization makes no sense if being executed on the client-side, it is possible to split the application into several areas. These areas are isolated so that the navigation between them will lead to another (initial) request to the server. This allows to achieve a somehow weak level of security, because it is possible to add authentication and authorization logic to an area. Requesting an area's JavaScript bundle or requesting an area's route requires the requesting client to pass the authentication and authorization. The reason that this is only a somehow *weak* security is that there is no way of preventing the usage of an area's JavaScript bundle once it got obtained. But since the data access is safe anyway, this is not problematic. These areas exist mainly to provide a way to support the separation of an application into different security levels and to be able to properly respond to users who try to access a part of the application they are not authorized to.
 
 **Example:**
 
@@ -607,7 +600,7 @@ server.area(__dirname + '/app.js', {
 })
 ```
 
-#### Server-only Routes
+### Server-only Routes
 
 Additionally, it is still possible to make use of [express](https://github.com/visionmedia/express) to define routes, as shown below.
 
@@ -622,11 +615,7 @@ app.post('/register', function(req, res) {
 
 This is especially useful for cases where the business logic should not be shared between server and client.
 
-### Data Security
-
-The data authentication and authorization logic are safe to code manipulation, as explained [before](#security). Both can be defined as follows.
-
-#### Authentication
+### Model Authentication
 
 Data API calls can be authenticated using scopes. A scope simply consists of a name and a [connect](https://github.com/senchalabs/connect) middleware, as shown below.
 
@@ -644,7 +633,7 @@ module.exports = swac.Model.define('Note', { scope: 'app' }, function() {
 })
 ```
 
-#### Authorization
+### Model Authorization
 
 The authorization can be established by providing appropriated *allow* and/or *deny* functions in the model's definition.
 
@@ -665,7 +654,7 @@ swac.Model.define('Todo', function() {
 
 Both accept functions for *all*, *read*, *write*, *get*, *list*, *post*, *put* and *delete*. Detail can be found in the [API documentation above](#allowdefinition).
 
-#### Sever-only Model
+### Sever-only Model
 
 Additionally, it is possible to declare a model as a *server-only* model. There will be no Web API for such models.
 
@@ -677,7 +666,7 @@ swac.Model.define('Todo', { serverOnly: true }, function() {
 })
 ```
 
-#### Sever-only Property
+### Sever-only Property
 
 As a smaller granularity, it is possible to define properties of a model as *server-only*, too.
 
@@ -689,7 +678,7 @@ swac.Model.define('Todo', function() {
 })
 ```
 
-#### Sever-only Model Definition
+### Sever-only Model Definition
 
 Finally, it is possible to split the whole model definition into two parts. A part which will be shared between server and client and a part which will not be shared. This could simply be achieved by adding an additional file with a `.server.js` extension.
 
