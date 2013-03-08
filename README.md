@@ -1,11 +1,7 @@
-# SWAC ![](https://dl.dropbox.com/u/6699613/swac-logo.png)
-
-## Status [![Build Status](https://secure.travis-ci.org/rkusa/swac.png)](http://travis-ci.org/rkusa/swac)
-
-Don't use yet.
-
-## Example
-[SWAC TodoMVC](https://github.com/rkusa/todomvc.swac)
+![](https://dl.dropbox.com/u/6699613/swac.png)  
+[![Build Status](https://secure.travis-ci.org/rkusa/swac.png)](http://travis-ci.org/rkusa/swac)  
+**Status:** Not Ready for Production  
+**Examples:** [SWAC TodoMVC](https://github.com/rkusa/todomvc.swac), [SWAC Demo](https://github.com/rkusa/swac-demo)
     
 ## Getting Started
 
@@ -42,7 +38,7 @@ app.configure(function() {
 swac.area(__dirname + '/app')
 ```
 
-Finally, attach it to a HTTP/HTTPS server:
+Finally, attach it to a [HTTP](http://nodejs.org/docs/latest/api/http.html), [HTTPS](http://nodejs.org/docs/latest/api/https.html) or [SPDY](https://github.com/indutny/node-spdy) server:
 
 ```js
 var server = require('http').createServer(app)
@@ -55,29 +51,44 @@ First, require the `swac` module:
 
 ```js
 var swac   = require('swac')
-  , get    = swac.get
-  , post   = swac.post
-  , put    = swac.put
-  , delete = swac.delete
 ```
 
-Finally, define your routes
+Second, define your routes
 
 ```js
-get('/', function(app, done) {
+swac.get('/', function(app, done) {
   done.render('index')
 })
 ```
 
-## Contents
+### Contents
 1. [API](#api)
 2. [Security](#security)
 3. [License](#license)
 
-## API
+- - -
 
-## SWAC/Server
+## API
+1. [Server](#server)
+2. [Routes](#routes)
+3. [Application](#application)
+4. [Application Model](#application-model)
+5. [Model Factory](#model-factory)
+6. [Model Definition](#model-definition)
+7. [Model](#model)
+8. [Model.prototype](#modelprototype)
+9. [Collection](#collection)
+10. [Collection.prototype](#collectionprototype)
+
+## Server
 `require('swac/server')`
+
+### .middleware([basePath])
+This is the SWAC connect middleware that must be used.
+
+**Arguments:**
+
+* **basePath** - the base path to which the area bundles are published to
 
 ### .area(path[, opts])
 This method creates an area with the file in the path as starting point. The therefor created JavaScript bundle will contain all the area's dependencie.
@@ -120,7 +131,7 @@ This methods is used to define scopes, which will be used to authenticate API ac
 server.scope('app', passport.authenticate('bearer', { session: false }))
 ```
 
-## SWAC
+## Application
 `require('swac')`
 
 ### .VERB(pattern, action[, rdy[, options]])
@@ -182,8 +193,21 @@ These are the arguments provided to the callback of a route.
 * **app** - the applications root model
 * **done** - the function, which must be called to finish the action's functionality
 
-## app
-This is the root model of an application.
+## Route Hierarchy
+
+In SWAC routes are defined hierarchically. The resulting route hierarchy is used to determine the necessary parts that have to be executed to reflect changes between two user interactions. The business logic of a route is thereby separated into parts, where each part reflects the changes necessary to move from one route to an immediately following one.
+
+**Example:**
+
+```js
+var root     = swac.get('/')             // = /
+var projects = root.get('/projects')     // = /projects
+var project  = projects.get('/:project') // = /projects/:project
+var tasks    = project.get('/tasks')     // = /projects/:project/tasks
+```
+
+## Application Model
+The `app` object is the root model of an application.
 
 ### .register(name, obj)
 Register an object to a property of the *app* model to flag it to be serialized and transferred to the client.
@@ -580,6 +604,8 @@ This stops the array from inserting new elements according to a previously defin
 ### .size
 Same as `Array.prototype.length` but with the difference, that fragments could listen to changes of this property.
 
+- - -
+
 ## Security
 
 **Important Note:** Since the goal of this framework is to re-use an application's codebase between server and client it should be kept in mind that every part of the application's logic will be shared between server and client unless it is explicitly declared as server-only logic. Nevertheless, the actual communication between the business logic and the database will always be executed on the server-side.
@@ -712,6 +738,8 @@ Additional use cases:
 
 * conceal authorization logic
 * conceal database adapter definition
+
+- - -
 
 ## MIT License
 Copyright (c) 2012 Markus Ast
