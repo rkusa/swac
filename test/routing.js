@@ -2,7 +2,7 @@ var fixtures = require('./fixtures')
   , swac = require('../')
   , utils = require('../lib/utils')
   , should = require('should')
-  , root, stack, context
+  , root, stack = [], context
 
 GLOBAL.page = require('page')
 GLOBAL.window = {
@@ -55,7 +55,7 @@ function initialRequest (path, cont) {
   switchToServer()
   fixtures.client.get(path)
   .expect(200).end(function(err) {
-    if (err) finish(err)
+    if (err) throw err
     switchToBrowser()
     stack = []
     cont()
