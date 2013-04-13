@@ -6,7 +6,7 @@ var swac = require('../../')
   , state = exports.state = { app: null }
   , routing = require('../../lib/routing')
   , Model = require('../../lib/model')
-  , adapter = require('./mock-adapter')
+  , adapter = exports.adapter = require('./mock-adapter')
 
 var d = domain.create()
 d.req = {}

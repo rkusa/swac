@@ -1,5 +1,11 @@
 var db = exports.db = {}
 
+exports.clear = function() {
+  Object.keys(db).forEach(function(key) {
+    delete db[key]
+  })
+}
+
 exports.initialize = function(Todo, opts, definition, callback) {
   if (callback) callback()
   return {

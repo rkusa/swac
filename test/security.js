@@ -90,8 +90,9 @@ describe('Security', function() {
       ], done)
     }))
     after(function() {
-      Todo.allow = { instance: {} }
-      Todo.deny = { instance: {} }
+      Todo.allow.instance = {}
+      Todo.deny.instance = {}
+      fixtures.adapter.clear()
     })
     describe('all', function() {
       before(function() {
