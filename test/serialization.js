@@ -97,6 +97,11 @@ describe('Serialization', function() {
       roles.length.should.equal(3)
       users.length.should.equal(1)
     })
+    it('should recover items positions', function() {
+      roles[0].name.should.equal(obj.roles[0].name)
+      roles[1].name.should.equal(obj.roles[1].name)
+      roles[2].name.should.equal(obj.roles[2].name)
+    })
     it('should recover "classes"', function() {
       roles.forEach(function(role) {
         role.should.be.instanceof(Role)
@@ -111,6 +116,16 @@ describe('Serialization', function() {
     })
     it('should recover class references', function() {
       users.type.should.equal(User)
+    })
+    it('should keep observable order', function() {
+      obj.roles = swac.Observable.Array(obj.roles)
+      prepared = implode(obj)
+      recovered = JSON.parse(JSON.stringify(prepared))
+      recovered = implode.recover(prepared)
+      roles = recovered.roles
+      roles[0].name.should.equal(obj.roles[0].name)
+      roles[1].name.should.equal(obj.roles[1].name)
+      roles[2].name.should.equal(obj.roles[2].name)
     })
   })
 })
