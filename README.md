@@ -1,7 +1,8 @@
 ![](https://dl.dropbox.com/u/6699613/swac.png)  
 [![Build Status](https://secure.travis-ci.org/rkusa/swac.png)](http://travis-ci.org/rkusa/swac)  
 **Status:** Not Ready for Production  
-**Examples:** [SWAC TodoMVC](https://github.com/rkusa/todomvc.swac), [SWAC Demo](https://github.com/rkusa/swac-demo)
+**Examples:** [SWAC TodoMVC](https://github.com/rkusa/todomvc.swac), [SWAC Demo](https://github.com/rkusa/swac-demo)  
+[**Changelog**](https://gist.github.com/rkusa/5408516)
     
 ## Getting Started
 
@@ -42,7 +43,9 @@ Finally, attach it to a [HTTP](http://nodejs.org/docs/latest/api/http.html), [HT
 
 ```js
 var server = require('http').createServer(app)
-server.listen(80)
+swac.ready(function() {
+  server.listen(80)
+})
 ```
 
 ### Your App
@@ -129,6 +132,21 @@ This methods is used to define scopes, which will be used to authenticate API ac
 
 ```js
 server.scope('app', passport.authenticate('bearer', { session: false }))
+```
+
+### .ready(fn)
+This methods is used to delay the execution of the provided function until the SWAC server is ready, i.e., until the client-side bundles are build and the database tables are initialized.
+
+**Arguments:**
+
+* **fn** - the function thats execution should be delayed
+
+**Example:**
+
+```js
+swac.ready(function() {
+  server.listen(80)
+})
 ```
 
 ## Application
@@ -679,6 +697,57 @@ swac.Model.define('Todo', function() {
 ```
 
 Both accept functions for *all*, *read*, *write*, *get*, *list*, *post*, *put* and *delete*. Detail can be found in the [API documentation above](#allowdefinition).
+
+#### Asynchronous Model Authorization
+
+All of these authorization methods can be used asynchronously or in a combination of both sync and async code.
+
+**Example:**
+
+```js
+swac.Model.define('Todo', function() {
+  this.property('task')
+  this.property('user')
+
+  this.allow({
+    put: function(req, todo, callback) {
+      if (!req.user || !todo) return false
+      utils.can('todos', 'update', req.user, function(can) {
+        callback(can)
+      })
+    }
+  })
+})
+```
+
+### Property Authorization
+
+There is also the possibility to define authorization methods that only affects certain properties of the model. They can be defined using `this.allow(properties, authorization)` or `this.deny(properties, authorization)`.
+
+**Arguments**
+
+* **properties** - can be a single property or a array of properties
+* **authorization** - the object containing the authorization methods
+
+**Example:**
+
+```js
+swac.Model.define('Todo', function() {
+  this.allow(['isDone', 'tasks'], {
+    write: function(req, todo, value, property, callback) {
+    }
+  })
+})
+```
+
+**authorization(req, model, value, property, callback)**  
+These are the arguments provided to the authorization methods.
+
+* **req** - the current request object
+* **model** - the current model
+* **value** - the value that should be set to the property
+* **property** - the name of the currently affected property
+* **callback** - the callback (optional, method can also be synchronously)
 
 ### Sever-only Model
 

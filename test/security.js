@@ -208,5 +208,58 @@ describe('Security', function() {
       it.skip('should work using DELETE', function(done) {
       })
     })
+    var todo
+    describe('server-only properties', function() {
+      before(function(done) {
+        Todo.post({ task: 'A', isDone: true }, function(err, t) {
+          should.strictEqual(err, null)
+          todo = t
+          Todo.prototype._validation.isDone.serverOnly = true
+          done()
+        })
+      })
+      after(function() {
+        Todo.prototype._validation.isDone.serverOnly = false
+      })
+      it('should be accessible from the server-side', function(done) {
+        Todo.get(todo.id, function(err, t) {
+          should.strictEqual(err, null)
+          t.isDone.should.equal(true)
+          done()
+        })
+      })
+      it('should be writable from the server-side', function(done) {
+        todo.isDone = false
+        Todo.put(todo, function(err, t) {
+          should.strictEqual(err, null)
+          Todo.get(todo.id, function(err, t) {
+            should.strictEqual(err, null)
+            t.isDone.should.equal(false)
+            done()
+          })
+        })
+      })
+      it('should not be accessible from the client-side', function(done) {
+        fixtures.client.get('/_api/todo/' + todo.id)
+        .end(function(err, res) {
+          res.status.should.equal(200)
+          var obj = JSON.parse(res.text)
+          obj.should.not.have.property('isDone')
+          done()
+        })
+      })
+      it('should not be writable from the client-side', function(done) {
+        fixtures.client.put('/_api/todo/' + todo.id)
+        .send({ task: 'A', isDone: true })
+        .expect(200)
+        .end(function() {
+          Todo.get(todo.id, function(err, t) {
+            should.strictEqual(err, null)
+            t.isDone.should.equal(false)
+            done()
+          })
+        })
+      })
+    })
   })
 })
