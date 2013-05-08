@@ -19,11 +19,11 @@
     "revalidator": "0.1.x"
   },
   "devDependencies": {
-    "mocha": "1.8.x",
+    "mocha": "1.9.x",
     "should": "1.2.x",
     "supertest": "0.5.x",
     "zombie": "2.0.x",
-    "async": "0.1.x"
+    "async": "0.2.x"
   },
   "bugs": "https://github.com/rkusa/swac/issues",
   "repository" : {
