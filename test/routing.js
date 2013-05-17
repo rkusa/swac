@@ -30,7 +30,7 @@ function switchToBrowser () {
 function defineRoute (id, parent) {
   if (!parent) parent = swac
   return parent.get('/' + id, function(app, done) {
-    app.area['main'] = function() { return '' }
+    app.sections['main'] = function() { return '' }
     window.app = app
     stack.push(id)
     done.render('empty')

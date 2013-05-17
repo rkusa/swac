@@ -253,7 +253,7 @@ This method is used to mark a block in a template as a area.
 *layout.html*
 
 ```html
-<div>@area.main()</div>
+<div>@section('main')</div>
 ```
 
 *index.html*

@@ -9,7 +9,7 @@ describe('Fragment', function() {
     fixtures.client.get('/').expect(200).end(function(err, res) {
       if (err) return done(err)
       state.app.should.have.property('fragments')
-      state.app.fragments.should.have.lengthOf(5)
+      state.app.fragments.should.have.lengthOf(4)
       done()
     })
   })

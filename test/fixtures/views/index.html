@@ -1,13 +1,8 @@
-@area('main', function() {
-	<ul>
-		@collection(todos, function(todo) {
-			<li>
-				<input type="checkbox" @(todo.isDone ? '"checked"' : '')>
-				<label>@todo.task</label>
-	    </li>
-		})
-	</ul>
-})
-
-@area('footer', function() {
-})
+<ul>
+	@collection(todos, function(todo) {
+		<li>
+			<input type="checkbox" @(todo.isDone ? '"checked"' : '')>
+			<label>@todo.task</label>
+    </li>
+	})
+</ul>
