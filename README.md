@@ -1,5 +1,5 @@
 ![](https://dl.dropbox.com/u/6699613/swac.png)  
-[![Build Status](https://secure.travis-ci.org/rkusa/swac.png)](http://travis-ci.org/rkusa/swac) 
+[![Build Status](https://secure.travis-ci.org/rkusa/swac.png)](http://travis-ci.org/rkusa/swac) [![Dependency Status](https://gemnasium.com/rkusa/swac.png)](https://gemnasium.com/rkusa/swac)
 
 A Web application’s codebase is typically split into a server-side and a client-side with essential functionalities being implemented twice, such as validation or rendering. For implementing the codebase on the client, JavaScript, HTML and CSS are languages that all modern Web browsers can interpret. As the counterpart, the server-side codebase can be realized by plenty of programming languages, which provide facilities to implement standardized communication interfaces. While recent developments such as Node.js allow using JavaScript as a client-side programming languages outside the browser in a simple and efficient way also on the server-side, they lack offering a common codebase for the entire Web application. **SWAC is a framework that enables sharing of presentation and business logic between server and client using the same codebase.**
 
@@ -250,8 +250,8 @@ Register an object to a property of the *app* model to flag it to be serialized 
 app.register('todos', swac.observableArray(Todo))
 ```
 
-### .area(name, fn)
-This method is used to mark a block in a template as a area.
+### .registerSection(name, fn)
+This method is used to separate the application into sections.
 
 **Arguments:**
 
@@ -269,11 +269,11 @@ This method is used to mark a block in a template as a area.
 *index.html*
 
 ```html
-@area('main', function() {
+@section main {
   <div>
     ...
   </div>
-})
+}
 ```
 
 ### .block(fn)

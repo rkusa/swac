@@ -11,17 +11,17 @@
     "test": "mocha"
   },
   "dependencies": {
-    "express": "3.1.x",
+    "express": "3.2.x",
     "razorjs": "git://github.com/rkusa/razorjs.git",
     "page": "1.3.x",
     "browserify": "2.13.x",
-    "qs": "0.5.x",
+    "qs": "0.6.x",
     "revalidator": "0.1.x"
   },
   "devDependencies": {
     "mocha": "1.9.x",
     "should": "1.2.x",
-    "supertest": "0.5.x",
+    "supertest": "0.6.x",
     "zombie": "2.0.x",
     "async": "0.2.x"
   },
