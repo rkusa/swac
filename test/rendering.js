@@ -30,7 +30,7 @@ describe('Rendering', function() {
     })
     it('should create appropriated fragments', function() {
       // console.log(state.app)
-      state.app.fragments.length.should.equal(2)
+      Object.keys(state.app.fragments).length.should.equal(2)
       with (state.app.fragments[0]) {
         id.should.equal(0)
         template.fn.toString().should.include('_b.push(status);')
@@ -64,7 +64,7 @@ describe('Rendering', function() {
     })
     it('should create appropriated fragment', function() {
       // console.log(state.app.fragments)
-      state.app.fragments.length.should.equal(2)
+      Object.keys(state.app.fragments).length.should.equal(2)
       with (state.app.fragments[1]) {
         id.should.equal(1)
         template.fn.toString().should.include('_b.push(todo.task);')
@@ -115,7 +115,7 @@ describe('Rendering', function() {
     })
     it('should create appropriated fragments', function() {
       // console.log(state.app.fragments)
-      state.app.fragments.length.should.equal(4)
+      Object.keys(state.app.fragments).length.should.equal(4)
       state.app.fragments[0].id.should.equal(0)
       for (var i = 1; i <= 3; ++i) {
         state.app.fragments[i].id.should.equal(i)
