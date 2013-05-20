@@ -31,12 +31,12 @@ describe('Rendering', function() {
     it('should create appropriated fragments', function() {
       // console.log(state.app)
       Object.keys(state.app.fragments).length.should.equal(2)
-      with (state.app.fragments[0]) {
-        id.should.equal(0)
+      with (state.app.sections['main']) {
+        state.app.fragments[id].should.equal(state.app.sections['main'])
         template.fn.toString().should.include('_b.push(status);')
       }
-      with (state.app.fragments[1]) {
-        id.should.equal(1)
+      with (state.app.sections['footer']) {
+        state.app.fragments[id].should.equal(state.app.sections['footer'])
         template.fn.toString().should.include('Copyrights etc.')
       }
     })
