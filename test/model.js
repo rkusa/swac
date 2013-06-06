@@ -1,5 +1,5 @@
 var fixtures = require('./fixtures')
-  , implode = require('../lib/implode')
+  , implode = require('implode')
   , should = require('should')
   , Todo = fixtures.Todo
   , utils = require('../lib/utils')

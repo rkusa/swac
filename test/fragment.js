@@ -1,5 +1,5 @@
 var fixtures = require('./fixtures')
-  , implode = require('../lib/implode')
+  , implode = require('implode')
   , Todo = fixtures.Todo
   , Fragment = require('../lib/fragment')
   , state = fixtures.state

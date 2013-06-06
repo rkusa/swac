@@ -1,7 +1,7 @@
 var Todo = require('./fixtures').Todo
   , collection = require('../lib/collection')
   , Collection = collection.Collection
-  , implode = require('../lib/implode')
+  , implode = require('implode')
   , should = require('should')
 
 var Todos, todos
