@@ -157,8 +157,8 @@ describe('Model', function() {
       utils.isClient = true
       var Model = require('./fixtures/example.model')
         , model = new Model
-      model.should.have.property('Client')
-      model.should.not.have.property('Server')
+      model.should.have.ownProperty('Client')
+      model.should.not.have.ownProperty('Server')
     })
     it('Server-Side', function(done) {
       delete require.cache[require.resolve('./fixtures/example.model')]
@@ -167,8 +167,8 @@ describe('Model', function() {
       var Model = require('./fixtures/example.model')
       process.nextTick(function() {
         var model = new Model
-        model.should.have.property('Client')
-        model.should.have.property('Server')
+        model.should.have.ownProperty('Client')
+        model.should.have.ownProperty('Server')
         done()
       })
     })
@@ -458,7 +458,8 @@ describe('Model', function() {
           allow = false
           Todo.post({ task: 'A', category: 'A' }, function(err, todo) {
             should.strictEqual(err, null)
-            todo.should.have.property('category', null)
+            todo.should.have.ownProperty('category')
+            should.strictEqual(todo.category, undefined)
             todo.destroy()
             allow = true
             Todo.post({ task: 'A', category: 'A' }, function(err, todo) {
@@ -481,7 +482,8 @@ describe('Model', function() {
           })
           allow = false
           Todo.post({ task: 'B', category: 'B' }, function(err, todo) {
-            todo.should.have.property('category', null)
+            todo.should.have.ownProperty('category')
+            todo.should.be.undefined
             allow = true
             Todo.post({ task: 'B', category: 'B' }, function(err, todo) {
               todo.should.have.property('category', 'B')

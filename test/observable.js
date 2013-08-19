@@ -62,7 +62,8 @@ describe('Array', function() {
   describe('.get()', function() {
     it('should track item\'s #id property', function() {
       var todo = new Todo
-      todo.should.have.property('id', null)
+      todo.should.have.ownProperty('id')
+      should.strictEqual(todo.id, undefined)
       todos.add(todo)
       todo.id = 10
       todos.find(10).should.equal(todo)
