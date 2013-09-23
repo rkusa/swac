@@ -129,18 +129,8 @@ describe('Model', function() {
       validation.should.equal(false)
       with (todo) {
         Object.keys($errors).should.have.lengthOf(2)
-        with ($errors.task) {
-          attribute.should.equal('minLength')
-          expected.should.equal(1)
-          actual.should.equal(0)
-          message.should.equal('is too short (minimum is 1 characters)')
-        }
-        with ($errors.isDone) {
-          attribute.should.equal('type')
-          expected.should.equal('boolean')
-          actual.should.equal('string')
-          message.should.equal('must be of boolean type')
-        }
+        $errors.task.message.should.equal('is too short (minimum is 1 characters)')
+        $errors.isDone.message.should.equal('must be a boolean')
       }
     })
     it('should return true appropriately', function() {

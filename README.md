@@ -4,10 +4,8 @@
 A Web application’s codebase is typically split into a server-side and a client-side with essential functionalities being implemented twice, such as validation or rendering. For implementing the codebase on the client, JavaScript, HTML and CSS are languages that all modern Web browsers can interpret. As the counterpart, the server-side codebase can be realized by plenty of programming languages, which provide facilities to implement standardized communication interfaces. While recent developments such as Node.js allow using JavaScript as a client-side programming languages outside the browser in a simple and efficient way also on the server-side, they lack offering a common codebase for the entire Web application. **SWAC is a framework that enables sharing of presentation and business logic between server and client using the same codebase.**
 
 ```json
-{
-  "name": "swac",
-  "version": "0.6.0"
-}
+{ "name": "swac",
+  "version": "0.8.0" }
 ```
  
 **Status:** Not Ready for Production  
