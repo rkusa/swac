@@ -12,17 +12,17 @@
   },
   "dependencies": {
     "implode": "1.0.x",
-    "express": "3.3.x",
+    "express": "3.4.x",
     "razorjs": "git://github.com/rkusa/razorjs.git",
     "page": "1.3.x",
-    "browserify": "2.25.x",
+    "browserify": "2.32.x",
     "qs": "0.6.x",
     "revalidator": "0.1.x"
   },
   "devDependencies": {
-    "mocha": "1.10.x",
-    "should": "1.2.x",
-    "supertest": "0.6.x",
+    "mocha": "1.13.x",
+    "should": "1.3.x",
+    "supertest": "0.8.x",
     "zombie": "2.0.x",
     "async": "0.2.x"
   },
