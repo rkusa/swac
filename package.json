@@ -4,7 +4,7 @@
     "name": "Markus Ast",
     "email": "npm.m@rkusa.st"
   },
-  "version": "0.6.0",
+  "version": "0.7.1",
   "homepage": "https://github.com/rkusa/swac",
   "scripts": {
     "start": "node app",
