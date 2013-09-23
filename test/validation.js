@@ -1,6 +1,6 @@
 var validate = require('../lib/validate')
   , should = require('should')
-  , Model = require('swac').Model
+  , Model = require('../').Model
 
 describe('Validation', function() {
   describe('required', function() {
