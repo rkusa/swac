@@ -10,7 +10,6 @@ A Web application’s codebase is typically split into a server-side and a clien
  
 **Status:** Not Ready for Production  
 **Examples:** [SWAC TodoMVC](https://github.com/rkusa/todomvc.swac), [SWAC Demo](https://github.com/rkusa/swac-demo)  
-**Changelog**: [git.io/rnuWdg](https://gist.github.com/rkusa/5408516)
     
 ## Getting Started
 
@@ -370,8 +369,21 @@ Define a property.
 
 * **silent** - (boolean, default: true) whether the property should support events
 * **serverOnly** - (boolean, default: false) makes the property only accessible from the server-side (property will not be accessible through the web API)
-* **default** - the properties default value
-* Validation: **required**, **type**, **pattern**, ... provided by [revalidator](https://github.com/flatiron/revalidator#usage)
+* **default** - the properties default value (can be a function)
+* Validation: see below **required**, **type**, **pattern**
+
+**Validation:**
+
+* **required** - (boolean, default: false) whether the property must be set or not
+* **type** - (string, default: any) string, number, boolean, array, object, date or email
+* **minimum** - the minimum number (only applies if type is set to number)
+* **min** - alias for minimum
+* **maximum** - the maximum number (only applies if type is set to number)
+* **max** - alias for maximum
+* **minLength** - minimum string length (only applies if type is set to string)
+* **maxLength** - maximum string length (only applies if type is set to string)
+* **enum** - an array of possible values (whitelist)
+* **conform** - a function (can be both sync or async)
 
 **Example:**
 
@@ -567,9 +579,9 @@ model.save(function() {
 ### .destroy(callback)
 Destroy a model. This method also removes the model from the underlying database.
 
-**Arguments**
+**Arguments:**
 
-* **callback** - the callback which will be executed after the model got destroyed
+* **callback** - the callback that will be executed after the model got destroyed
 
 **Example:**
 
@@ -578,6 +590,36 @@ model.destroy(function() {
 	done.render('index')
 })
 ```
+
+### .validate([[properties,] callback])
+Validates the model according to the defined schema.
+
+**Arguments:**
+
+* **properties** - (string or array) the properties that should be validated
+* **callback** - the callback that is called after the validation completed
+
+**Example:**
+
+```js
+model.validate(function(isValid, hasWarnings) {
+  done.render('index')
+})
+```
+
+### .errorFor(prop)
+Gets the error for a given property.
+
+**Arguments:**
+
+* **prop** - the property name
+
+### .warningFor(prop)
+Gets the warning for a given property.
+
+**Arguments:**
+
+* **prop** - the property name
 
 ## Collection
 `require('swac').Collection`
