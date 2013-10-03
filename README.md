@@ -5,7 +5,7 @@ A Web application’s codebase is typically split into a server-side and a clien
 
 ```json
 { "name": "swac",
-  "version": "0.8.0" }
+  "version": "0.9.0" }
 ```
  
 **Status:** Not Ready for Production  
