@@ -35,7 +35,7 @@ describe('Validation', function() {
         var instance = new model({ num: '' })
         var issues = validate(instance, { num: { type: 'number' } })
         should.strictEqual(issues.num, undefined)
-        instance.should.have.property('num', 0)
+        instance.should.have.property('num', '')
       })
       it('should fail with non numeric inputs', function() {
         var issues = validate(new model({ num: 'asd' }), { num: { type: 'number' } })
