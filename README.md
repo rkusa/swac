@@ -9,7 +9,8 @@ SWAC is a framework for developing Web application codebases that work on both t
 ```
  
 **Status:** Not Ready for Production  
-**Examples:** [SWAC TodoMVC](https://github.com/rkusa/todomvc.swac), [SWAC Demo](https://github.com/rkusa/swac-demo)
+**Example:** [Demo Application](https://github.com/rkusa/swac-demo)  
+**Skeleton:** [SWAC Skeleton](https://github.com/rkusa/swac-skeleton) 
 
 ## Introduction
 
