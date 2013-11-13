@@ -4,20 +4,20 @@
     "name": "Markus Ast",
     "email": "npm.m@rkusa.st"
   },
-  "version": "0.9.0",
+  "version": "0.10.0",
   "homepage": "https://github.com/rkusa/swac",
   "scripts": {
     "start": "node app",
     "test": "mocha"
   },
   "dependencies": {
-    "implode": "1.0.x",
-    "express": "3.4.x",
+    "implode": "1.1.x",
+    "node-eventproxy": "0.3.x",
     "razorjs": "git://github.com/rkusa/razorjs.git",
+    "express": "3.4.x",
     "page": "1.3.x",
     "browserify": "2.34.x",
-    "qs": "0.6.x",
-    "validator": "1.5.x"
+    "qs": "0.6.x"
   },
   "devDependencies": {
     "mocha": "1.13.x",
