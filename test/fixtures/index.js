@@ -1,12 +1,12 @@
 var swac = require('../../')
+  , odm = require('swac-odm')
   , domain = require('domain')
   , server = exports.server = require('../../lib/server')
   , app = server.app
   , client = exports.client = require('supertest')(app)
   , state = exports.state = { app: null }
   , routing = require('../../lib/routing')
-  , Model = require('../../lib/model')
-  , adapter = exports.adapter = require('./mock-adapter')
+  , adapter = require('./mock-adapter')
 
 var d = domain.create()
 d.req = {}
@@ -36,14 +36,14 @@ swac.get('/', function(app, done) {
   state.app = app.original
 })
 
-var Todo = exports.Todo = swac.Model.define('Todo', function() {
+var Todo = exports.Todo = odm.Model.define('Todo', function() {
   this.use(adapter)
   this.property('task', { type: 'string', minLength: 1 })
   this.property('isDone', { type: 'boolean' })
   this.property('category')
 })
 
-exports.Todo.Collection = swac.Collection.define('Todos', Todo, function() {
+exports.Todo.Collection = odm.Collection.define('Todos', Todo, function() {
   this.property('left', function() {
     var count = 0
     this.forEach(function(todo) {

@@ -1,5 +1,6 @@
 var fixtures = require('./fixtures')
   , swac = require('../')
+  , odm = require('swac-odm')
   , Todo = fixtures.Todo
   , utils = require('../lib/utils')
   , should = require('should')
@@ -90,7 +91,7 @@ describe('Rendering', function() {
   describe('Collections', function() {
     before(function() {
       swac.get('/collections', function(app, done) {
-        app.register('todos', swac.observableArray(Todo))
+        app.register('todos', new odm.Array(Todo))
         app.todos.reset([
           new Todo({ task: 'First',  isDone: false }),
           new Todo({ task: 'Second', isDone: true })

@@ -1,25 +1,31 @@
 var db = exports.db = {}
 
 exports.clear = function() {
-  Object.keys(db).forEach(function(key) {
-    delete db[key]
-  })
+  for (var key in db) delete db[key]
+  delete process.domain.swac
 }
 
 exports.initialize = function(Todo, opts, definition, callback) {
-  if (callback) callback()
-  return {
-    list: function(/*view, key, callback*/) {
+  var views = {}
+  var api = {
+    view: function(/*view, key, callback*/) {
       var args = Array.prototype.slice.call(arguments)
         , callback = args.pop()
+        , view = args.shift()
+        , key = args.shift()
       var arr = []
       Object.keys(db).forEach(function(key) {
         arr.push(db[key])
       })
+      if (view) {
+        arr = arr.filter(function(row) {
+          return views[view](row, key)
+        })
+      }
       if (callback) callback(null, arr)
     },
     get: function(id, callback) {
-      if (callback) callback(null, db[id])
+      if (callback) callback(null, db[id] || null)
     },
     put: function(todo, callback) {
       if (!todo) return false
@@ -37,8 +43,21 @@ exports.initialize = function(Todo, opts, definition, callback) {
       if (callback) callback(null, db[instance.id])
     },
     delete: function(instance, callback) {
+      if (!instance) return callback()
       delete db[typeof instance === 'object' ? instance.id : instance]
       if (callback) callback()
     }
   }
+
+  if (definition) {
+    definition.call({
+      view: function(name, reduceFn) {
+        views[name] = reduceFn
+      }
+    })
+  }
+
+  if (callback) callback()
+
+  return api
 }
