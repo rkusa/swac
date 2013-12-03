@@ -16,7 +16,7 @@
   "dependencies": {
     "implode": "1.1.x",
     "node-eventproxy": "0.3.x",
-    "razorjs": "git://github.com/rkusa/razorjs.git",
+    "razorjs": "0.4.x",
     "express": "3.4.x",
     "page": "1.3.x",
     "browserify": "2.35.x",
