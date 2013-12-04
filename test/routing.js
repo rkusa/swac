@@ -2,6 +2,8 @@ var fixtures = require('./fixtures')
   , swac = require('../')
   , utils = require('../lib/utils')
   , should = require('should')
+  , routing = require('../lib/routing')
+  , State = require('../lib/state')
   , root, stack = [], context
 
 GLOBAL.page = require('page')
@@ -21,19 +23,21 @@ GLOBAL.removeEventListener = function() {}
 
 function switchToServer () {
   utils.isServer = true
-  utils.isClient = false  
+  utils.isClient = false
+  routing.Request = require('../lib/helper/request.server.js')
 }
 function switchToBrowser () {
   utils.isServer = false
   utils.isClient = true  
+  routing.Request = require('../lib/helper/request.client.js')
 }
 function defineRoute (id, parent) {
   if (!parent) parent = swac
   return parent.get('/' + id, function(app, done) {
     app.sections['main'] = function() { return '' }
-    window.app = app
     stack.push(id)
-    done.render('empty')
+    if (utils.isServer) done.render('empty')
+    else done()
   })
 }
 function defineRouteTree() {
@@ -58,6 +62,9 @@ function initialRequest (path, cont) {
     if (err) throw err
     switchToBrowser()
     stack = []
+    window.app = new State
+    routing.initialized = false
+    page.show(path) // initialize routing
     cont()
   })
 }
@@ -83,6 +90,7 @@ describe('Routing', function() {
       stack[0].should.equal('A')
       stack[1].should.equal('B')
       stack[2].should.equal('E')
+      // console.log(stack)
       finish()
     })
   })
@@ -113,9 +121,10 @@ describe('Routing', function() {
       })
     })
     // TODO:
-    it.skip('change tree', function(finish) {
+    it('change tree', function(finish) {
       initialRequest('/A/B/E', function() {
         page.show('/F/G')
+        // console.log(stack)
         stack.length.should.equal(2)
         stack[0].should.equal('F')
         stack[1].should.equal('G')

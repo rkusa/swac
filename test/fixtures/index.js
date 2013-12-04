@@ -2,11 +2,12 @@ var swac = require('../../')
   , odm = require('swac-odm')
   , domain = require('domain')
   , server = exports.server = require('../../lib/server')
-  , app = server.app
-  , client = exports.client = require('supertest')(app)
   , state = exports.state = { app: null }
   , routing = require('../../lib/routing')
   , adapter = require('./mock-adapter')
+  , express = require('express')
+  , app = express()
+  , client = exports.client = require('supertest')(app)
 
 var d = domain.create()
 d.req = {}
@@ -17,9 +18,9 @@ exports.domainify = function(fn) {
   }
 }
 
-app.set('views', __dirname + '/views')
-app.use(server.express.bodyParser())
-app.use(server.middleware('/'))
+app.use(express.urlencoded())
+app.use(express.json())
+app.use(server.middleware('/', { views: __dirname + '/views' }))
 
 swac.get  = routing.get
 swac.post = routing.post
