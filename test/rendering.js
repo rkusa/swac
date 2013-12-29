@@ -172,7 +172,7 @@ describe('Rendering', function() {
       fixtures.client.get('/inheritance')
         .expect(200)
         .end(function(err, res) {
-          console.log(res.text)
+          res.text.should.not.contain('ReferenceError')
           done()
         })
     })
