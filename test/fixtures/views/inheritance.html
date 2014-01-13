@@ -1,0 +1,12 @@
+@collection(todos, function(todo) {
+  <h2>@todo.task</h2>
+  @collection(childs, function(child) {
+    @todo.task > @{child.task}
+    <img @class="todo.isDone ? '' : 'hidden'" />
+  })
+})
+<!--
+@todos.forEach(function(todo) {
+  <i>@{todo.task}</i>
+})
+-->

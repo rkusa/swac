@@ -1,5 +1,6 @@
 var fixtures = require('./fixtures')
   , swac = require('../')
+  , odm = require('swac-odm')
   , Todo = fixtures.Todo
   , utils = require('../lib/utils')
   , should = require('should')
@@ -29,7 +30,7 @@ describe('Rendering', function() {
         })
     })
     it('should create appropriated fragments', function() {
-      // console.log(state.app)
+      // console.log(state.app.fragments)
       Object.keys(state.app.fragments).length.should.equal(2)
       with (state.app.sections['main']) {
         state.app.fragments[id].should.equal(state.app.sections['main'])
@@ -90,7 +91,7 @@ describe('Rendering', function() {
   describe('Collections', function() {
     before(function() {
       swac.get('/collections', function(app, done) {
-        app.register('todos', swac.observableArray(Todo))
+        app.register('todos', new odm.Array(Todo))
         app.todos.reset([
           new Todo({ task: 'First',  isDone: false }),
           new Todo({ task: 'Second', isDone: true })
@@ -151,26 +152,29 @@ describe('Rendering', function() {
       }
     })
   })
-  describe('Helper', function() {
-    describe('Form', function() {
-      before(function() {
-        swac.get('/helper/form', function(app, done) {
-          app.register('todo', new Todo)
-          done.render('forms')
-          state.app = app
+  describe('Argument inheritance', function() {
+    before(function() {
+      swac.get('/inheritance', function(app, done) {
+        app.register('todos', new Todo.Collection)
+        app.todos.reset([
+          new Todo({ task: 'First',  isDone: false }),
+          new Todo({ task: 'Second', isDone: true })
+        ])
+        app.register('childs', new Todo.Collection)
+        app.childs.reset([
+          new Todo({ task: 'First',  isDone: false }),
+          new Todo({ task: 'Second', isDone: true })
+        ])
+        done.render('inheritance')
+      })
+    })
+    it('should render', function(done) {
+      fixtures.client.get('/inheritance')
+        .expect(200)
+        .end(function(err, res) {
+          res.text.should.not.contain('ReferenceError')
+          done()
         })
-      })
-      it('should render', function(done) {
-        fixtures.client.get('/helper/form')
-          .expect(200)
-          .end(function(err, res) {
-            res.text.should.include('<form method="POST">')
-            res.text.should.include('<label for="todo_task">Task</label>')
-            res.text.should.include('<input id="todo_task" name="todo[task]" value="" type="text"/>')
-            res.text.should.include('</form>')
-            done()
-          })
-      })
     })
   })
 })
