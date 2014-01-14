@@ -5,7 +5,7 @@ SWAC is a framework for developing Web application codebases that work on both t
 
 ```json
 { "name": "swac",
-  "version": "0.11.0" }
+  "version": "0.11.1" }
 ```
  
 **Status:** Not Ready for Production  
