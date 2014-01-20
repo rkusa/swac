@@ -1,12 +1,9 @@
 ![](https://dl.dropbox.com/u/6699613/swac.png)  
-[![Build Status](https://secure.travis-ci.org/rkusa/swac.png)](http://travis-ci.org/rkusa/swac) [![Dependency Status](https://gemnasium.com/rkusa/swac.png)](https://gemnasium.com/rkusa/swac)
+[![NPM](https://badge.fury.io/js/swac.png)](https://npmjs.org/package/swac) 
+[![Build Status](https://secure.travis-ci.org/rkusa/swac.png)](http://travis-ci.org/rkusa/swac) 
+[![Dependency Status](https://david-dm.org/rkusa/swac.png?theme=shields.io)](https://david-dm.org/rkusa/swac)
 
 SWAC is a framework for developing Web application codebases that work on both the server- and the client-side.
-
-```json
-{ "name": "swac",
-  "version": "0.11.1" }
-```
  
 **Status:** Not Ready for Production  
 **Example:** [Demo Application](https://github.com/rkusa/swac-demo)  
@@ -866,7 +863,7 @@ Additional use cases:
 - - -
 
 ## MIT License
-Copyright (c) 2012-2013 Markus Ast
+Copyright (c) 2012-2014 Markus Ast
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 

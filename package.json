@@ -1,10 +1,9 @@
 {
   "name": "swac",
-  "author": {
-    "name": "Markus Ast",
-    "email": "npm.m@rkusa.st"
-  },
-  "version": "0.11.1",
+  "version": "0.11.2",
+  "author": "Markus Ast <npm.m@rkusa.st>",
+  "description": "SWAC is a framework for developing Web application codebases that work on both the server- and the client-side.",
+  "keywords": ["framework", "server", "client", "shared"],
   "homepage": "https://github.com/rkusa/swac",
   "scripts": {
     "start": "node app",
@@ -23,7 +22,7 @@
     "swac-odm": "rkusa/swac-odm",
     "mocha": "1.17.x",
     "should": "2.1.x",
-    "supertest": "0.8.x",
+    "supertest": "0.9.x",
     "zombie": "2.0.x",
     "async": "0.2.x"
   },
@@ -32,6 +31,7 @@
     "type" : "git",
     "url" : "git://github.com/rkusa/swac.git"
   },
+  "license": "MIT",
   "engines": {
     "node": ">=0.8"
   }
