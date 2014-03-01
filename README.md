@@ -95,12 +95,17 @@ swac.get('/', function(app, done) {
 ## Server
 `require('swac/server')`
 
-### .middleware([basePath])
+### .middleware([basePath], [opts])
 This is the SWAC connect middleware that must be used.
 
 **Arguments:**
 
 * **basePath** - the base path to which the area bundles are published to
+* **opts** - additional options
+
+**Options:**
+
+* **views** - the basepath for the views
 
 ### .area(path[, opts])
 This method creates an area with the file in the path as starting point. The therefor created JavaScript bundle will contain all the area's dependencie.
