@@ -3,7 +3,12 @@
   "version": "0.11.3",
   "author": "Markus Ast <npm.m@rkusa.st>",
   "description": "SWAC is a framework for developing Web application codebases that work on both the server- and the client-side.",
-  "keywords": ["framework", "server", "client", "shared"],
+  "keywords": [
+    "framework",
+    "server",
+    "client",
+    "shared"
+  ],
   "homepage": "https://github.com/rkusa/swac",
   "scripts": {
     "start": "node app",
@@ -15,8 +20,8 @@
     "razorjs": "0.4.x",
     "express": "3.4.x",
     "page": "1.3.x",
-    "browserify": "3.20.x",
-    "qs": "0.6.x"
+    "qs": "0.6.x",
+    "browserify-middleware": "~2.3.0"
   },
   "devDependencies": {
     "swac-odm": "rkusa/swac-odm",
@@ -27,9 +32,9 @@
     "async": "0.2.x"
   },
   "bugs": "https://github.com/rkusa/swac/issues",
-  "repository" : {
-    "type" : "git",
-    "url" : "git://github.com/rkusa/swac.git"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rkusa/swac.git"
   },
   "license": "MIT",
   "engines": {
