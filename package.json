@@ -1,6 +1,6 @@
 {
   "name": "swac",
-  "version": "0.11.4",
+  "version": "0.12.0",
   "author": "Markus Ast <npm.m@rkusa.st>",
   "description": "SWAC is a framework for developing Web application codebases that work on both the server- and the client-side.",
   "keywords": [
