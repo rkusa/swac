@@ -1,7 +1,7 @@
 <div>
 	Update the following:
 	@block(function () {
-		<input type="checkbox" @(todo.isDone ? 'checked="true"' : '')>
+		<input type="checkbox" checked="@(todo.isDone ? 'true' : 'false')">
 		<label>@todo.task</label>
 	})
 </div>
