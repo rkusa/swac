@@ -18,8 +18,7 @@ exports.domainify = function(fn) {
   }
 }
 
-app.use(express.urlencoded())
-app.use(express.json())
+app.use(require('body-parser')())
 app.use(server.middleware('/', { views: __dirname + '/views' }))
 
 swac.get  = routing.get
